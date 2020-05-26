@@ -168,7 +168,6 @@
     "/api/data/v9.0/systemusers(1db92e65-e77b-e911-a833-000d3a375590)/Microsoft.Dynamics.CRM.AddUserToRecordTeam": {},
     "/api/data/v9.0/systemusers({userID})/Microsoft.Dynamics.CRM.RemoveUserFromRecordTeam": {},
     "/api/data/v9.0/cat_projectteamroleses": {},
-    "/api/data/v9.0/{entityname}": {},
     "/org8010b22f.crm4.dynamics.com/api/data/v9.0/EntityDefinitions(LogicalName='{entityname}')/Attributes": {},
     "/org8010b22f.crm4.dynamics.com/api/data/v9.0/EntityDefinitions(LogicalName='cat_gtmentry')": {},
     "/api/data/v9.0/EntityDefinitions(LogicalName='{entityname}')/Attributes": {
