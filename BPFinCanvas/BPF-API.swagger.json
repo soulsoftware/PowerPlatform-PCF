@@ -2,10 +2,10 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "CDS API",
-    "description": "CDS APIs"
+    "title": "BPF API",
+    "description": "BPF APIs"
   },
-  "host": "org8010b22f.crm4.dynamics.com",
+  "host": "<environmenturl>",
   "basePath": "/",
   "schemes": [
     "https"
@@ -20,7 +20,7 @@
     "/api/data/v9.0/": {},
     "/api/data/v9.0/cat_gtmentries": {},
     "/v1.0/me": {},
-    "/org8010b22f.crm4.dynamics.com/api/data/v9.0/workflows": {},
+    "/<environmenturl>/api/data/v9.0/workflows": {},
     "/api/data/v9.0/workflows": {
       "get": {
         "responses": {
@@ -168,8 +168,8 @@
     "/api/data/v9.0/systemusers(1db92e65-e77b-e911-a833-000d3a375590)/Microsoft.Dynamics.CRM.AddUserToRecordTeam": {},
     "/api/data/v9.0/systemusers({userID})/Microsoft.Dynamics.CRM.RemoveUserFromRecordTeam": {},
     "/api/data/v9.0/cat_projectteamroleses": {},
-    "/org8010b22f.crm4.dynamics.com/api/data/v9.0/EntityDefinitions(LogicalName='{entityname}')/Attributes": {},
-    "/org8010b22f.crm4.dynamics.com/api/data/v9.0/EntityDefinitions(LogicalName='cat_gtmentry')": {},
+    "/<environmenturl>/api/data/v9.0/EntityDefinitions(LogicalName='{entityname}')/Attributes": {},
+    "/<environmenturl>/api/data/v9.0/EntityDefinitions(LogicalName='cat_gtmentry')": {},
     "/api/data/v9.0/EntityDefinitions(LogicalName='{entityname}')/Attributes": {
       "get": {
         "responses": {
@@ -229,9 +229,9 @@
     },
     "/api/data/v9.0/{entityname}({uniqueId})": {},
     "/api/data/v9.0/setactivepath": {},
-    "/org8010b22f.crm4.dynamics.com/api/data/v9.0/EntityDefinitions(LogicalName='{entityname}')/Attributes/Microsoft.Dynamics.CRM.PicklistAttributeMetadata": {},
-    "/org8010b22f.crm4.dynamics.com/api/data/v9.0/EntityDefinitions(LogicalName='{entityname}')/Attributes(LogicalName='{attributename}')/Microsoft.Dynamics.CRM.PicklistAttributeMetadata": {},
-    "/org8010b22f.crm4.dynamics.com/api/data/v9.0/EntityDefinitions(LogicalName='{entityname}')/Attributes/{type}": {},
+    "/<environmenturl>/api/data/v9.0/EntityDefinitions(LogicalName='{entityname}')/Attributes/Microsoft.Dynamics.CRM.PicklistAttributeMetadata": {},
+    "/<environmenturl>/api/data/v9.0/EntityDefinitions(LogicalName='{entityname}')/Attributes(LogicalName='{attributename}')/Microsoft.Dynamics.CRM.PicklistAttributeMetadata": {},
+    "/<environmenturl>/api/data/v9.0/EntityDefinitions(LogicalName='{entityname}')/Attributes/{type}": {},
     "/api/data/v9.0/{entityname}({ProcessInstanceId})": {
       "get": {
         "responses": {
@@ -456,7 +456,7 @@
       "type": "oauth2",
       "flow": "accessCode",
       "authorizationUrl": "https://login.windows.net/common/oauth2/authorize",
-      "tokenUrl": "https://login.microsoftonline.com/common/oauth2/token?resource=https://org8010b22f.crm4.dynamics.com",
+      "tokenUrl": "https://login.microsoftonline.com/common/oauth2/token?resource=https://<environmenturl>",
       "scopes": {}
     }
   },
