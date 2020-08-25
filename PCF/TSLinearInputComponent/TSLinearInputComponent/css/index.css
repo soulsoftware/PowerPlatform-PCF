@@ -1,4 +1,4 @@
-.SampleNamespace\.TSLinearInputComponent input[type=range].linearslider {
+.SampleNameSpace\.TSLinearInputComponent input[type=range].linearslider {
     margin: 1px 0;
     background: transparent;
     -webkit-appearance: none;
@@ -8,17 +8,17 @@
     -webkit-tap-highlight-color: transparent
   }
   
-  .SampleNamespace\.TSLinearInputComponent input[type=range].linearslider:focus {
+.SampleNameSpace\.TSLinearInputComponent input[type=range].linearslider:focus {
     outline: none;
   }
   
-  .SampleNamespace\.TSLinearInputComponent input[type=range].linearslider::-webkit-slider-runnable-track {
+.SampleNameSpace\.TSLinearInputComponent input[type=range].linearslider::-webkit-slider-runnable-track {
     background: #666;
     height: 2px;
     cursor: pointer
   }
   
-  .SampleNamespace\.TSLinearInputComponent input[type=range].linearslider::-webkit-slider-thumb {
+.SampleNameSpace\.TSLinearInputComponent input[type=range].linearslider::-webkit-slider-thumb {
     background: #666;
     border: 0 solid #f00;
     height: 24px;
@@ -30,13 +30,13 @@
     margin-top: -12px
   }
   
-  .SampleNamespace\.TSLinearInputComponent input[type=range].linearslider::-moz-range-track {
+.SampleNameSpace\.TSLinearInputComponent input[type=range].linearslider::-moz-range-track {
     background: #666;
     height: 2px;
     cursor: pointer
   }
   
-  .SampleNamespace\.TSLinearInputComponent input[type=range].linearslider::-moz-range-thumb {
+.SampleNameSpace\.TSLinearInputComponent input[type=range].linearslider::-moz-range-thumb {
     background: #666;
     border: 0 solid #f00;
     height: 24px;
@@ -48,13 +48,13 @@
     margin-top: -12px
   }
   
-  .SampleNamespace\.TSLinearInputComponent input[type=range].linearslider::-ms-track {
+.SampleNameSpace\.TSLinearInputComponent input[type=range].linearslider::-ms-track {
     background: #666;
     height: 2px;
     cursor: pointer
   }
   
-  .SampleNamespace\.TSLinearInputComponent input[type=range].linearslider::-ms-thumb {
+.SampleNameSpace\.TSLinearInputComponent input[type=range].linearslider::-ms-thumb {
     background: #666;
     border: 0 solid #f00;
     height: 24px;
