@@ -15,7 +15,7 @@ export class TSLinearInputComponent implements ComponentFramework.StandardContro
 	// reference to Power Apps component framework Context object
 	private _context?: ComponentFramework.Context<IInputs>;
 	// Event Handler 'refreshData' reference
-	private _refreshData?: EventListenerOrEventListenerObject;
+	private _refreshDataHandler?: EventListenerOrEventListenerObject;
 	/**
 	 * Empty constructor.
 	 */
@@ -41,11 +41,11 @@ export class TSLinearInputComponent implements ComponentFramework.StandardContro
 		this._context = context;
 		this._container = document.createElement("div");
 		this._notifyOutputChanged = notifyOutputChanged;
-		this._refreshData = this.refreshData.bind(this);
+		this._refreshDataHandler = (ev) => this.refreshData(ev)
 		// creating HTML elements for the input type range and binding it to the function which refreshes the component data
 		this.inputElement = document.createElement("input");
 		this.inputElement.setAttribute("type", "range");
-		this.inputElement.addEventListener("input", this._refreshData);
+		this.inputElement.addEventListener("input", this._refreshDataHandler);
 		//setting the max and min values for the component.
 		this.inputElement.setAttribute("min", "1");
 		this.inputElement.setAttribute("max", "1000");
@@ -111,8 +111,8 @@ export class TSLinearInputComponent implements ComponentFramework.StandardContro
 	 * i.e. cancelling any pending remote calls, removing listeners, etc.
 	 */
 	public destroy() {
-		if( this.inputElement && this._refreshData ) { // Type Guard
-			this.inputElement.removeEventListener("input", this._refreshData);
+		if( this.inputElement && this._refreshDataHandler ) { // Type Guard
+			this.inputElement.removeEventListener("input", this._refreshDataHandler);
 		}
 			
 	}

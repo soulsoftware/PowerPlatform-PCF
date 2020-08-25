@@ -8,7 +8,6 @@
     "rebuild": "pcf-scripts rebuild",
     "start": "pcf-scripts start",
     "start:watch": "pcf-start --watch' --codePath ./out/controls/TSLinearInputComponent"
-
   },
   "dependencies": {
     "@types/node": "^10.12.18",
