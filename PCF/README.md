@@ -3,19 +3,20 @@
 ### Install Office365 CLI
 
 ```
-npm i -g @pnp/office365-cli
+$ npm i -g @pnp/office365-cli
+$ o365
 ```
 
 ### Scaffold a PCF component
 
 from Office365 cli prompt run
 ```
-pa pcf init --name <name> --namespace <namespace> --template <Single|Dataset>
+o365$ pa pcf init --name <name> --namespace <namespace> --template <Single|Dataset>
 ```
 
 set LOCALAPPDATA environment variable
 ```
-export LOCALAPPDATA=<local data folder>
+$ export LOCALAPPDATA=<local data folder>
 ```
 
 ## References
