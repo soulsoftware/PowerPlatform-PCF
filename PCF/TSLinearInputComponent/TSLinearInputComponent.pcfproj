@@ -8,8 +8,8 @@
   <Import Project="$(PowerAppsTargetsPath)\Microsoft.PowerApps.VisualStudio.Pcf.props" Condition="Exists('$(PowerAppsTargetsPath)\Microsoft.PowerApps.VisualStudio.Pcf.props')"/>
   
   <PropertyGroup>
-    <Name>pcf</Name>
-    <ProjectGuid>36dab132-d294-4e68-b882-6bb994a4e12c</ProjectGuid>
+    <Name>TSLinearInputComponent</Name>
+    <ProjectGuid>4acb6eec-f56b-4176-96b4-71a9efc9b941</ProjectGuid>
     <OutputPath>$(MSBuildThisFileDirectory)out\controls</OutputPath>
   </PropertyGroup>
 
