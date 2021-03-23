@@ -10,6 +10,16 @@ on:
 jobs:
   create-pcf:
     runs-on: windows-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
     steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
       - run: |
-          echo "PCF name: ${{ github.event.inputs.PCFName }}"
+          npx yeoman
+          echo "creating PCF named: ${{ github.event.inputs.PCFName }}"
