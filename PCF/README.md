@@ -1,17 +1,24 @@
 ## MACOSX development with the PowerApps Component Framework (PCF)
 
-### Install Office365 CLI
+### Install [Office365 CLI](https://pnp.github.io/cli-microsoft365/)
 
 ```
-$ npm i -g @pnp/office365-cli
-$ o365
+$ npm i -g @pnp/cli-microsoft365
+$ m365
 ```
 
 ### Scaffold a PCF component
 
 from Office365 cli prompt run
 ```
-o365$ pa pcf init --name <name> --namespace <namespace> --template <Single|Dataset>
+m365$ pa pcf init --name <name> --namespace <namespace> --template <Single|Dataset>
+```
+
+add `typescript` and `tsconfig.json`
+
+```
+npm i typescript -D
+npx tsc --init
 ```
 
 set LOCALAPPDATA environment variable
@@ -19,6 +26,10 @@ set LOCALAPPDATA environment variable
 $ export LOCALAPPDATA=<local data folder>
 ```
 
+Build component
+```
+nmp run build
+```
 ## References
 
 * Articles
