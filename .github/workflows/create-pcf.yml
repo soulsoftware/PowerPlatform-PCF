@@ -26,6 +26,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: install Powerapps CLI
+        run: |
+            msiexec /i powerapps-cli-1.0.msi /quiet /qn /norestart /log powerapps-cli-install.log
+
       - name: Create PCF
         run: |
             echo "creating PCF named: ${{ github.event.inputs.PCFName }}"
