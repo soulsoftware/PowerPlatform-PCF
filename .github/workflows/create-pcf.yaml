@@ -1,0 +1,15 @@
+name: "create pcf"
+
+on:
+  workflow_dispatch:
+    inputs:
+     PCFName:
+      description: 'PCF name'
+      required: true
+      #default: 'false'
+jobs:
+  create-pcf:
+    runs-on: windows-latest
+    steps:
+      - run: |
+        echo "PCF name: ${{ github.event.inputs.PCFName }}"
