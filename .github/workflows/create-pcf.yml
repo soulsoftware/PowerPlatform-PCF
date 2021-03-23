@@ -28,7 +28,10 @@ jobs:
 
       - name: install Powerapps CLI
         run: |
-            msiexec /i powerapps-cli-1.0.msi /quiet /qn /norestart 
+            dotnet add package Microsoft.PowerApps.CLI --version 1.5.5
+      # - name: install Powerapps CLI
+      #   run: |
+      #       msiexec /i powerapps-cli-1.0.msi /quiet /qn /norestart
 
       - name: Create PCF
         run: |
