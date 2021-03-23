@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: |
+          echo "creating PCF named: ${{ github.event.inputs.PCFName }}"
           npm install -g yo
           npm install -g generator-pcf
-          npx yo
-          echo "creating PCF named: ${{ github.event.inputs.PCFName }}"
+          yo pcf --force --n ${{ github.event.inputs.PCFName }}
