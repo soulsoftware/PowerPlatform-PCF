@@ -28,7 +28,7 @@ jobs:
 
       - name: install Powerapps CLI
         run: |
-            msiexec /i powerapps-cli-1.0.msi /quiet /qn /norestart /log powerapps-cli-install.log
+            msiexec /i powerapps-cli-1.0.msi /quiet /qn /norestart 
 
       - name: Create PCF
         run: |
