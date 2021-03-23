@@ -17,11 +17,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: install yeoman generator
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - run: |
-          echo "creating PCF named: ${{ github.event.inputs.PCFName }}"
-          npm install -g yo
-          npm install -g generator-pcf
-          yo pcf --force --n ${{ github.event.inputs.PCFName }}
+        run: |
+            echo "creating PCF named: ${{ github.event.inputs.PCFName }}"
+            npm install -g yo
+            npm install -g generator-pcf
+            yo pcf --force --n ${{ github.event.inputs.PCFName }}
