@@ -26,7 +26,7 @@ jobs:
       - name: Install PCF CLI
         run: |
           nuget install Microsoft.PowerApps.CLI
-          $pcfPath = "$(Resolve-Path ".\Microsoft.PowerApps.CLI*\tools" | Select -ExpandProperty Path)\pac"
+          $pcfPath = "$(Resolve-Path ".\Microsoft.PowerApps.CLI*\tools" | Select -ExpandProperty Path)"
           echo "$pcfPath" >> $GITHUB_PATH
           npm install -g yo
           npm install -g generator-pcf
