@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <Name>PowerApps Plug-in Library</Name>
+    <Description>A template for creating and building a PowerApps Plug-in class library (.dll)</Description>
+    <Icon>pluginprojecttemplate.ico</Icon>
+    <ProjectType>PowerApps</ProjectType>
+    <ProjectSubType>Plugin Library</ProjectSubType>
+    <RequiredFrameworkVersion>4.6.2</RequiredFrameworkVersion>
+    <MaxFrameworkVersion>4.6.2</MaxFrameworkVersion>
+    <SortOrder>1000</SortOrder>
+    <TemplateID>{eaa5f3db-185a-44ca-85d2-ce9184b4ca8d}</TemplateID>
+    <CreateNewFolder>true</CreateNewFolder>
+    <CreateInPlace>true</CreateInPlace>
+    <DefaultName>PowerAppsPlugin</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <PlatformTag>Power Platform</PlatformTag>
+    <ProjectTypeTag>PowerApps</ProjectTypeTag>
+    <ProjectTypeTag>Dynamics 365</ProjectTypeTag>
+    <LanguageTag>CSharp</LanguageTag>
+  </TemplateData>
+  <TemplateContent>
+    <Project File="template_pluginproject.csproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="PluginBase.cs">template_PluginBase.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Plugin1.cs" OpenInEditor="true">template_Plugin1.cs</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

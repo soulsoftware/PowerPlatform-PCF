@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">  
+  <PropertyGroup>
+    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{818DD606-4513-4D3D-B7A6-D5BBC32E70E5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>solutionproject</RootNamespace>
+    <AssemblyName>solutionproject</AssemblyName>
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CreateVsixContainer>false</CreateVsixContainer>
+    <DeployExtension>false</DeployExtension>
+    <DeployVSTemplates>false</DeployVSTemplates>
+    <CopyVsixManifestToOutput>false</CopyVsixManifestToOutput>
+    <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+  </PropertyGroup>
+
+  <Import Project="..\..\VS.Common.props" />
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="$(VSSDKBuildToolsVersion)" />
+  </ItemGroup>
+  <!-- 
+  These are the files which will show up in the project template for the custom project system.
+  The project system developer will then customize them in the template.  If you add or 
+  remove files here, you must also reference them in the ProjectTemplateTemplate.vstemplate file.
+  -->
+  <ItemGroup>
+    <None Include="solutionproject.ico" />
+    <None Include="template_solutionprojecttype.cdsproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <VSTemplate Include="solutionproject.vstemplate">
+      <SubType>Designer</SubType>
+    </VSTemplate>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="Other\Customizations.xml" />
+    <Content Include="Other\Relationships.xml" />
+    <Content Include="Other\template_Solution.xml" />
+  </ItemGroup>
+  
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSSDKBuildToolsPath)\Microsoft.VsSDK.targets" Condition="Exists('$(VSSDKBuildToolsPath)\Microsoft.VsSDK.targets')" />
+</Project>

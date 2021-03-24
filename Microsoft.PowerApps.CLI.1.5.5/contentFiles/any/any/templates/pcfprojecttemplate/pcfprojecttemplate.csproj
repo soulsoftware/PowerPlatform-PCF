@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{990B5784-7E94-49A5-90C0-C1C1A80BD477}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>pcfproject</RootNamespace>
+    <AssemblyName>pcfproject</AssemblyName>
+    <ToolName>VSExt</ToolName>
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CreateVsixContainer>false</CreateVsixContainer>
+    <DeployExtension>false</DeployExtension>
+    <DeployVSTemplates>false</DeployVSTemplates>
+    <CopyVsixManifestToOutput>false</CopyVsixManifestToOutput>
+    <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+    <IsvNoGeneratedVersion>true</IsvNoGeneratedVersion>
+  </PropertyGroup>
+
+  <Import Project="..\..\VS.Common.props" />
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="$(VSSDKBuildToolsVersion)" />
+  </ItemGroup>
+  <!-- 
+  These are the files which will show up in the project template for the custom project system.
+  The project system developer will then customize them in the template.  If you add or 
+  remove files here, you must also reference them in the ProjectTemplateTemplate.vstemplate file.
+  -->
+  <ItemGroup>
+    <None Include=".gitignore" />
+    <None Include="package.json" />
+    <None Include="pcfconfig.json" />
+    <None Include="pcfproject.ico" />
+    <None Include="template_pcfprojecttype.pcfproj" />
+    <None Include="tsconfig.json" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <VSTemplate Include="pcfproject.vstemplate">
+      <SubType>Designer</SubType>
+    </VSTemplate>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="control\dataset-template\generated\ManifestTypes.d.ts" />
+    <Content Include="control\dataset-template\template_ControlManifest.Input.xml" />
+    <Content Include="control\dataset-template\template_index.ts" />
+    <Content Include="control\field-template\generated\ManifestTypes.d.ts" />
+    <Content Include="control\field-template\template_ControlManifest.Input.xml" />
+    <Content Include="control\field-template\template_index.ts" />
+  </ItemGroup>
+  
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSSDKBuildToolsPath)\Microsoft.VsSDK.targets" Condition="Exists('$(VSSDKBuildToolsPath)\Microsoft.VsSDK.targets')" />
+</Project>
