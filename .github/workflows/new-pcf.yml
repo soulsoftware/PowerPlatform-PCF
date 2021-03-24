@@ -27,10 +27,11 @@ jobs:
         run: |
           nuget install Microsoft.PowerApps.CLI
           $pcfPath = "$(Resolve-Path ".\Microsoft.PowerApps.CLI*\tools" | Select -ExpandProperty Path)"
-          echo $pcfPath >> $GITHUB_PATH
-          npm install -g yo
-          npm install -g generator-pcf
-          yo pcf --force --n ${{ github.event.inputs.PCFName }}
+          echo "$pcfPath" >> $GITHUB_PATH
+          echo "$PATH"
+#          npm install -g yo
+#          npm install -g generator-pcf
+#          yo pcf --force --n ${{ github.event.inputs.PCFName }}
 
       - name: Commit PCF components to repo
         run: |
