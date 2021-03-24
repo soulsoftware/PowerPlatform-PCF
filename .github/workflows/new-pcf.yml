@@ -1,0 +1,53 @@
+#
+# inspired by - https://github.com/rajyraman/pcf-template-dataset
+#
+name: new-pcf
+
+on:
+  workflow_dispatch:
+    inputs:
+     PCFName:
+      description: 'PCF name'
+      required: true
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@v2
+
+      - id: checkpcfconfig
+        run: |
+          Test-Path pcfconfig.json
+          echo "::set-output name=exists::$(Test-Path pcfconfig.json)"
+
+      - run: echo "::set-env name=GIT_REDIRECT_STDERR::2>&1"
+        if: steps.checkpcfconfig.outputs.exists != 'True'
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        if: steps.checkpcfconfig.outputs.exists != 'True'
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install PCF CLI
+        if: steps.checkpcfconfig.outputs.exists != 'True'
+        run: |
+          nuget install Microsoft.PowerApps.CLI
+          $pcfPath = "$(Resolve-Path ".\Microsoft.PowerApps.CLI*\tools" | Select -ExpandProperty Path)\pac"
+            npm install -g yo
+            npm install -g generator-pcf
+            yo pcf --force --n ${{ github.event.inputs.PCFName }}
+
+      - name: Commit PCF components to repo
+        if: steps.checkpcfconfig.outputs.exists != 'True'
+        run: |
+          Write-Host "****...Push code to repo...****"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add --all
+          git tag pcf-tempate -f
+          git commit -m "Add PCF Template"
+          git  -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin master
