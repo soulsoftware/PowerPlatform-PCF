@@ -61,13 +61,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip
-          path: ${{ env.msbuildtarget }}/bin/Debug/${{ steps.solution-unique-name.outputs.info }}_managed.zip
+          path: ${{ env.msbuildtarget }}/bin/Debug/Solution_managed.zip
 
       - name: Unmanaged Solution Artifact ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_unmanaged.zip
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_unmanaged.zip
-          path: ${{ env.msbuildtarget }}/bin/Debug/${{ steps.solution-unique-name.outputs.info }}.zip
+          path: ${{ env.msbuildtarget }}/bin/Debug/Solution.zip
 
       - name: Create Release ${{ steps.solution-unique-name.outputs.info }}_v${{ steps.solution-version.outputs.info }}
         id: create_release
