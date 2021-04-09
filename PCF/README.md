@@ -30,13 +30,19 @@ Build component
 ```
 nmp run build
 ```
+
 ## References
 
 * Articles
-    * [Cross-platform development with the PowerApps Component Framework](https://blog.yannickreekmans.be/cross-platform-development-with-the-powerapps-component-framework/)
-    * [PCF component in Canvas App setting](https://www.dancingwithcrm.com/pcf-component-in-canvas-app/  )
+  * [Cross-platform development with the PowerApps Component Framework](https://blog.yannickreekmans.be/cross-platform-development-with-the-powerapps-component-framework/)
+  * [PCF component in Canvas App setting](https://www.dancingwithcrm.com/pcf-component-in-canvas-app/  )
+  * [PCF Dataset control using Property-set and Property](https://www.inogic.com/blog/2020/07/how-to-create-configurable-pcf-dataset-control-using-property-set-and-property/)
+* Projects
+  * [Github PDFFormFillCanvas](https://github.com/rwilson504/PCFControls/tree/master/PDFFormFillCanvas)
+* Microsoft Docs
+  * [Implementing data-set component for canvas apps](https://docs.microsoft.com/en-us/powerapps/developer/component-framework/sample-controls/data-set-component-canvas)
 * Microsoft Learning Path
-    * [Create components with Power Apps Component Framework](https://docs.microsoft.com/en-us/learn/paths/use-power-apps-component-framework/)
+  * [Create components with Power Apps Component Framework](https://docs.microsoft.com/en-us/learn/paths/use-power-apps-component-framework/)
 * POWERFulDevs 2020 episodes
-    * [Javascript loves PCF](https://channel9.msdn.com/Shows/POWERful-Devs/JavaScript-Loves-PCF)
-    * [Get Started with Power Apps Component Framework PCF](https://channel9.msdn.com/Shows/POWERful-Devs/Get-Started-with-Power-Apps-Component-Framework-PCF)
+  * [Javascript loves PCF](https://channel9.msdn.com/Shows/POWERful-Devs/JavaScript-Loves-PCF)
+  * [Get Started with Power Apps Component Framework PCF](https://channel9.msdn.com/Shows/POWERful-Devs/Get-Started-with-Power-Apps-Component-Framework-PCF)
