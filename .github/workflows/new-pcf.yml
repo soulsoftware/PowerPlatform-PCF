@@ -1,0 +1,44 @@
+#
+# inspired by - https://github.com/rajyraman/pcf-template-dataset
+#
+name: new-pcf
+
+on:
+  workflow_dispatch:
+    inputs:
+     PCFName:
+      description: 'PCF name'
+      required: true
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install PCF CLI
+        run: |
+          nuget install Microsoft.PowerApps.CLI
+          $pcfPath = "$(Resolve-Path ".\Microsoft.PowerApps.CLI*\tools" | Select -ExpandProperty Path)"
+          echo "$pcfPath" >> $GITHUB_PATH
+          echo "$PATH"
+#          npm install -g yo
+#          npm install -g generator-pcf
+#          yo pcf --force --n ${{ github.event.inputs.PCFName }}
+
+      - name: Commit PCF components to repo
+        run: |
+          Write-Host "****...Push code to repo...****"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add --all
+          git tag pcf-tempate -f
+          git commit -m "Add PCF Template"
+          git  -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin master
