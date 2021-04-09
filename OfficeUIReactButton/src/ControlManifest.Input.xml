@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<manifest>
+  <control namespace="PCFNamespace" constructor="OfficeUIReactButton" version="0.0.1" display-name-key="OfficeUIReactButton" description-key="OfficeUIReactButton description" control-type="standard">
+    <property name="buttonValue" display-name-key="buttonValue" description-key="Button_value" of-type="SingleLine.Text" usage="bound" required="true"/>
+    <property name="buttonLink" display-name-key="buttonLink"  description-key="Button_Link" of-type="SingleLine.Text" usage="input" required="true"/>
+    <resources>
+      <code path="index.ts" order="1"/>
+    </resources>
+  </control>
+</manifest>
