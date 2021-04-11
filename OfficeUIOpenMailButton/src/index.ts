@@ -1,14 +1,13 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { ButtonAnchor, IPCFButtonProps } from './PCFButton';
+import { ButtonAnchor, IPCFButtonProps, initialize } from './PCFButton';
 
 export class OfficeUIOpenMailButton implements ComponentFramework.StandardControl<IInputs, IOutputs> {
 	private theContainer: HTMLDivElement;
 	private props: IPCFButtonProps = {
-		//tableValue: this.numberFacesChanged.bind(this),
-		buttonValue: "",
-		buttonLink: ""
+		MessageID: "",
+		Target: ""
 	}
 
 	/**
@@ -31,6 +30,8 @@ export class OfficeUIOpenMailButton implements ComponentFramework.StandardContro
 		
 		this.theContainer = container;
 		//this.notifyOutputChanged = notifyOutputChanged;
+
+		initialize()
 	}
 
 
@@ -40,8 +41,9 @@ export class OfficeUIOpenMailButton implements ComponentFramework.StandardContro
 	 */
 	public updateView(context: ComponentFramework.Context<IInputs>): void {
 		// Add code to update control view
-		this.props.buttonValue = context.parameters.buttonValue.raw!;
-		this.props.buttonLink = context.parameters.buttonLink.raw!;
+		this.props.MessageID = context.parameters.MessageID.raw!;
+		this.props.Target = context.parameters.Target.raw!;
+
 		ReactDOM.render(
 			React.createElement(
 				ButtonAnchor,
