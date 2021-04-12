@@ -2,14 +2,14 @@
 .registration
 
 # dependencies
-/node_modules
+node_modules/
 
 # generated directory
 **/generated
 
 # output directory
-/out
+out/
 
 # msbuild output directories
-/bin
-/obj
+bin/
+obj/
