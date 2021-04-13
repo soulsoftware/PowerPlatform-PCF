@@ -12,7 +12,7 @@
 
 import {IInputs, IOutputs} from "./generated/ManifestTypes";
 
-	export class TSWebAPI implements ComponentFramework.StandardControl<IInputs, IOutputs>
+	export class WebApiExplorer implements ComponentFramework.StandardControl<IInputs, IOutputs>
 	{
 		// Reference to the control container HTMLDivElement
 		// This element contains all elements of our custom control example
@@ -116,7 +116,7 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
 		{
 			// Create header label for Web API sample
 			let headerDiv: HTMLDivElement = this.createHTMLDivElement("create_container", true, "Click to create " 
-				+ TSWebAPI._entityName + " record");
+				+ WebApiExplorer._entityName + " record");
 			this._container.appendChild(headerDiv);
 
 			// Create button 1 to create record with revenue field set to 100
@@ -155,7 +155,7 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
 		private renderDeleteExample() : void
 		{
 			// Create header label for Web API sample
-			let headerDiv: HTMLDivElement = this.createHTMLDivElement("delete_container", true, "Click to delete " + TSWebAPI._entityName + " record");	
+			let headerDiv: HTMLDivElement = this.createHTMLDivElement("delete_container", true, "Click to delete " + WebApiExplorer._entityName + " record");	
 
 			// Render button to invoke DeleteRecord Web API call
 			this._deleteRecordButton = this.createHTMLButtonElement(
@@ -202,12 +202,12 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
 
 			// Create header label for Web API sample
 			let statusDivHeader: HTMLDivElement = this.createHTMLDivElement(containerName, true, 
-				"Click to calculate average value of " + TSWebAPI._currencyAttributeNameFriendlyName);	
+				"Click to calculate average value of " + WebApiExplorer._currencyAttributeNameFriendlyName);	
 			let statusDiv: HTMLDivElement = this.createHTMLDivElement(containerName, false, undefined);	
 
 			// Create button to invoke Fetch XML RetrieveMultiple Web API example
 			this._oDataRefreshButton = this.createHTMLButtonElement(
-				"Calculate average value of " + TSWebAPI._currencyAttributeNameFriendlyName,
+				"Calculate average value of " + WebApiExplorer._currencyAttributeNameFriendlyName,
 				"odata_refresh",
 				null,
 				this.calculateAverageButtonOnClickHandler.bind(this));
@@ -248,19 +248,19 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
 			);
 
 			// Generate unique record name by appending timestamp to _requiredAttributeValue
-			let recordName: string = TSWebAPI._requiredAttributeValue + "_" + Date.now();
+			let recordName: string = WebApiExplorer._requiredAttributeValue + "_" + Date.now();
 
 			// Set the values for the attributes we want to set on the new record
 			// If you want to set additional attributes on the new record, add to data dictionary as key/value pair
 			var data: any = {};
-			data[TSWebAPI._requiredAttributeName] = recordName;
-			data[TSWebAPI._currencyAttributeName] = currencyAttributeValue;
+			data[WebApiExplorer._requiredAttributeName] = recordName;
+			data[WebApiExplorer._currencyAttributeName] = currencyAttributeValue;
 
 			// store reference to 'this' so it can be used in the callback method
 			var thisRef = this;
 
 			// Invoke the Web API to creat the new record
-			this._context.webAPI.createRecord(TSWebAPI._entityName, data).then
+			this._context.webAPI.createRecord(WebApiExplorer._entityName, data).then
 			(
 				function (response: ComponentFramework.EntityReference) 
 				{
@@ -270,16 +270,16 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
 					let id: string = response.id.guid;
 
 					// Generate HTML to inject into the result div to showcase the fields and values of the new record created
-					let resultHtml: string = "Created new " + TSWebAPI._entityName + " record with below values:"
+					let resultHtml: string = "Created new " + WebApiExplorer._entityName + " record with below values:"
 					resultHtml += "<br />";
 					resultHtml += "<br />";
 					resultHtml += "id: " + id;
 					resultHtml += "<br />";
 					resultHtml += "<br />";
-					resultHtml += TSWebAPI._requiredAttributeName + ": " + recordName;
+					resultHtml += WebApiExplorer._requiredAttributeName + ": " + recordName;
 					resultHtml += "<br />";
 					resultHtml += "<br />";
-					resultHtml += TSWebAPI._currencyAttributeName + ": " + currencyAttributeValue;
+					resultHtml += WebApiExplorer._currencyAttributeName + ": " + currencyAttributeValue;
 
 					thisRef.updateResultContainerText(resultHtml);
 				},
@@ -300,7 +300,7 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
 			// Invoke a lookup dialog to allow the user to select an existing record of type _entityName to delete
 			var lookUpOptions: any =
 			{
-				entityTypes: [TSWebAPI._entityName]
+				entityTypes: [WebApiExplorer._entityName]
 			};
 
 			// store reference to 'this' so it can be used in the callback method
@@ -357,10 +357,10 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
 			// Build FetchXML to retrieve the average value of _currencyAttributeName field for all _entityName records
 			// Add a filter to only aggregate on records that have _currencyAttributeName not set to null
 			let fetchXML: string = "<fetch distinct='false' mapping='logical' aggregate='true'>";
-			fetchXML += "<entity name='" + TSWebAPI._entityName + "'>";
-			fetchXML += "<attribute name='" + TSWebAPI._currencyAttributeName + "' aggregate='avg' alias='average_val' />";
+			fetchXML += "<entity name='" + WebApiExplorer._entityName + "'>";
+			fetchXML += "<attribute name='" + WebApiExplorer._currencyAttributeName + "' aggregate='avg' alias='average_val' />";
 			fetchXML += "<filter>";
-			fetchXML += "<condition attribute='" + TSWebAPI._currencyAttributeName + "' operator='not-null' />";
+			fetchXML += "<condition attribute='" + WebApiExplorer._currencyAttributeName + "' operator='not-null' />";
 			fetchXML += "</filter>";
 			fetchXML += "</entity>";
 			fetchXML += "</fetch>";
@@ -369,7 +369,7 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
 			var thisRef = this;
 
 			// Invoke the Web API RetrieveMultipleRecords method to calculate the aggregate value
-			this._context.webAPI.retrieveMultipleRecords(TSWebAPI._entityName, "?fetchXml=" + fetchXML).then
+			this._context.webAPI.retrieveMultipleRecords(WebApiExplorer._entityName, "?fetchXml=" + fetchXML).then
 			(
 				function (response: ComponentFramework.WebApi.RetrieveMultipleResponse) 
 				{
@@ -377,7 +377,7 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
 					let averageVal:Number = response.entities[0].average_val;
 					
 					// Generate HTML to inject into the result div to showcase the result of the RetrieveMultiple Web API call
-					let resultHTML: string = "Average value of " + TSWebAPI._currencyAttributeNameFriendlyName + " attribute for all " + TSWebAPI._entityName + " records: " + averageVal;
+					let resultHTML: string = "Average value of " + WebApiExplorer._currencyAttributeNameFriendlyName + " attribute for all " + WebApiExplorer._entityName + " records: " + averageVal;
 					thisRef.updateResultContainerText(resultHTML);
 				},
 				function (errorResponse: any) 
@@ -396,14 +396,14 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
 		{
 			// Generate OData query string to retrieve the _currencyAttributeName field for all _entityName records
 			// Add a filter to only retrieve records with _requiredAttributeName field which contains _requiredAttributeValue
-			let queryString: string = "?$select=" + TSWebAPI._currencyAttributeName + "&$filter=contains(" + TSWebAPI._requiredAttributeName + 
-				",'" + TSWebAPI._requiredAttributeValue + "')";
+			let queryString: string = "?$select=" + WebApiExplorer._currencyAttributeName + "&$filter=contains(" + WebApiExplorer._requiredAttributeName + 
+				",'" + WebApiExplorer._requiredAttributeValue + "')";
 
 			// store reference to 'this' so it can be used in the callback method
 			var thisRef = this;
 
 			// Invoke the Web API Retrieve Multiple call
-			this._context.webAPI.retrieveMultipleRecords(TSWebAPI._entityName, queryString).then
+			this._context.webAPI.retrieveMultipleRecords(WebApiExplorer._entityName, queryString).then
 			(
 				function (response: any) 
 				{
@@ -416,7 +416,7 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
 					for (let entity of response.entities)
 					{
 						// Retrieve the value of _currencyAttributeName field
-						let value:Number = entity[TSWebAPI._currencyAttributeName];
+						let value:Number = entity[WebApiExplorer._currencyAttributeName];
 						
 						// Check the value of _currencyAttributeName field and increment the correct counter
 						if (value == 100)
@@ -437,11 +437,11 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
 					let innerHtml: string = "Use above buttons to create or delete a record to see count update";
 					innerHtml += "<br />";
 					innerHtml += "<br />";
-					innerHtml += "Count of " + TSWebAPI._entityName + " records with " + TSWebAPI._currencyAttributeName + " of 100: " + count1;
+					innerHtml += "Count of " + WebApiExplorer._entityName + " records with " + WebApiExplorer._currencyAttributeName + " of 100: " + count1;
 					innerHtml += "<br />";
-					innerHtml += "Count of " + TSWebAPI._entityName + " records with " + TSWebAPI._currencyAttributeName + " of 200: " + count2;
+					innerHtml += "Count of " + WebApiExplorer._entityName + " records with " + WebApiExplorer._currencyAttributeName + " of 200: " + count2;
 					innerHtml += "<br />";
-					innerHtml += "Count of " + TSWebAPI._entityName + " records with " + TSWebAPI._currencyAttributeName + " of 300: " + count3;
+					innerHtml += "Count of " + WebApiExplorer._entityName + " records with " + WebApiExplorer._currencyAttributeName + " of 300: " + count3;
 
 					// Inject the HTML into the fetch xml status div
 					if (thisRef._odataStatusContainerDiv)
@@ -494,7 +494,7 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
 		 */
 		private getCreateRecordButtonLabel(entityNumber: string): string
 		{
-			return "Create record with " + TSWebAPI._currencyAttributeNameFriendlyName + " of " + entityNumber;
+			return "Create record with " + WebApiExplorer._currencyAttributeNameFriendlyName + " of " + entityNumber;
 		}
 
 		/**
