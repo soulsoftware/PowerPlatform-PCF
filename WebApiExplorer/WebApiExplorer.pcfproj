@@ -8,8 +8,8 @@
   <Import Project="$(PowerAppsTargetsPath)\Microsoft.PowerApps.VisualStudio.Pcf.props" Condition="Exists('$(PowerAppsTargetsPath)\Microsoft.PowerApps.VisualStudio.Pcf.props')"/>
   
   <PropertyGroup>
-    <Name>OfficeUIReactButton</Name>
-    <ProjectGuid>da1b96fa-0ea5-4e82-8a98-d52f3462ac14</ProjectGuid>
+    <Name>WebApiExplorer</Name>
+	  <ProjectGuid>3f346c91-67ae-407a-9455-80e5eea64786</ProjectGuid>
     <OutputPath>$(MSBuildThisFileDirectory)out\controls</OutputPath>
   </PropertyGroup>
 
