@@ -41,6 +41,13 @@ export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl
 	public updateView(context: ComponentFramework.Context<IInputs>): void {
 		// Add code to update control view; 
 
+		console.log( '<OfficeUIHourOnlyField>', 
+			'TimeValue.Format:', context.parameters.TimeValue.attributes?.Format,
+			'TimeValue.Behavior', context.parameters.TimeValue.attributes?.Behavior,
+			'TimeValue.ImeMode', context.parameters.TimeValue.attributes?.ImeMode
+		
+		)
+
 		const dt = new Date( 1899, 11, 31, 0, 0)
 		this.props = {
 			TimeValue:context.parameters.TimeValue.raw || dt,

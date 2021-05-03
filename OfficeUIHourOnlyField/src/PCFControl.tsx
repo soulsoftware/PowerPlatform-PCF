@@ -20,15 +20,6 @@ export function initialize() {
 }
 
 
-function formatTime( input:Date|string ) {
-  const format2digit = ( v:number ) => (v<=9 ) ? `0${v}` : `${v}` 
-
-  if( input instanceof Date ) {
-      return `${format2digit(input.getHours())}:${format2digit(input.getMinutes())}`
-  }
-
-  return input
-}
 /**
  * 
  * @param props 
@@ -38,17 +29,31 @@ export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldPro
   const {  disabled, DefaultDate, TimeValue, onTimeChange } = props;
   const TimeIcon: IIconProps = { iconName: 'DateTime2' };
 
+  const formatTime = ( input:Date|string ) => {
+    const format2digit = ( v:number ) => (v<=9) ? `0${v}` : `${v}` 
+  
+    if( input instanceof Date ) {
+        return `${format2digit(input.getHours())}:${format2digit(input.getMinutes())}`
+    }
+  
+    return input
+  }
+  
   const timeIsValid = ( value?:string ):Date|null => {
       if( !value ) return null
       const res = /(\d\d):(\d\d)/.exec(value)
       if( !res || res.length!= 3 ) return null
-      const h = parseInt(res[1])
-      if( h > 24 ) return null
-      const m = parseInt(res[2])
-      if( m > 60 ) return null
+
+      let hh = parseInt(res[1])
+      let mm = parseInt(res[2])
+      if( mm > 59 ) {
+        hh++
+        mm -= 60
+      }
+      if( hh > 23 ) return null
       const dt = new Date( DefaultDate.getTime() )
-      dt.setHours( h )
-      dt.setMinutes( m )
+      dt.setHours( hh )
+      dt.setMinutes( mm )
       return dt;
   }
 
