@@ -1,20 +1,20 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { ButtonAnchor, IPCFButtonProps, initialize } from './PCFButton';
+import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './PCFControl';
+
 
 export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl<IInputs, IOutputs> {
 	private theContainer: HTMLDivElement;
-	private props: IPCFButtonProps = {
-		MessageID: "",
-		Target: ""
-	}
+	
+	private props?: IPCFHourOnlyTextFieldProps
+
+	private notifyOutputChanged:() => void
 
 	/**
 	 * Empty constructor.
 	 */
 	constructor() {
-
 	}
 
 	/**
@@ -29,26 +29,32 @@ export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl
 		// Add control initialization code
 		
 		this.theContainer = container;
-		//this.notifyOutputChanged = notifyOutputChanged;
+		this.notifyOutputChanged = notifyOutputChanged;
 
 		initialize()
 	}
-
 
 	/**
 	 * Called when any value in the property bag has changed. This includes field values, data-sets, global values such as container height and width, offline status, control metadata values such as label, visible, etc.
 	 * @param context The entire property bag available to control via Context Object; It contains values as set up by the customizer mapped to names defined in the manifest, as well as utility functions
 	 */
 	public updateView(context: ComponentFramework.Context<IInputs>): void {
-		// Add code to update control view
-		this.props.MessageID = context.parameters.MessageID.raw!;
-		this.props.Target = context.parameters.Target.raw!;
+		// Add code to update control view; 
+
+		const dt = new Date( 1899, 11, 31, 0, 0)
+		this.props = {
+			TimeValue:context.parameters.TimeValue.raw || dt,
+			DefaultDate:context.parameters.DefaultDate.raw = dt,
+			onTimeChange:( value ) => {
+				if( this.props ) {
+					this.props.TimeValue = value
+					this.notifyOutputChanged()
+				}
+			}
+		}
 
 		ReactDOM.render(
-			React.createElement(
-				ButtonAnchor,
-				this.props
-			),
+			React.createElement( HourOnlyTextField, this.props ),
 			this.theContainer
 		);
 	}
@@ -58,7 +64,9 @@ export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl
 	 * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as “bound” or “output”
 	 */
 	public getOutputs(): IOutputs {
-		return {};
+		
+		return this.props || {}
+
 	}
 
 	/** 
