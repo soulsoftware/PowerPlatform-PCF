@@ -8,6 +8,7 @@ export interface IPCFHourOnlyTextFieldProps {
   DefaultDate: Date;
   TimeValue: Date;
   disabled?: boolean;  
+  isUTC:boolean;
 
   onTimeChange: OnTimeChangeHandler
 }
@@ -20,6 +21,12 @@ export function initialize() {
 }
 
 
+type TimeType  = {
+  h:number
+  m:number
+} 
+
+
 /**
  * 
  * @param props 
@@ -27,13 +34,33 @@ export function initialize() {
  */
 export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldProps> = props => {
   const {  disabled, DefaultDate, TimeValue, onTimeChange } = props;
+  
   const TimeIcon: IIconProps = { iconName: 'DateTime2' };
+ 
+  const getTime = (d:Date):TimeType => 
+      (props.isUTC) ? 
+        { h:d.getUTCHours(), m:d.getUTCMinutes() }  : 
+        { h:d.getHours(), m:d.getMinutes() } 
+
+  const setTime = (t:TimeType):Date => { 
+    const d = new Date( DefaultDate.getTime() )
+    if(props.isUTC) { 
+      d.setUTCHours(t.h)
+      d.setUTCMinutes(t.m)
+    } 
+    else {
+      d.setUTCHours(t.h) 
+      d.setUTCMinutes(t.m)
+    }
+    return d
+  }
 
   const formatTime = ( input:Date|string ) => {
     const format2digit = ( v:number ) => (v<=9) ? `0${v}` : `${v}` 
   
     if( input instanceof Date ) {
-        return `${format2digit(input.getHours())}:${format2digit(input.getMinutes())}`
+        const t = getTime(input) 
+        return `${format2digit(t.h)}:${format2digit(t.m)}`
     }
   
     return input
@@ -51,9 +78,9 @@ export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldPro
         mm -= 60
       }
       if( hh > 23 ) return null
-      const dt = new Date( DefaultDate.getTime() )
-      dt.setHours( hh )
-      dt.setMinutes( mm )
+
+      const dt = setTime( { h:hh, m:mm } )
+
       return dt;
   }
 

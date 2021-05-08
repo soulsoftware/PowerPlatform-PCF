@@ -40,18 +40,27 @@ export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl
 	 */
 	public updateView(context: ComponentFramework.Context<IInputs>): void {
 		// Add code to update control view; 
+        
+		/**
+         * DateTime Field Behavior options
+         * 0 - None - Unknown DateTime Behavior,
+         * 1 - UserLocal - Respect user local time. Dates stored as UTC,
+         * 3 - TimeZoneIndependent - Dates and time stored without conversion to UTC
+         */
+		const DateTimeFieldBehavior = context.parameters.TimeValue.attributes?.Behavior
 
 		console.log( '<OfficeUIHourOnlyField>', 
 			'TimeValue.Format:', context.parameters.TimeValue.attributes?.Format,
-			'TimeValue.Behavior', context.parameters.TimeValue.attributes?.Behavior,
+			'TimeValue.Behavior', DateTimeFieldBehavior,
 			'TimeValue.ImeMode', context.parameters.TimeValue.attributes?.ImeMode
 		
 		)
 
 		const dt = new Date( 1899, 11, 31, 0, 0)
 		this.props = {
-			TimeValue:context.parameters.TimeValue.raw || dt,
-			DefaultDate:context.parameters.DefaultDate.raw = dt,
+			TimeValue: context.parameters.TimeValue.raw || dt,
+			DefaultDate: context.parameters.DefaultDate.raw || dt,
+			isUTC:(1==DateTimeFieldBehavior),
 			onTimeChange:( value ) => {
 				if( this.props ) {
 					this.props.TimeValue = value
