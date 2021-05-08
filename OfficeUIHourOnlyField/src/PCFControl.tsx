@@ -7,8 +7,8 @@ export interface IPCFHourOnlyTextFieldProps {
   // These are set based on the toggles shown above the examples (not needed in real code)
   DefaultDate: Date;
   TimeValue: Date;
-  disabled?: boolean;  
   isUTC:boolean;
+  disabled?: boolean;  
 
   onTimeChange: OnTimeChangeHandler
 }
@@ -21,10 +21,7 @@ export function initialize() {
 }
 
 
-type TimeType  = {
-  h:number
-  m:number
-} 
+type TimeType  = { h:number, m:number } 
 
 
 /**
@@ -33,18 +30,18 @@ type TimeType  = {
  * @returns 
  */
 export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldProps> = props => {
-  const {  disabled, DefaultDate, TimeValue, onTimeChange } = props;
+  const {  disabled, DefaultDate, TimeValue, onTimeChange, isUTC } = props;
   
   const TimeIcon: IIconProps = { iconName: 'DateTime2' };
  
   const getTime = (d:Date):TimeType => 
-      (props.isUTC) ? 
+      (isUTC) ? 
         { h:d.getUTCHours(), m:d.getUTCMinutes() }  : 
         { h:d.getHours(), m:d.getMinutes() } 
 
   const setTime = (t:TimeType):Date => { 
     const d = new Date( DefaultDate.getTime() )
-    if(props.isUTC) { 
+    if(isUTC) { 
       d.setUTCHours(t.h)
       d.setUTCMinutes(t.m)
     } 
