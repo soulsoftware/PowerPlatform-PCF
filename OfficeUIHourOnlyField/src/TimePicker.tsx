@@ -40,7 +40,7 @@ function getTimeOptions( step:number, timeValue:Date, defaultDate:Date|null ) {
 
 	let options: IComboBoxOption[] = []
 
-	let firstDate = defaultDate || new Date(0, 0, 0)
+	let firstDate = (defaultDate) ? new Date(defaultDate) : new Date(0, 0, 0)
 	firstDate.setHours(0)
 	firstDate.setMinutes(0)
 
