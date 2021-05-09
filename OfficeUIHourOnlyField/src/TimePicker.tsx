@@ -1,42 +1,139 @@
 import * as React from 'react';
-import * as moment from 'moment'
+import './time.extension'
+import {
+	initializeIcons,
+	IIconProps,
+	ComboBox,
+	IComboBoxOption,
+	SelectableOptionMenuItemType,
+	IComboBoxStyles,
+	IComboBox
+} from 'office-ui-fabric-react';
 
-export class TimePicker extends React.Component {
+type OnTimeChangeHandler = (newValue: Date) => void
 
-	defaultValue: string
-	name: string
-	beginLimit: string
-	endLimit: string
-	step: number
+export interface IPCFHourOnlyTextFieldProps {
+	// These are set based on the toggles shown above the examples (not needed in real code)
+	DefaultDate: Date|null;
+	TimeValue: Date;
+	isUTC: boolean;
+	disabled?: boolean;
 
-	onChange: () => void 
+	onTimeChange: OnTimeChangeHandler
+}
+
+/**
+ * 
+ */
+export function initialize() {
+	initializeIcons()
+}
+
+type TimeOptions = { options:IComboBoxOption[], selectedKey?:string }
+/**
+ * 
+ * @param defaultDate 
+ * @param step 
+ * @returns 
+ */
+function getTimeOptions( step:number, timeValue:Date, defaultDate:Date|null ) {
+
+	let options: IComboBoxOption[] = []
+
+	let firstDate = defaultDate || new Date(0, 0, 0)
+	firstDate.setHours(0)
+	firstDate.setMinutes(0)
+
+	let selectedKey:string|undefined
+
+	let nextDate = firstDate
+
+	const timeEqual = ( d1:Date, d2:Date ) => {
+		const t1 = d1.getTimeObject()
+		const t2 = d2.getTimeObject()
 		
-	isEarlierThanEndLimit(timeValue:any, endLimit:any, lastValue:any) {
-		const timeValueIsEarlier = moment(timeValue, 'h:mmA').diff(moment(endLimit, 'h:mmA')) < 0
-		const timeValueIsLaterThanLastValue = lastValue === undefined ? true : moment(lastValue, 'h:mmA').diff(moment(timeValue, 'h:mmA')) < 0
-		return timeValueIsEarlier && timeValueIsLaterThanLastValue;
+		return t1.mm === t2.mm && t1.hh === t2.hh
 	}
 
-	render () {
-		let timeValue = this.beginLimit || "12:00AM";
-		let lastValue;
-    	let endLimit = this.endLimit || "11:59PM";
-		let step = this.step || 15;
+	options.push({ key: 'h_am', text: 'AM', itemType: SelectableOptionMenuItemType.Header })
+	options.push({ key: 'd_am', text: 'AM', itemType: SelectableOptionMenuItemType.Divider })
 
-		let options = [];
-		options.push(<option key={timeValue} value={timeValue}>{timeValue}</option>);
-		while ( this.isEarlierThanEndLimit(timeValue, endLimit, lastValue) ) 
-		{
-				lastValue = timeValue;
-				console.log(timeValue, moment(timeValue, 'h:mmA').diff(moment(endLimit, 'h:mmA'), 'minutes'));
-				timeValue = moment(timeValue, 'h:mmA').add(step, 'minutes').format('h:mmA');
-				options.push(<option key={timeValue} value={timeValue}>{timeValue}</option>)
+	while (firstDate.getDate() == nextDate.getDate() && nextDate.getTime12Object().am) {
+
+		const text = nextDate.toLocaleTimeObjectString('en-us')
+
+		if( timeEqual(timeValue, nextDate) ) {
+			console.log( 'selected key', text )
+			selectedKey = text
 		}
 
-		return(
-			<select defaultValue={this.defaultValue} onChange={this.onChange} name={this.name}>
-				{options}
-			</select>
-		)
+		options.push({ key: text, text: text, data:nextDate })
+
+		nextDate = nextDate.addMinutes(step)
 	}
+
+	options.push({ key: 'h_pm', text: 'PM', itemType: SelectableOptionMenuItemType.Header })
+	options.push({ key: 'd_pm', text: 'PM', itemType: SelectableOptionMenuItemType.Divider })
+
+	while (firstDate.getDate() == nextDate.getDate() && !nextDate.getTime12Object().am) {
+
+		const text = nextDate.toLocaleTimeObjectString('en-us')
+
+		if( timeEqual(timeValue, nextDate) ) {
+			console.log( 'selectedKey', text )
+			selectedKey = text
+		}
+
+		options.push({ key: text, text: text, data:nextDate })
+
+		nextDate = nextDate.addMinutes(step)
+	}
+
+	if( !selectedKey ) {
+		selectedKey = options[3].key as string
+	}
+	return { options:options, selectedKey:selectedKey }
+
 }
+
+/**
+ * 
+ * @param props 
+ * @returns 
+ */
+export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldProps> = props => {
+	const { disabled, DefaultDate, TimeValue, onTimeChange, isUTC } = props;
+
+	let step = 15;
+
+	const [options] = React.useState( () => getTimeOptions( step, TimeValue, DefaultDate ) ) 
+	const [selectedKey, setSelectedKey] = React.useState<string | number | undefined>( () => options.selectedKey );
+
+	const onChangeHandler = React.useCallback(
+	    (event: React.FormEvent<IComboBox>, option?: IComboBoxOption, index?: number, value?: string): void => {
+			if( option && option.data ) {
+				setSelectedKey(option.key)
+				onTimeChange( option.data )
+			}
+	    }, [])
+
+	// const onChangeHandler = (event: React.FormEvent<IComboBox>, option?: IComboBoxOption, index?: number, value?: string ) => {
+	// }
+
+	const comboBoxStyles: Partial<IComboBoxStyles> = { root: { maxWidth: 300 } };
+
+	const TimeIcon: IIconProps = { iconName: 'TimePicker' };
+
+	return (
+		<ComboBox
+			selectedKey={selectedKey}
+			onChange={onChangeHandler}
+			buttonIconProps={TimeIcon}
+			options={options.options}
+			styles={comboBoxStyles}
+		>
+		</ComboBox>
+	)
+}
+
+

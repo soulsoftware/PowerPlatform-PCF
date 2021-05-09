@@ -1,7 +1,8 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './PCFControl';
+// import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './PCFControl';
+import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './TimePicker';
 
 
 export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl<IInputs, IOutputs> {
@@ -50,17 +51,16 @@ export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl
 		const DateTimeFieldBehavior = context.parameters.TimeValue.attributes?.Behavior
 
 		console.log( '<OfficeUIHourOnlyField>', 
+			'DefaultDate:', context.parameters.DefaultDate.raw,
 			'TimeValue.Format:', context.parameters.TimeValue.attributes?.Format,
 			'TimeValue.Behavior', DateTimeFieldBehavior,
-			'TimeValue.ImeMode', context.parameters.TimeValue.attributes?.ImeMode
+			'TimeValue.ImeMode', context.parameters.TimeValue.attributes?.ImeMode,
 		
 		)
 
-		const dt = new Date( 1899, 11, 31, 0, 0)
 		this.props = {
-			TimeValue: context.parameters.TimeValue.raw || dt,
-			//DefaultDate: context.parameters.DefaultDate.raw ?? dt,
-			DefaultDate: dt,
+			TimeValue: context.parameters.TimeValue.raw || new Date( 0, 0, 0, 0, 0),
+			DefaultDate: context.parameters.DefaultDate.raw,
 			isUTC:(1==DateTimeFieldBehavior),
 			onTimeChange:( value ) => {
 				if( this.props ) {
