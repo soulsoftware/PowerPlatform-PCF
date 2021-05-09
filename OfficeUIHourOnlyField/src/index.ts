@@ -51,6 +51,7 @@ export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl
 		const DateTimeFieldBehavior = context.parameters.TimeValue.attributes?.Behavior
 
 		console.log( '<OfficeUIHourOnlyField>', 
+			'TimeValue:', context.parameters.TimeValue.raw ,
 			'DefaultDate:', context.parameters.DefaultDate.raw,
 			'TimeValue.Format:', context.parameters.TimeValue.attributes?.Format,
 			'TimeValue.Behavior', DateTimeFieldBehavior,
