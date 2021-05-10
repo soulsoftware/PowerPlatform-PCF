@@ -79,3 +79,22 @@ it( 'time util UTC tests', () => {
     expect(to).toEqual( { hh:23, mm:0 })
 
 })
+
+
+it( 'parse date from string', () => {
+    const defaultDate = new Date( 1899, 11, 31, 0, 0)
+
+    //const dt = new Date( '1899-12-31 10:00 PM')
+    const dt = new Date( `${defaultDate.toDateString()} 10:00 PM`)
+
+    expect(dt.getTime()).not.toBeNaN()
+
+    console.log( 'parsed date', dt )
+    console.log( 'parsed date', dt.toLocaleDateString('en-us', options) )
+
+    const dterr = new Date( '1899-12-31 10:BB P')
+
+    expect(dterr.getTime()).toBeNaN()
+
+    console.log( 'parsed date', dterr.toLocaleDateString('en-us', options) )
+})

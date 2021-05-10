@@ -2,13 +2,15 @@ import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 // import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './PCFControl';
-import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './TimePicker';
+// import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './TimePicker';
+import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './TimePicker2';
 
 
 export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl<IInputs, IOutputs> {
 	private theContainer: HTMLDivElement;
 	
 	private props?: IPCFHourOnlyTextFieldProps
+	private output: IOutputs = {}
 
 	private notifyOutputChanged:() => void
 
@@ -60,14 +62,12 @@ export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl
 		)
 
 		this.props = {
-			TimeValue: context.parameters.TimeValue.raw || new Date( 0, 0, 0, 0, 0),
+			TimeValue: context.parameters.TimeValue.raw,
 			DefaultDate: context.parameters.DefaultDate.raw,
 			isUTC:(1==DateTimeFieldBehavior),
 			onTimeChange:( value ) => {
-				if( this.props ) {
-					this.props.TimeValue = value
-					this.notifyOutputChanged()
-				}
+				this.output.TimeValue = value
+				this.notifyOutputChanged()
 			}
 		}
 
@@ -82,9 +82,7 @@ export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl
 	 * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as “bound” or “output”
 	 */
 	public getOutputs(): IOutputs {
-		
-		return this.props || {}
-
+		return this.output
 	}
 
 	/** 
