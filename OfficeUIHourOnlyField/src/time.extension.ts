@@ -32,9 +32,13 @@ Date.prototype.getTime12Object = function() { 
 
     const result:Time12Object = { hh:this.getHours() - 12, mm:this.getMinutes(), am:false }
     
-    if( result.hh === 0 || result.hh === -12 ) {
+    if( result.hh === -12 ) {
         result.hh = 12
-        result.am = ( result.mm === 0 ) 
+        result.am = true
+    }
+    else if( result.hh === 0 ) {
+        result.hh = 12
+        result.am = false
     }
     else if( result.hh < 0 ) {
         result.hh = 12 + result.hh
