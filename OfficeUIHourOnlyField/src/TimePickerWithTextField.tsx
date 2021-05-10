@@ -25,7 +25,6 @@ export function initialize() {
 	initializeIcons()
 }
 
-
 /**
  * 
  * @param props 
@@ -48,7 +47,7 @@ export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldPro
 
 	const onChangeHandler = React.useCallback(
 	    (event: React.FormEvent<HTMLInputElement|HTMLTextAreaElement>, value?: string): void => {
-			console.log( 'onChangeHandler', value )
+			// console.log( 'onChangeHandler', value )
 			if( value ) {
 				setTimeValueField( value )
 				const checkDate = new Date( `${defDate.toDateString()} ${value}`)

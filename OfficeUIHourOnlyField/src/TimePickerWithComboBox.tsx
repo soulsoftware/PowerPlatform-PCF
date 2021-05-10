@@ -58,9 +58,9 @@ function getTimeOptions( step:number, timeValue:Date, defaultDate:Date|null ) {
 	options.push({ key: 'h_am', text: 'AM', itemType: SelectableOptionMenuItemType.Header })
 	options.push({ key: 'd_am', text: 'AM', itemType: SelectableOptionMenuItemType.Divider })
 
-	while (firstDate.getDate() == nextDate.getDate() && nextDate.getTime12Object().am) {
+	while (firstDate.getDate() == nextDate.getDate() && nextDate.getTimeObject({hour12:true}).am) {
 
-		const text = nextDate.toLocaleTimeObjectString('en-us')
+		const text = nextDate.toLocaleTimeString('en-us', { hour: "2-digit", minute: "2-digit" } )
 
 		if( timeEqual(timeValue, nextDate) ) {
 			console.log( 'selected key', text )
@@ -75,9 +75,9 @@ function getTimeOptions( step:number, timeValue:Date, defaultDate:Date|null ) {
 	options.push({ key: 'h_pm', text: 'PM', itemType: SelectableOptionMenuItemType.Header })
 	options.push({ key: 'd_pm', text: 'PM', itemType: SelectableOptionMenuItemType.Divider })
 
-	while (firstDate.getDate() == nextDate.getDate() && !nextDate.getTime12Object().am) {
+	while (firstDate.getDate() == nextDate.getDate() && !nextDate.getTimeObject({hour12:true}).am) {
 
-		const text = nextDate.toLocaleTimeObjectString('en-us')
+		const text = nextDate.toLocaleTimeString('en-us', { hour: "2-digit", minute: "2-digit" })
 
 		if( timeEqual(timeValue, nextDate) ) {
 			console.log( 'selectedKey', text )

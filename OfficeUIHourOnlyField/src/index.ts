@@ -1,9 +1,8 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-// import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './PCFControl';
-// import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './TimePicker';
-import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './TimePicker2';
+
+import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './TimePickerWithTextField';
 
 
 export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl<IInputs, IOutputs> {
@@ -60,7 +59,7 @@ export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl
 			'TimeValue.ImeMode', context.parameters.TimeValue.attributes?.ImeMode,
 		
 		)
-
+		
 		this.props = {
 			TimeValue: context.parameters.TimeValue.raw,
 			DefaultDate: context.parameters.DefaultDate.raw,

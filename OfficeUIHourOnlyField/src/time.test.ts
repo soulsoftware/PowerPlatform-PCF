@@ -7,6 +7,11 @@ const options: Intl.DateTimeFormatOptions = {
     day: "numeric", 
     hour: "2-digit", 
     minute: "2-digit"  
+}; 
+
+const optionHours: Intl.DateTimeFormatOptions = {  
+    hour: "2-digit", 
+    minute: "2-digit"  
 };  
 
 it( 'first date', () => {
@@ -49,23 +54,23 @@ it( 'time util tests', () => {
     dt.setTimeObject( { hh:24, mm:0 } )
     
     expect(dt.getTimeObject()).toEqual( { hh:0, mm:0 })
-    expect(dt.getTime12Object()).toEqual( { hh:12, mm:0, am:true })
-    expect(dt.toLocaleTimeObjectString()).toEqual( '00:00' )
-    expect(dt.toLocaleTimeObjectString('en-us')).toEqual( '12:00 AM' )
+    expect(dt.getTimeObject({hour12:true})).toEqual( { hh:12, mm:0, am:true })
+    expect(dt.toLocaleTimeString( undefined, optionHours)).toEqual( '00:00' )
+    expect(dt.toLocaleTimeString('en-us', optionHours)).toEqual( '12:00 AM' )
 
     dt.setTimeObject( { hh:23, mm:0 } )
 
     expect(dt.getTimeObject()).toEqual( { hh:23, mm:0 })
-    expect(dt.getTime12Object()).toEqual( { hh:11, mm:0, am:false })
-    expect(dt.toLocaleTimeObjectString()).toEqual( '23:00' )
-    expect(dt.toLocaleTimeObjectString('en-us')).toEqual( '11:00 PM' )
+    expect(dt.getTimeObject( {hour12:true} )).toEqual( { hh:11, mm:0, am:false })
+    expect(dt.toLocaleTimeString(undefined, optionHours)).toEqual( '23:00' )
+    expect(dt.toLocaleTimeString('en-us', optionHours)).toEqual( '11:00 PM' )
 
     dt.setTimeObject( { hh:12, mm:59 } )
 
     expect(dt.getTimeObject()).toEqual( { hh:12, mm:59 })
-    expect(dt.getTime12Object()).toEqual( { hh:12, mm:59, am:false })
-    expect(dt.toLocaleTimeObjectString()).toEqual( '12:59' )
-    expect(dt.toLocaleTimeObjectString('en-us')).toEqual( '12:59 PM' )
+    expect(dt.getTimeObject({hour12:true})).toEqual( { hh:12, mm:59, am:false })
+    expect(dt.toLocaleTimeString(undefined, optionHours)).toEqual( '12:59' )
+    expect(dt.toLocaleTimeString('en-us', optionHours)).toEqual( '12:59 PM' )
 
 })
 

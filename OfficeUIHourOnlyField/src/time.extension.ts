@@ -1,20 +1,18 @@
 type TimeObject  = { 
     hh:number, 
-    mm:number
+    mm:number,
+    am?:boolean
 } 
-
-type Time12Object = TimeObject & { am: boolean } 
 
 
 declare interface Date {
-    getTimeObject():TimeObject
-    getTime12Object():Time12Object
+    getTimeObject( options?: Intl.DateTimeFormatOptions ):TimeObject
 
     setTimeObject( t:TimeObject  ):void
 
     addMinutes( minutes:number ):Date
     
-    toLocaleTimeObjectString(locales?: string | string[]):string
+    // toLocaleTimeObjectString(locales?: string | string[]):string
     
     toTimeZoneIndependentString( options?: Intl.DateTimeFormatOptions ):string
     toTimeZoneDependentString( options?: Intl.DateTimeFormatOptions ):string
@@ -28,28 +26,31 @@ Date.prototype.addMinutes = function( minutes:number) {
     return result
 }
 
-Date.prototype.getTime12Object = function() { 
+Date.prototype.getTimeObject = function( options?: Intl.DateTimeFormatOptions ):TimeObject { 
 
-    const result:Time12Object = { hh:this.getHours() - 12, mm:this.getMinutes(), am:false }
+    if( options?.hour12 ) {
+        const result:TimeObject = { 
+            hh:this.getHours() - 12, 
+            mm:this.getMinutes(), 
+            am:false 
+        }
     
-    if( result.hh === -12 ) {
-        result.hh = 12
-        result.am = true
-    }
-    else if( result.hh === 0 ) {
-        result.hh = 12
-        result.am = false
-    }
-    else if( result.hh < 0 ) {
-        result.hh = 12 + result.hh
-        result.am = true
+        if( result.hh === 0 ) {
+            result.hh = 12
+        }
+        else if( result.hh === -12 ) {
+            result.hh = 12
+            result.am = true
+        }
+        else if( result.hh < 0 ) {
+            result.hh = 12 + result.hh
+            result.am = true
+        }
+    
+        return result     
     }
 
-    return result 
-}
-
-Date.prototype.getTimeObject = function() { 
-    return { hh:this.getHours(), mm:this.getMinutes() }  
+    return { hh:this.getHours(), mm:this.getMinutes() } 
 }
 
 Date.prototype.setTimeObject = function(t:TimeObject) { 
@@ -61,61 +62,45 @@ Date.prototype.toTimeZoneIndependentString = function( options?: Intl.DateTimeFo
 
     const twodigit = ( v:number) =>  (v < 10) ? `0${v}` : `${v}` 
 
-    console.log( 'toTimeZoneIndependentString:', 'start', this.toString() )
-
     const tmpDate = this.addMinutes( this.getTimezoneOffset() )
 
-    console.log( 'toTimeZoneIndependentString:', 'after timezone adjustment',  tmpDate.toString() )
-
-    if( options?.hour12 ) {
-        const t = tmpDate.getTime12Object()
-        const result = `${twodigit(t.hh)}:${twodigit(t.mm)} ${(t.am) ? 'AM': 'PM'}`
-
-        console.log( 'toTimeZoneIndependentString:', 'format time',  result )
-        return result
-    }
+    const t = tmpDate.getTimeObject( options )
     
-    const t = tmpDate.getTimeObject()
+    if( options?.hour12 ) {    
+        return `${twodigit(t.hh)}:${twodigit(t.mm)} ${(t.am) ? 'AM': 'PM'}`
+    }  
+
     return `${twodigit(t.hh)}:${twodigit(t.mm)}`
-    
+
 }
 
 Date.prototype.toTimeZoneDependentString = function( options?: Intl.DateTimeFormatOptions ) {
 
     const twodigit = ( v:number) =>  (v < 10) ? `0${v}` : `${v}` 
 
-    console.log( 'toTimeZoneDependentString:', 'start', this.toString() )
-
-    const tmpDate = this
-
-    console.log( 'toTimeZoneDependentString:', 'after timezone adjustment',  tmpDate.toString() )
+    const t = this.getTimeObject( options )
 
     if( options?.hour12 ) {
-        const t = tmpDate.getTime12Object()
-        const result = `${twodigit(t.hh)}:${twodigit(t.mm)} ${(t.am) ? 'AM': 'PM'}`
-
-        console.log( 'toTimeZoneDependentString:', 'format time',  result )
-        return result
+        return `${twodigit(t.hh)}:${twodigit(t.mm)} ${(t.am) ? 'AM': 'PM'}`
     }
     
-    const t = tmpDate.getTimeObject()
     return `${twodigit(t.hh)}:${twodigit(t.mm)}`
     
 }
 
 
-Date.prototype.toLocaleTimeObjectString = function(locales?: string | string[]) {
+// Date.prototype.toLocaleTimeObjectString = function(locales?: string | string[]) {
 
-    let options: Intl.DateTimeFormatOptions = {  
-        //weekday: "short", 
-        //year: "numeric", 
-        //month: "short",  
-        //day: "numeric", 
-        hour: "2-digit", 
-        minute: "2-digit"
+//     let options: Intl.DateTimeFormatOptions = {  
+//         //weekday: "short", 
+//         //year: "numeric", 
+//         //month: "short",  
+//         //day: "numeric", 
+//         hour: "2-digit", 
+//         minute: "2-digit"
       
-    };  
+//     };  
     
-    return this.toLocaleTimeString(locales, options); 
+//     return this.toLocaleTimeString(locales, options); 
 
-}
+// }
