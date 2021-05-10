@@ -31,7 +31,7 @@ Date.prototype.getTime12Object = function() { 
 
     const result:Time12Object = { hh:this.getHours() - 12, mm:this.getMinutes(), am:false }
     
-    if( result.hh === 0 ) {
+    if( result.hh === 0 || result.hh === -12 ) {
         result.hh = 12
         result.am = ( result.mm === 0 ) 
     }
@@ -67,7 +67,7 @@ Date.prototype.toTimeZoneIndependentString = function( options?: Intl.DateTimeFo
         const result = `${twodigit(t.hh)}:${twodigit(t.mm)} ${(t.am) ? 'AM': 'PM'}`
 
         console.log( 'toTimeZoneIndependentString:', 'format time',  result )
-
+        return result
     }
     
     const t = tmpDate.getTimeObject()
