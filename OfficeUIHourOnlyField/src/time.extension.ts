@@ -36,7 +36,7 @@ Date.prototype.getTime12Object = function() { 
         result.am = ( result.mm === 0 ) 
     }
     else if( result.hh < 0 ) {
-        result.hh = Math.abs(result.hh) 
+        result.hh = 12 + result.hh
         result.am = true
     }
 
@@ -56,11 +56,18 @@ Date.prototype.toTimeZoneIndependentString = function( options?: Intl.DateTimeFo
 
     const twodigit = ( v:number) =>  (v < 10) ? `0${v}` : `${v}` 
 
+    console.log( 'toTimeZoneIndependentString:', 'start', this.toString() )
+
     const tmpDate = this.addMinutes( this.getTimezoneOffset() )
+
+    console.log( 'toTimeZoneIndependentString:', 'after timezone adjustment',  tmpDate.toString() )
 
     if( options?.hour12 ) {
         const t = tmpDate.getTime12Object()
-        return `${twodigit(t.hh)}:${twodigit(t.mm)} ${(t.am) ? 'AM': 'PM'}`
+        const result = `${twodigit(t.hh)}:${twodigit(t.mm)} ${(t.am) ? 'AM': 'PM'}`
+
+        console.log( 'toTimeZoneIndependentString:', 'format time',  result )
+
     }
     
     const t = tmpDate.getTimeObject()
