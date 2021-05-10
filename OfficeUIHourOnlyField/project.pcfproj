@@ -11,6 +11,7 @@
     <Name>OfficeUI-HourOnly-Field</Name>
     <ProjectGuid>da1b96fa-0ea5-4e82-8a98-d52f3462ac14</ProjectGuid>
     <OutputPath>$(MSBuildThisFileDirectory)out\controls</OutputPath>
+    <PcfBuildMode>production</PcfBuildMode>
   </PropertyGroup>
 
   <PropertyGroup>

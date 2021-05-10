@@ -1,13 +1,15 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './PCFControl';
+
+import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './TimePickerWithTextField';
 
 
 export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl<IInputs, IOutputs> {
 	private theContainer: HTMLDivElement;
 	
 	private props?: IPCFHourOnlyTextFieldProps
+	private output: IOutputs = {}
 
 	private notifyOutputChanged:() => void
 
@@ -50,23 +52,21 @@ export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl
 		const DateTimeFieldBehavior = context.parameters.TimeValue.attributes?.Behavior
 
 		console.log( '<OfficeUIHourOnlyField>', 
+			'TimeValue:', context.parameters.TimeValue.raw ,
+			'DefaultDate:', context.parameters.DefaultDate.raw,
 			'TimeValue.Format:', context.parameters.TimeValue.attributes?.Format,
 			'TimeValue.Behavior', DateTimeFieldBehavior,
-			'TimeValue.ImeMode', context.parameters.TimeValue.attributes?.ImeMode
+			'TimeValue.ImeMode', context.parameters.TimeValue.attributes?.ImeMode,
 		
 		)
-
-		const dt = new Date( 1899, 11, 31, 0, 0)
+		
 		this.props = {
-			TimeValue: context.parameters.TimeValue.raw ?? dt,
-			//DefaultDate: context.parameters.DefaultDate.raw ?? dt,
-			DefaultDate: dt,
-			isUTC:(1==DateTimeFieldBehavior),
+			TimeValue: context.parameters.TimeValue.raw,
+			DefaultDate: context.parameters.DefaultDate.raw,
+			TimeZoneIndependent:(3==DateTimeFieldBehavior),
 			onTimeChange:( value ) => {
-				if( this.props ) {
-					this.props.TimeValue = value
-					this.notifyOutputChanged()
-				}
+				this.output.TimeValue = value
+				this.notifyOutputChanged()
 			}
 		}
 
@@ -81,9 +81,7 @@ export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl
 	 * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as “bound” or “output”
 	 */
 	public getOutputs(): IOutputs {
-		
-		return this.props || {}
-
+		return this.output
 	}
 
 	/** 

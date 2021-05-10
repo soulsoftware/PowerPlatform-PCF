@@ -6,15 +6,19 @@
     "build": "pcf-scripts build",
     "clean": "pcf-scripts clean",
     "rebuild": "pcf-scripts rebuild",
-    "start": "pcf-scripts start"
+    "start": "pcf-scripts start",
+    "test": "jest"
   },
   "dependencies": {
     "@types/powerapps-component-framework": "^1.2.3",
     "office-ui-fabric-react": "^7.166.2"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.23",
     "@types/node": "^12.20.7",
+    "jest": "^26.6.3",
     "pcf-scripts": "^1.5.5",
-    "pcf-start": "^1.5.5"
+    "pcf-start": "^1.5.5",
+    "ts-jest": "^26.5.6"
   }
 }
