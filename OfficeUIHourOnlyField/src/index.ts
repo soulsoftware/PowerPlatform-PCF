@@ -64,7 +64,7 @@ export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl
 		this.props = {
 			TimeValue: context.parameters.TimeValue.raw,
 			DefaultDate: context.parameters.DefaultDate.raw,
-			isUTC:(1==DateTimeFieldBehavior),
+			TimeZoneIndependent:(1==DateTimeFieldBehavior),
 			onTimeChange:( value ) => {
 				this.output.TimeValue = value
 				this.notifyOutputChanged()
