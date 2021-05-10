@@ -19,6 +19,7 @@ declare interface Date {
     
     toLocaleTimeObjectString(ocales?: string | string[]):string
     
+    toTimeObjectString( options: Intl.DateTimeFormatOptions ):string
 }
 
 Date.prototype.addMinutes = function( minutes:number) {
@@ -78,6 +79,20 @@ Date.prototype.setTimeObject = function(t:TimeObject) {
     this.setMinutes(t.mm)
 } 
 
+Date.prototype.toTimeObjectString = function( options: Intl.DateTimeFormatOptions ) {
+
+    const twodigit = ( v:number) =>  (v < 10) ? `0${v}` : `${v}` 
+    
+    if( options.hour12 ) {
+        const t = this.getTime12Object()
+        return `${twodigit(t.hh)}:${twodigit(t.mm)} ${(t.am) ? 'AM': 'PM'}`
+    }
+    
+    const t = this.getTimeObject()
+    return `${twodigit(t.hh)}:${twodigit(t.mm)}`
+    
+}
+
 
 Date.prototype.toLocaleTimeObjectString = function(locales?: string | string[]) {
 
@@ -87,7 +102,8 @@ Date.prototype.toLocaleTimeObjectString = function(locales?: string | string[]) 
         //month: "short",  
         //day: "numeric", 
         hour: "2-digit", 
-        minute: "2-digit"  
+        minute: "2-digit"
+      
     };  
     
     return this.toLocaleTimeString(locales, options); 

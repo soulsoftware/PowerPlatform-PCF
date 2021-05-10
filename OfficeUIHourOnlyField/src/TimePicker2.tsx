@@ -35,8 +35,8 @@ export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldPro
 	const { disabled, DefaultDate, TimeValue, onTimeChange, isUTC } = props;
 
 	const [timeValueField, setTimeValueField] = React.useState( () => 
-		( TimeValue != null ) ? TimeValue.toLocaleTimeObjectString('en-us') : '');
-	
+		( TimeValue != null ) ? TimeValue.toTimeObjectString( { hour12:true } ): '')
+			
 	const [errorMessage, setErrorMessage] = React.useState('');
 
 	const onChangeHandler = React.useCallback(
