@@ -12,7 +12,7 @@ export interface IPCFHourOnlyTextFieldProps {
 	// These are set based on the toggles shown above the examples (not needed in real code)
 	DefaultDate: Date|null;
 	TimeValue: Date|null;
-	isUTC: boolean;
+	TimeZoneIndependent: boolean;
 	disabled?: boolean;
 
 	onTimeChange: OnTimeChangeHandler
@@ -32,12 +32,12 @@ export function initialize() {
  * @returns 
  */
 export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldProps> = props => {
-	const { disabled, DefaultDate, TimeValue, onTimeChange, isUTC } = props;
+	const { disabled, DefaultDate, TimeValue, onTimeChange, TimeZoneIndependent } = props;
 
 	const defDate = ( DefaultDate == null ) ? new Date( 1899, 11, 31, 0, 0) : new Date( DefaultDate )
 
 	const [timeValueField, setTimeValueField] = React.useState( () => 
-		( TimeValue != null ) ? TimeValue.toUTCTimeObjectString( { hour12:true } ): '')
+		( TimeValue != null ) ? TimeValue.toTimeZoneIndependentString( { hour12:true } ): '')
 
 	const [errorMessage, setErrorMessage] = React.useState('');
 

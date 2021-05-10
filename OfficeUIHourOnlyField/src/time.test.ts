@@ -69,18 +69,6 @@ it( 'time util tests', () => {
 
 })
 
-
-it( 'time util UTC tests', () => {
-
-    const dt = new Date( 1899, 11, 31, 0, 0)
-
-    const to = dt.getUTCTimeObject()
-
-    expect(to).toEqual( { hh:23, mm:0 })
-
-})
-
-
 it( 'parse date from string', () => {
     const defaultDate = new Date( 1899, 11, 31, 0, 0)
 
@@ -89,21 +77,39 @@ it( 'parse date from string', () => {
 
     expect(dt.getTime()).not.toBeNaN()
 
-    console.log( 'parsed date', dt )
-    console.log( 'parsed date', dt.toLocaleDateString('en-us', options) )
+    // console.log( 'parsed date', dt )
+    // console.log( 'parsed date', dt.toLocaleDateString('en-us', options) )
 
     const dterr = new Date( '1899-12-31 10:BB P')
 
     expect(dterr.getTime()).toBeNaN()
 
-    console.log( 'parsed date', dterr.toLocaleDateString('en-us', options) )
+    //console.log( 'parsed date', dterr.toLocaleDateString('en-us', options) )
 })
 
 it( 'format time test', () => {
 
+    
     const dt = new Date( 1899, 11, 31, 23, 30)   
     
-    expect( dt.toUTCTimeObjectString( )).toEqual('22:30')
+    expect( dt.toTimeZoneIndependentString( )).toEqual('22:30')
     expect( dt.toLocaleTimeObjectString( 'en-us' )).toEqual('11:30 PM')
-    expect( dt.toUTCTimeObjectString( { hour12:true } )).toEqual('10:30 PM')
+    expect( dt.toTimeZoneIndependentString( { hour12:true } )).toEqual('10:30 PM')
+
+    {
+    const dt = new Date( 1899, 11, 31, 23, 30)   
+
+    const hh = dt.getHours()
+    const mm = dt.getMinutes()
+    const tz = dt.getTimezoneOffset()
+
+    console.log( 'hh:mm', hh, mm, tz )
+    
+    const dt1 = dt.addMinutes( tz )
+
+    const hh1 = dt1.getHours()
+    const mm1 = dt1.getMinutes()
+    const tz1 = dt1.getTimezoneOffset()
+    console.log( 'hh:mm', hh1, mm1, tz1 )
+    }
 })
