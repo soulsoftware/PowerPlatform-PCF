@@ -34,9 +34,11 @@ export function initialize() {
 export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldProps> = props => {
 	const { disabled, DefaultDate, TimeValue, onTimeChange, isUTC } = props;
 
+	const defDate = ( DefaultDate == null ) ? new Date( 1899, 11, 31, 0, 0) : new Date( DefaultDate )
+
 	const [timeValueField, setTimeValueField] = React.useState( () => 
 		( TimeValue != null ) ? TimeValue.toTimeObjectString( { hour12:true } ): '')
-			
+
 	const [errorMessage, setErrorMessage] = React.useState('');
 
 	const onChangeHandler = React.useCallback(
@@ -44,7 +46,7 @@ export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldPro
 			console.log( 'onChangeHandler', value )
 			if( value ) {
 				setTimeValueField( value )
-				const checkDate = new Date( `${DefaultDate?.toDateString()} ${value}`)
+				const checkDate = new Date( `${defDate.toDateString()} ${value}`)
 				if( !isNaN(checkDate.getTime()) ) {
 					onTimeChange( checkDate )
 					setErrorMessage('')
