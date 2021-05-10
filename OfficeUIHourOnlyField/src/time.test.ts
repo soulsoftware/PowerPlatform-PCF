@@ -93,8 +93,9 @@ it( 'format time test', () => {
     const dt = new Date( 1899, 11, 31, 23, 30)   
     
     expect( dt.toTimeZoneIndependentString( )).toEqual('22:30')
-    expect( dt.toLocaleTimeObjectString( 'en-us' )).toEqual('11:30 PM')
+    expect( dt.toTimeZoneDependentString()).toEqual('23:30')
     expect( dt.toTimeZoneIndependentString( { hour12:true } )).toEqual('10:30 PM')
+    expect( dt.toTimeZoneDependentString( { hour12:true })).toEqual('11:30 PM')
 
     {
     const dt = new Date( 1899, 11, 31, 23, 30)   

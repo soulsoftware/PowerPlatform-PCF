@@ -6,7 +6,7 @@ import {
 	TextField
 } from 'office-ui-fabric-react';
 
-type OnTimeChangeHandler = (newValue: Date) => void
+type OnTimeChangeHandler = (newValue?: Date) => void
 
 export interface IPCFHourOnlyTextFieldProps {
 	// These are set based on the toggles shown above the examples (not needed in real code)
@@ -36,8 +36,13 @@ export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldPro
 
 	const defDate = ( DefaultDate == null ) ? new Date( 1899, 11, 31, 0, 0) : new Date( DefaultDate )
 
-	const [timeValueField, setTimeValueField] = React.useState( () => 
-		( TimeValue != null ) ? TimeValue.toTimeZoneIndependentString( { hour12:true } ): '')
+	const [timeValueField, setTimeValueField] = React.useState( () => 		
+		( TimeValue != null ) ?
+			(( TimeZoneIndependent ) ?
+						TimeValue.toTimeZoneIndependentString( { hour12:true } ) :
+						TimeValue.toTimeZoneDependentString( { hour12:true } )) : 
+						''
+	)
 
 	const [errorMessage, setErrorMessage] = React.useState('');
 
@@ -55,12 +60,18 @@ export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldPro
 					setErrorMessage('Time is not valid!')
 				}
 			}
+			else {
+				setErrorMessage('')
+				setTimeValueField( '' )
+				onTimeChange( undefined )
+			}
 	    }, [])
 
 	const TimeIcon: IIconProps = { iconName: 'Clock' };
 
 	return (
 		<TextField
+			placeholder="---"
 			onChange={onChangeHandler}
 			iconProps={TimeIcon}
 			value={timeValueField}

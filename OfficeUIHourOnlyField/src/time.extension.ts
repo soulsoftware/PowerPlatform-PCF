@@ -17,6 +17,7 @@ declare interface Date {
     toLocaleTimeObjectString(locales?: string | string[]):string
     
     toTimeZoneIndependentString( options?: Intl.DateTimeFormatOptions ):string
+    toTimeZoneDependentString( options?: Intl.DateTimeFormatOptions ):string
 }
 
 Date.prototype.addMinutes = function( minutes:number) {
@@ -67,6 +68,29 @@ Date.prototype.toTimeZoneIndependentString = function( options?: Intl.DateTimeFo
         const result = `${twodigit(t.hh)}:${twodigit(t.mm)} ${(t.am) ? 'AM': 'PM'}`
 
         console.log( 'toTimeZoneIndependentString:', 'format time',  result )
+        return result
+    }
+    
+    const t = tmpDate.getTimeObject()
+    return `${twodigit(t.hh)}:${twodigit(t.mm)}`
+    
+}
+
+Date.prototype.toTimeZoneDependentString = function( options?: Intl.DateTimeFormatOptions ) {
+
+    const twodigit = ( v:number) =>  (v < 10) ? `0${v}` : `${v}` 
+
+    console.log( 'toTimeZoneDependentString:', 'start', this.toString() )
+
+    const tmpDate = this
+
+    console.log( 'toTimeZoneDependentString:', 'after timezone adjustment',  tmpDate.toString() )
+
+    if( options?.hour12 ) {
+        const t = tmpDate.getTime12Object()
+        const result = `${twodigit(t.hh)}:${twodigit(t.mm)} ${(t.am) ? 'AM': 'PM'}`
+
+        console.log( 'toTimeZoneDependentString:', 'format time',  result )
         return result
     }
     
