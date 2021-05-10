@@ -98,3 +98,12 @@ it( 'parse date from string', () => {
 
     console.log( 'parsed date', dterr.toLocaleDateString('en-us', options) )
 })
+
+it( 'format time test', () => {
+
+    const dt = new Date( 1899, 11, 31, 23, 30)   
+    
+    expect( dt.toUTCTimeObjectString( )).toEqual('22:30')
+    expect( dt.toLocaleTimeObjectString( 'en-us' )).toEqual('11:30 PM')
+    expect( dt.toUTCTimeObjectString( { hour12:true } )).toEqual('10:30 PM')
+})

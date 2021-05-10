@@ -37,7 +37,7 @@ export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldPro
 	const defDate = ( DefaultDate == null ) ? new Date( 1899, 11, 31, 0, 0) : new Date( DefaultDate )
 
 	const [timeValueField, setTimeValueField] = React.useState( () => 
-		( TimeValue != null ) ? TimeValue.toTimeObjectString( { hour12:true } ): '')
+		( TimeValue != null ) ? TimeValue.toUTCTimeObjectString( { hour12:true } ): '')
 
 	const [errorMessage, setErrorMessage] = React.useState('');
 
@@ -57,7 +57,7 @@ export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldPro
 			}
 	    }, [])
 
-	const TimeIcon: IIconProps = { iconName: 'TimePicker' };
+	const TimeIcon: IIconProps = { iconName: 'Clock' };
 
 	return (
 		<TextField
