@@ -13,3 +13,4 @@ out/
 # msbuild output directories
 bin/
 obj/
+ExportToExcelButton/~/Library/Microsoft/PowerAppsCli/usersettings.json
