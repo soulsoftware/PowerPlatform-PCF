@@ -19,7 +19,7 @@
     <property name="Font" display-name-key="Property_Font" description-key="Property_Font" of-type="SingleLine.Text" usage="bound" required="true" default-value="verdana"/>
     <property name="BackgroundColor" display-name-key="Property_BackgroundColor" description-key="Property_BackgroundColor" of-type="SingleLine.Text" usage="bound" required="true" default-value="Purple"/>
     -->
-    
+
     <!--
       Property node's of-type attribute can be of-type-group attribute.
       Example:
