@@ -1,7 +1,7 @@
 import {IInputs, IOutputs} from "./generated/ManifestTypes";
 import { ExportToExcelControl, IControlProps, initializeControl } from "./control";
-import ReactDOM = require("react-dom");
-import React = require("react");
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
