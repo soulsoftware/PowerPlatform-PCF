@@ -11,6 +11,8 @@
   "dependencies": {
     "@types/powerapps-component-framework": "^1.2.3",
     "office-ui-fabric-react": "^7.166.2",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "xlsx": "^0.15.2"
   },
   "devDependencies": {
