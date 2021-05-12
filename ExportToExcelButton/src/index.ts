@@ -1,5 +1,5 @@
 import {IInputs, IOutputs} from "./generated/ManifestTypes";
-import { ExportToExcelControl, IControlProps, initializeControl } from "./control";
+import { ExportToExcelControl, IControlProps, initializeControl, exportToExcel } from "./control";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
@@ -9,6 +9,10 @@ const EXCEL_EXTENSION = '.xlsx';
 
 export class ExportToExcelButton implements ComponentFramework.StandardControl<IInputs, IOutputs> {
 	private theContainer: HTMLDivElement;
+	private hasDownloaded = false
+	private notifyOutputChanged: () => void
+	private outputs:IOutputs = {}
+
 	/**
 	 * Empty constructor.
 	 */
@@ -29,7 +33,8 @@ export class ExportToExcelButton implements ComponentFramework.StandardControl<I
 	{
 		this.theContainer = container
 		initializeControl()
-		//this._notifyOutputChanged = notifyOutputChanged;
+		this.notifyOutputChanged = notifyOutputChanged;
+
 	}
 
 
@@ -42,16 +47,13 @@ export class ExportToExcelButton implements ComponentFramework.StandardControl<I
 		const props:IControlProps = {}
 
 		// Add code to update control view
-		if(context.parameters.dataToExport.raw)
-		{
-			props.printable = context.parameters.dataToExport.raw 
-		};
-		if( context.parameters.FileName.raw)
-		{
+		if(context.parameters.dataToExport.raw){
+			props.jsonData = context.parameters.dataToExport.raw 
+		}
+		if( context.parameters.FileName.raw){
 			props.filename = context.parameters.FileName.raw + EXCEL_EXTENSION 
-		};
-		if(context.parameters.ButtonText.raw)
-		{
+		}
+		if(context.parameters.ButtonText.raw){
 			props.text  = context.parameters.ButtonText.raw
 		};
 
@@ -59,6 +61,22 @@ export class ExportToExcelButton implements ComponentFramework.StandardControl<I
 			React.createElement( ExportToExcelControl, props ),
 			this.theContainer
 		);
+
+		if( !this.hasDownloaded && context.parameters.Download.raw ){
+			if( props.jsonData && props.filename ) {
+				try {
+					exportToExcel( props.jsonData, props.filename)
+					this.outputs = { EventName: 'Success', EventValue:`file ${props.filename} generated!` }
+				}
+				catch( e ){
+					this.outputs = { EventName:'Error', EventValue:`${e}` }
+
+				}
+				this.notifyOutputChanged()
+			}
+		}
+
+		this.hasDownloaded = context.parameters.Download.raw
 	}
 
 	/** 
@@ -67,7 +85,7 @@ export class ExportToExcelButton implements ComponentFramework.StandardControl<I
 	 */
 	public getOutputs(): IOutputs
 	{
-		return {};
+		return this.outputs
 	}
 
 	/** 

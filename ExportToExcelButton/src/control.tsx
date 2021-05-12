@@ -5,7 +5,7 @@ import * as React from 'react';
 import * as XLSX from 'xlsx';
 
 export interface IControlProps {
-    printable?:string
+    jsonData?:string
     filename?:string
     text?:string
 }
@@ -14,25 +14,28 @@ export function initializeControl() {
     initializeIcons()
 }
 
+export function exportToExcel( data:string, fileName:string ) {
+
+    console.log( data )
+    const testss = JSON.parse(data);
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(testss);
+    const workbook: XLSX.WorkBook = {Sheets: {'data': worksheet}, SheetNames: ['data']};
+    XLSX.writeFile(workbook,fileName);
+}
+
 const excel: IIconProps = { iconName: 'excelDocument' };
 
-
 export const ExportToExcelControl: React.FunctionComponent<IControlProps> = props => {
-  const { printable, filename, text } = props;
+  const { jsonData, filename, text } = props;
 
-  const isValid = () => printable && filename
+  const isValid = () => jsonData && filename
 
-  const exportToExcel = React.useCallback(() => {
+  const exportToExcelHandler = React.useCallback(() => {
 
-        if( printable && filename ) {
+        if( jsonData && filename ) {
 
             try {
-                console.log( printable )
-                const testss = JSON.parse(printable);
-                const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(testss);
-                const workbook: XLSX.WorkBook = {Sheets: {'data': worksheet}, SheetNames: ['data']};
-                XLSX.writeFile(workbook,filename);
-
+              exportToExcel( jsonData, filename )
             }
             catch( e ) {
                 console.error( e )
@@ -42,7 +45,7 @@ export const ExportToExcelControl: React.FunctionComponent<IControlProps> = prop
   },[])
 
   return (
-    <ActionButton iconProps={excel} allowDisabledFocus disabled={!isValid()} onClick={exportToExcel} text={text} >
+    <ActionButton iconProps={excel} allowDisabledFocus disabled={!isValid()} onClick={exportToExcelHandler} text={text} >
       Export to Excel
     </ActionButton>
   );

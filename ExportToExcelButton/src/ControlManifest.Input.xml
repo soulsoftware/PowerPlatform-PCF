@@ -3,15 +3,55 @@
   <control
     namespace="PCFNamespace"
     constructor="ExportToExcelButton"
-    version="1.0.0"
+    version="1.1.0"
     display-name-key="ExportToExcelButton"
     description-key="ExportToExcelButton description"
     control-type="standard">
 
     <!-- property node identifies a specific, configurable piece of data that the control expects from CDS -->
-    <property name="dataToExport" display-name-key="Property_Display_Key" description-key="Property_Desc_Key" of-type="SingleLine.Text" usage="bound" required="true" />
-    <property name="ButtonText" display-name-key="Property_ButtonText" description-key="Property_ButtonText" of-type="SingleLine.Text" usage="bound" required="true" default-value = "Export to Excel" />
-    <property name="FileName" display-name-key="Property_FileName" description-key="Property_FileName" of-type="SingleLine.Text" usage="bound" required="true" default-value = "exportResult"/>
+    <property name="ButtonText" 
+              display-name-key="Property_ButtonText" 
+              description-key="Property_ButtonText" 
+              of-type="SingleLine.Text" 
+              usage="input" 
+              required="true" 
+              default-value = "Export to Excel" />
+    <property name="dataToExport" 
+              display-name-key="Property_Display_Key" 
+              description-key="Property_Desc_Key" 
+              of-type="SingleLine.Text" 
+              usage="input" 
+              required="true" />
+    <property name="FileName" 
+              display-name-key="Property_FileName" 
+              description-key="Property_FileName" 
+              of-type="SingleLine.Text" 
+              usage="input" 
+              required="true" 
+              default-value = "exportResult"/>
+    
+    <property name="Download" 
+              display-name-key="Property_Download" 
+              description-key="Force Download" 
+              of-type="TwoOptions" 
+              usage="input" 
+              default-value = "false"/>
+    
+
+    <!-- Events -->
+    <property name="EventName" 
+              display-name-key="Property_EventName" 
+              description-key="The Event name" 
+              of-type="SingleLine.Text" 
+              usage="output" 
+              required="true" />
+    <property name="EventValue" 
+              display-name-key="EventValue" 
+              description-key="The value" 
+              of-type="SingleLine.Text" 
+              usage="output" 
+              required="false" />
+
     <!--
     <property name="ButtonHeight" display-name-key="Property_ButtonHeight" description-key="Property_ButtonHeight" of-type="SingleLine.Text" usage="bound" required="true" default-value = "60"/>
     <property name="TextColor" display-name-key="Property_TextColor" description-key="Property_TextColor" of-type="SingleLine.Text" usage="bound" required="true" default-value="white"/>
@@ -35,7 +75,7 @@
       <code path="index.ts" order="1"/>
       <!-- UNCOMMENT TO ADD MORE RESOURCES
       <css path="css/excelexport.css" order="1" />
-      <resx path="strings/excelexport.1033.resx" version="1.0.0" />
+      <resx path="strings/excelexport.1033.resx" version="1.1.0" />
       -->
     </resources>
     <!-- UNCOMMENT TO ENABLE THE SPECIFIED API
