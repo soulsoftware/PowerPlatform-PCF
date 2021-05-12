@@ -1,8 +1,7 @@
+import { ActionButton } from '@fluentui/react/lib/Button';
+import { IIconProps } from '@fluentui/react/lib/Icon';
+import { initializeIcons } from '@fluentui/react/lib/Icons';
 import * as React from 'react';
-import { IIconProps } from 'office-ui-fabric-react/lib/Icon';
-import { ActionButton } from 'office-ui-fabric-react/lib/Button';
-import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
-import { ILabelStyles } from 'office-ui-fabric-react/lib/Label';
 import * as XLSX from 'xlsx';
 
 export interface IControlProps {
@@ -17,11 +16,6 @@ export function initializeControl() {
 
 const excel: IIconProps = { iconName: 'excelDocument' };
 
-const errorStyle:ILabelStyles = {
-    root: {
-        color: 'red'
-    }
-}
 
 export const ExportToExcelControl: React.FunctionComponent<IControlProps> = props => {
   const { printable, filename, text } = props;
