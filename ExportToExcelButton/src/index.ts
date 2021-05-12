@@ -62,6 +62,8 @@ export class ExportToExcelButton implements ComponentFramework.StandardControl<I
 			this.theContainer
 		);
 
+		console.log( 'hasDownloaded',this.hasDownloaded, 'context.parameters.Download', context.parameters.Download.raw )
+		
 		if( !this.hasDownloaded && context.parameters.Download.raw ){
 			if( props.jsonData && props.filename ) {
 				try {
