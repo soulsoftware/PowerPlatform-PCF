@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { Link } from 'office-ui-fabric-react/lib/Link';
-import { Label } from 'office-ui-fabric-react/lib/Label';
-import { ScrollablePane, ScrollbarVisibility } from 'office-ui-fabric-react/lib/ScrollablePane';
-import { ShimmeredDetailsList } from 'office-ui-fabric-react/lib/ShimmeredDetailsList';
-import { Sticky, StickyPositionType } from 'office-ui-fabric-react/lib/Sticky';
-import { IRenderFunction, SelectionMode } from 'office-ui-fabric-react/lib/Utilities';
-import { DetailsListLayoutMode, Selection, IColumn, ConstrainMode, IDetailsHeaderProps } from 'office-ui-fabric-react/lib/DetailsList';
-import { TooltipHost, ITooltipHostProps } from 'office-ui-fabric-react/lib/Tooltip';
-import { initializeIcons } from '@uifabric/icons';
-import { Stack } from 'office-ui-fabric-react/lib/Stack';
+import { Link } from '@fluentui/react/lib/Link';
+import { Label } from '@fluentui/react/lib/Label';
+import { ScrollablePane, ScrollbarVisibility } from '@fluentui/react/lib/ScrollablePane';
+import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
+import { Sticky, StickyPositionType } from '@fluentui/react/lib/Sticky';
+import { IRenderFunction, SelectionMode } from '@fluentui/react/lib/Utilities';
+import { DetailsListLayoutMode, Selection, IColumn, ConstrainMode, IDetailsHeaderProps } from '@fluentui/react/lib/DetailsList';
+import { TooltipHost, ITooltipHostProps } from '@fluentui/react/lib/Tooltip';
+import { initializeIcons } from '@fluentui/react/lib/icons';
+import { Stack } from '@fluentui/react/lib/Stack';
 import * as lcid from 'lcid';
 import {IInputs} from "./generated/ManifestTypes";
 
@@ -42,9 +42,9 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
     
     // Set the isDataLoaded state based upon the paging totalRecordCount
     React.useEffect(() => {
-        var dataSet = props.pcfContext.parameters.sampleDataSet;
-        if (dataSet.loading || props.isModelApp) return;
-        setIsDataLoaded(dataSet.paging.totalResultCount !== -1);            
+        const dataSet = props.pcfContext.parameters.sampleDataSet
+        if (dataSet.loading || props.isModelApp) return
+        setIsDataLoaded(dataSet.paging.totalResultCount !== -1)         
     },
     [items]);
 
@@ -64,9 +64,7 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
     
     // the selector used by the DetailList
     const _selection = new Selection({
-        onSelectionChanged: () => {
-            _setSelectedItemsOnDataSet()
-        }
+        onSelectionChanged: () => _setSelectedItemsOnDataSet()
     }); 
     
     // sets the selected record id's on the Dynamics dataset.
@@ -85,20 +83,20 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
 
     // when a column header is clicked sort the items
     const _onColumnClick = (ev?: React.MouseEvent<HTMLElement>, column?: IColumn): void => {
-        let isSortedDescending = column?.isSortedDescending;
+        let isSortedDescending = column?.isSortedDescending
     
         // If we've sorted this column, flip it.
         if (column?.isSorted) {
-          isSortedDescending = !isSortedDescending;
+          isSortedDescending = !isSortedDescending
         }
 
         // Reset the items and columns to match the state.
-        setItems(copyAndSort(items, column?.fieldName!, props.pcfContext, isSortedDescending));
+        setItems(copyAndSort(items, column?.fieldName!, props.pcfContext, isSortedDescending))
         setColumns(
             columns.map(col => {
-                col.isSorted = col.key === column?.key;
-                col.isSortedDescending = isSortedDescending;
-                return col;
+                col.isSorted = col.key === column?.key
+                col.isSortedDescending = isSortedDescending
+                return col
             })
         );
     }      
@@ -165,31 +163,30 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
 };
 
 // navigates to the record when user clicks the link in the grid.
-const navigate = (item: any, linkReference: string | undefined, pcfContext: ComponentFramework.Context<IInputs>) => {        
-    pcfContext.parameters.sampleDataSet.openDatasetItem(item[linkReference + "_ref"])
-};
+const navigate = (item: any, linkReference: string | undefined, pcfContext: ComponentFramework.Context<IInputs>) =>        
+    pcfContext.parameters.sampleDataSet.openDatasetItem(item[ `${linkReference}_ref`])
 
 // get the items from the dataset
 const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IInputs>) => {
-    let dataSet = pcfContext.parameters.sampleDataSet;
+    const dataSet = pcfContext.parameters.sampleDataSet
 
-    var resultSet = dataSet.sortedRecordIds.map(function (key:any) {
-        var record = dataSet.records[key];
-        var newRecord: any = {
+    const resultSet = dataSet.sortedRecordIds.map( key => {
+        const record = dataSet.records[key];
+        const newRecord: any = {
             key: record.getRecordId()
         };
 
-        for (var column of columns)
+        for (let column of columns)
         {                
             newRecord[column.key] = record.getFormattedValue(column.key);
             if (isEntityReference(record.getValue(column.key)))
             {
-                var ref = record.getValue(column.key) as ComponentFramework.EntityReference;
-                newRecord[column.key + '_ref'] = ref;
+                const ref = record.getValue(column.key) as ComponentFramework.EntityReference;
+                newRecord[`${column.key}_ref`] = ref;
             }
             else if(column.data.isPrimary)
             {
-                newRecord[column.key + '_ref'] = record.getNamedReference();
+                newRecord[`${column.key}_ref`] = record.getNamedReference();
             }
         }            
 
@@ -206,20 +203,20 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>) : IColumn[]
 
     let columnWidthDistribution = getColumnWidthDistribution(pcfContext);
 
-    for (var column of dataSet.columns){
-        let iColumn: IColumn = {
-            key: column.name,
-            name: column.displayName,
-            fieldName: column.alias,
-            currentWidth: column.visualSizeFactor,
-            minWidth: 5,                
-            maxWidth: columnWidthDistribution.find(x => x.name === column.alias)?.width ||column.visualSizeFactor,
-            isResizable: true,
+    for (let column of dataSet.columns){
+        const iColumn: IColumn = {
+            className:      'detailList-cell',
+            headerClassName:'detailList-gridLabels',
+            key:            column.name,
+            name:           column.displayName,
+            fieldName:      column.alias,
+            currentWidth:   column.visualSizeFactor,
+            minWidth:       5,                
+            maxWidth:       columnWidthDistribution.find(x => x.name === column.alias)?.width || column.visualSizeFactor,
+            isResizable:    true,
+            data:           {isPrimary : column.isPrimary},
             sortAscendingAriaLabel: 'Sorted A to Z',
-            sortDescendingAriaLabel: 'Sorted Z to A',
-            className: 'detailList-cell',
-            headerClassName: 'detailList-gridLabels',
-            data: {isPrimary : column.isPrimary} 
+            sortDescendingAriaLabel:'Sorted Z to A',
         }
         
         //create links for primary field and entity reference.            
@@ -235,16 +232,16 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>) : IColumn[]
             );
         }
         else if(column.dataType === 'SingleLine.Phone'){
-            iColumn.onRender = (item: any, index: number | undefined, column: IColumn | undefined)=> (                                    
+            iColumn.onRender = (item, index: number | undefined, column: IColumn | undefined)=> (                                    
                 <Link href={`skype:${item[column!.fieldName!]}?call`} >{item[column!.fieldName!]}</Link>                    
             );
         }
 
         //set sorting information
-        let isSorted = dataSet?.sorting?.findIndex( (s:any) => s.name === column.name) !== -1 || false
+        let isSorted = dataSet?.sorting?.findIndex( s => s.name === column.name) !== -1 || false
         iColumn.isSorted = isSorted;
         if (isSorted){
-            iColumn.isSortedDescending = dataSet?.sorting?.find( (s:any) => s.name === column.name)?.sortDirection === 1 || false;
+            iColumn.isSortedDescending = dataSet?.sorting?.find( s => s.name === column.name)?.sortDirection === 1 || false;
         }
 
         iColumns.push(iColumn);
@@ -262,13 +259,13 @@ const getColumnWidthDistribution = (pcfContext: ComponentFramework.Context<IInpu
     //console.log(`new total width: ${totalWidth}`);
     let widthSum = 0;
     
-    columnsOnView.forEach(function (columnItem:any) {
+    columnsOnView.forEach( columnItem => {
         widthSum += columnItem.visualSizeFactor;
     });
 
     let remainWidth:number = totalWidth;
     
-    columnsOnView.forEach(function (item:any, index:any) {
+    columnsOnView.forEach((item, index) => {
         let widthPerCell = 0;
         if (index !== columnsOnView.length - 1) {
             let cellWidth = Math.round((item.visualSizeFactor / widthSum) * totalWidth);
@@ -293,7 +290,7 @@ const updateColumnWidths = (columns: IColumn[], pcfContext: ComponentFramework.C
     //make sure to use map here which returns a new array, otherwise the state/grid will not update.
     return currentColumns.map(col => {           
 
-        var newMaxWidth = columnWidthDistribution.find(x => x.name === col.fieldName);
+        const newMaxWidth = columnWidthDistribution.find(x => x.name === col.fieldName);
         if (newMaxWidth) col.maxWidth = newMaxWidth.width;
 
         return col;
@@ -314,7 +311,7 @@ const copyAndSort = <T, >(items: T[], columnKey: string, pcfContext: ComponentFr
 }
 
 const getUserLanguage = (pcfContext: ComponentFramework.Context<IInputs>): string => {
-    var language = lcid.from(pcfContext.userSettings.languageId);
+    const language = lcid.from(pcfContext.userSettings.languageId);
     return language.substring(0, language.indexOf('_'));
 } 
 

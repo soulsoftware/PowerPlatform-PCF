@@ -4,13 +4,15 @@
     overflow: auto;
 }
 
-/* #detailList .ms-Viewport, 
+/* 
+#detailList .ms-Viewport, 
 #detailList .ms-DetailsList,
 #detailList .ms-DetailsList-contentWrapper,
 #detailList .ms-DetailsList.list,
 #detailList .ms-DetailsList.list > div:first-child {
     height: 100%;
-} */
+} 
+*/
 
 #detailList .ms-DetailsHeader {
     padding-top: 0px;
