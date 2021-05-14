@@ -24,3 +24,7 @@ Allows you to simulate the out of the box grid and subgrid controls using the Of
 * Loading more than 5k records in DataSet.
 * Retaining the use of the standard ribbon buttons by using the setSelectedRecordIds function on the DataSet.
 * Detecting and responding to control width updates.
+
+## References
+
+* [Use custom controls for model-driven app data visualizations](https://docs.microsoft.com/en-us/powerapps/maker/model-driven-apps/use-custom-controls-data-visualizations)
