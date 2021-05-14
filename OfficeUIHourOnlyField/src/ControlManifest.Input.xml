@@ -3,7 +3,7 @@
 
   <control  namespace="PCFNamespace" 
             constructor="OfficeUIHourOnlyField" 
-            version="1.2.8" 
+            version="1.2.9" 
             display-name-key="OfficeUIHourOnlyField" 
             description-key="OfficeUIHourOnlyField description"
             control-type="standard">
