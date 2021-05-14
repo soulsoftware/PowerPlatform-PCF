@@ -102,6 +102,8 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
     }      
     
     const _onRenderDetailsHeader = (props: IDetailsHeaderProps | undefined, defaultRender?: IRenderFunction<IDetailsHeaderProps>): JSX.Element => {
+  
+        console.log( 'IDetailsHeaderProps', props )
         return (
             <Sticky stickyPosition={StickyPositionType.Header} isScrollSynced={true}>
                 {defaultRender!({
@@ -122,7 +124,6 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
     }      
 
     return (   
-        <Stack>     
         <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>  
                 <ShimmeredDetailsList
                         enableShimmer={!isDataLoaded}
@@ -142,8 +143,7 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
                         layoutMode = {DetailsListLayoutMode.justified}
                         constrainMode={ConstrainMode.unconstrained}
                     /> 
-            </ScrollablePane>
-        </Stack>            
+        </ScrollablePane>
     );
 };
 
