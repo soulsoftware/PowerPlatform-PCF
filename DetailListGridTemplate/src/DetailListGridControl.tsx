@@ -2,13 +2,11 @@ import * as React from 'react';
 import { Link } from '@fluentui/react/lib/Link';
 import { Label } from '@fluentui/react/lib/Label';
 import { ScrollablePane, ScrollbarVisibility } from '@fluentui/react/lib/ScrollablePane';
-import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
 import { Sticky, StickyPositionType } from '@fluentui/react/lib/Sticky';
 import { IRenderFunction, SelectionMode } from '@fluentui/react/lib/Utilities';
-import { DetailsListLayoutMode, Selection, IColumn, ConstrainMode, IDetailsHeaderProps, IDetailsFooterProps } from '@fluentui/react/lib/DetailsList';
+import { DetailsListLayoutMode, Selection, IColumn, ConstrainMode, IDetailsHeaderProps, IDetailsFooterProps, DetailsList } from '@fluentui/react/lib/DetailsList';
 import { TooltipHost, ITooltipHostProps } from '@fluentui/react/lib/Tooltip';
 import { initializeIcons } from '@fluentui/react/lib/icons';
-import { Stack } from '@fluentui/react/lib/Stack';
 import * as lcid from 'lcid';
 import {IInputs} from "./generated/ManifestTypes";
 
@@ -103,7 +101,6 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
     
     const _onRenderDetailsHeader = (props: IDetailsHeaderProps | undefined, defaultRender?: IRenderFunction<IDetailsHeaderProps>): JSX.Element => {
   
-        console.log( 'IDetailsHeaderProps', props )
         return (
             <Sticky stickyPosition={StickyPositionType.Header} isScrollSynced={true}>
                 {defaultRender!({
@@ -124,9 +121,9 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
     }      
    
     return (   
-        <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>          
-                <ShimmeredDetailsList
-                        enableShimmer={!isDataLoaded}
+        <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
+                  
+                <DetailsList
                         items={items}
                         columns= {columns}
                         setKey="set"                                                                                         
