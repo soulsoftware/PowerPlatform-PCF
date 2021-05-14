@@ -110,7 +110,7 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
                 })}
             </Sticky>
         )
-    }
+    }      
 
     return (   
         <Stack grow
@@ -121,17 +121,17 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
                 },
               }}>
         <Stack.Item 
+            grow 
             verticalFill 
-                styles={{
-                    root: {
-                        height: "100%",
-                        overflowY: "auto",
-                        overflowX: "auto",
-                    },
-                }}
-                  >
-        <div 
-            style={{ position: 'relative', height: '100%' }}>
+            styles={{
+                root: {
+                    height: "100%",
+                    overflowY: "auto",
+                    overflowX: "auto",
+                },
+            }}
+            >
+        {/* <div style={{ position: 'relative', height: '100%' }}> */}
         <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>            
                 <ShimmeredDetailsList
                         enableShimmer={!isDataLoaded}
@@ -151,7 +151,7 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
                         constrainMode={ConstrainMode.unconstrained}
                     />       
         </ScrollablePane>
-        </div>
+        {/* </div> */}
         </Stack.Item>
         <Stack.Item align="start">
             <div className="detailList-footer">
