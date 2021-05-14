@@ -5,7 +5,7 @@ import { ScrollablePane, ScrollbarVisibility } from '@fluentui/react/lib/Scrolla
 import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
 import { Sticky, StickyPositionType } from '@fluentui/react/lib/Sticky';
 import { IRenderFunction, SelectionMode } from '@fluentui/react/lib/Utilities';
-import { DetailsListLayoutMode, Selection, IColumn, ConstrainMode, IDetailsHeaderProps, IDetailsFooterProps, DetailsRow } from '@fluentui/react/lib/DetailsList';
+import { DetailsListLayoutMode, Selection, IColumn, ConstrainMode, IDetailsHeaderProps, IDetailsFooterProps } from '@fluentui/react/lib/DetailsList';
 import { TooltipHost, ITooltipHostProps } from '@fluentui/react/lib/Tooltip';
 import { initializeIcons } from '@fluentui/react/lib/icons';
 import { Stack } from '@fluentui/react/lib/Stack';
@@ -112,22 +112,21 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
                 })}
             </Sticky>
         )
-    }   
+    }      
 
-   const _onRenderDetailsFooter = (props: IDetailsFooterProps | undefined, defaultRender?: IRenderFunction<IDetailsFooterProps>): JSX.Element => {
- 
+    const _onRenderDetailsFooter = (props: IDetailsFooterProps | undefined, defaultRender?: IRenderFunction<IDetailsFooterProps>): JSX.Element => {
+
         return (
             <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
-                <Label className="detailList-gridLabels">Records: {items.length.toString()} ({selectedItemCount} selected)</Label>               
+                <Label className="footer-item">Records: {items.length.toString()} ({selectedItemCount} selected)</Label>               
             </Sticky>
         )
     }      
-
+   
     return (   
-        <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>  
+        <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>          
                 <ShimmeredDetailsList
                         enableShimmer={!isDataLoaded}
-                        className = 'list'                        
                         items={items}
                         columns= {columns}
                         setKey="set"                                                                                         
@@ -142,7 +141,7 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
                         onRenderDetailsFooter={_onRenderDetailsFooter}
                         layoutMode = {DetailsListLayoutMode.justified}
                         constrainMode={ConstrainMode.unconstrained}
-                    /> 
+                    />                   
         </ScrollablePane>
     );
 };
