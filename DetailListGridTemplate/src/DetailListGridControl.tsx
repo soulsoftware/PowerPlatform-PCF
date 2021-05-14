@@ -5,7 +5,7 @@ import { ScrollablePane, ScrollbarVisibility } from '@fluentui/react/lib/Scrolla
 import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
 import { Sticky, StickyPositionType } from '@fluentui/react/lib/Sticky';
 import { IRenderFunction, SelectionMode } from '@fluentui/react/lib/Utilities';
-import { DetailsListLayoutMode, Selection, IColumn, ConstrainMode, IDetailsHeaderProps } from '@fluentui/react/lib/DetailsList';
+import { DetailsListLayoutMode, Selection, IColumn, ConstrainMode, IDetailsHeaderProps, IDetailsFooterProps, DetailsRow } from '@fluentui/react/lib/DetailsList';
 import { TooltipHost, ITooltipHostProps } from '@fluentui/react/lib/Tooltip';
 import { initializeIcons } from '@fluentui/react/lib/icons';
 import { Stack } from '@fluentui/react/lib/Stack';
@@ -110,33 +110,21 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
                 })}
             </Sticky>
         )
+    }   
+
+   const _onRenderDetailsFooter = (props: IDetailsFooterProps | undefined, defaultRender?: IRenderFunction<IDetailsFooterProps>): JSX.Element => {
+ 
+        // console.log( '_onRenderDetailsFooter', props )
+        return (
+            <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
+                <Label className="detailList-gridLabels">Records: {items.length.toString()} ({selectedItemCount} selected)</Label>               
+            </Sticky>
+        )
     }      
 
     return (   
-        <Stack grow
-            styles={{
-                root: {
-                  width: "100%",
-                  height: "inherit",
-                },
-              }}>
-        <Stack.Item 
-            grow 
-            verticalFill 
-            styles={{
-                root: {
-                    height: "100%",
-                    overflowY: "auto",
-                    overflowX: "auto",
-                },
-            }}
-            >
-        
-        {/*
-        <div style={{ position: 'relative', height: '100%' }}>
-        */}
-        <div>
-        <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>          
+        <Stack>     
+        <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>  
                 <ShimmeredDetailsList
                         enableShimmer={!isDataLoaded}
                         className = 'list'                        
@@ -151,18 +139,12 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
                         checkButtonAriaLabel="Row checkbox"                        
                         selectionMode={SelectionMode.multiple}
                         onRenderDetailsHeader={_onRenderDetailsHeader}
+                        onRenderDetailsFooter={_onRenderDetailsFooter}
                         layoutMode = {DetailsListLayoutMode.justified}
                         constrainMode={ConstrainMode.unconstrained}
-                    />                   
-        </ScrollablePane>
-        </div>
-        </Stack.Item>
-        <Stack.Item align="start">
-            <div className="detailList-footer">
-               <Label className="detailList-gridLabels">Records: {items.length.toString()} ({selectedItemCount} selected)</Label>               
-            </div>
-        </Stack.Item>
-        </Stack>             
+                    /> 
+            </ScrollablePane>
+        </Stack>            
     );
 };
 
