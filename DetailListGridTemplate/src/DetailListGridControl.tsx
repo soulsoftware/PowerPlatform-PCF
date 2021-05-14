@@ -114,7 +114,6 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
 
    const _onRenderDetailsFooter = (props: IDetailsFooterProps | undefined, defaultRender?: IRenderFunction<IDetailsFooterProps>): JSX.Element => {
  
-        // console.log( '_onRenderDetailsFooter', props )
         return (
             <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
                 <Label className="detailList-gridLabels">Records: {items.length.toString()} ({selectedItemCount} selected)</Label>               
