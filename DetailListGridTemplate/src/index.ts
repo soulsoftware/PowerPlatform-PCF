@@ -80,7 +80,10 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 	 */
 	public updateView(context: ComponentFramework.Context<IInputs>): void
 	{
-		var dataSet = context.parameters.sampleDataSet;
+
+		console.log( 'context', context )
+
+		const dataSet = context.parameters.sampleDataSet;
 		
 		if (dataSet.loading) return;
 
