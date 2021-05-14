@@ -131,10 +131,12 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
                 },
             }}
             >
-        { /*
+        
+        {/*
         <div style={{ position: 'relative', height: '100%' }}>
-        <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>       
-        */ }     
+        */}
+        <div>
+        <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>          
                 <ShimmeredDetailsList
                         enableShimmer={!isDataLoaded}
                         className = 'list'                        
@@ -151,11 +153,9 @@ export const DetailListGridControl: React.FC<IProps> = (props) => {
                         onRenderDetailsHeader={_onRenderDetailsHeader}
                         layoutMode = {DetailsListLayoutMode.justified}
                         constrainMode={ConstrainMode.unconstrained}
-                    />   
-        { /*                
+                    />                   
         </ScrollablePane>
         </div>
-        */ }
         </Stack.Item>
         <Stack.Item align="start">
             <div className="detailList-footer">
