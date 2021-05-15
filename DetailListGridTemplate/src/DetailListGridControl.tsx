@@ -10,7 +10,7 @@ import { initializeIcons } from '@fluentui/react/lib/icons';
 import * as lcid from 'lcid';
 import {IInputs} from "./generated/ManifestTypes";
 
-export interface IProps {
+export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
     isModelApp: boolean,
     dataSetVersion: number
@@ -25,7 +25,7 @@ interface IColumnWidth {
 //They will display in Model app because Microsoft initializes them in their controls.
 initializeIcons();
 
-export const DetailListGridControl: React.FC<IProps> = (props) => {                           
+export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (props) => {                           
         
     // using react hooks to create functional which will allow us to set these values in our code
     // eg. when we calculate the columns we can then udpate the state of them using setColums([our new columns]);

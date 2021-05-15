@@ -1,7 +1,7 @@
 import {IInputs, IOutputs} from "./generated/ManifestTypes";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {IProps, DetailListGridControl}  from './DetailListGridControl'
+import {IDetailListGridControlProps, DetailListGridControl}  from './DetailListGridControl'
 
 
 
@@ -16,7 +16,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		return window.hasOwnProperty('getGlobalContextObject') 
 	}
 
-	private _props: IProps;
+	private _props: IDetailListGridControlProps;
 
 	constructor()
 	{
@@ -60,7 +60,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		//and we need to set the heigh based upon the allocated height of the container.
 		if (this._context.mode.allocatedHeight !== -1)
 		{
-			this._detailList.style.height = `${(this._context.mode.allocatedHeight).toString()}px`
+			this._detailList.style.height = `${this._context.mode.allocatedHeight}px`
 		}
 		else
 		{
@@ -68,7 +68,8 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 			// the control is a subgrid.
 			// Then multiple by 1.5 em which is what MS uses per row.	
 			let rowspan = this._context.mode.rowSpan;
-			if (rowspan) this._detailList.style.height = `${(rowspan * 1.5).toString()}em`;
+			console.log( 'rowSpan', rowspan)
+			if (rowspan) this._detailList.style.height = `${(rowspan * 1.5)}em`;
 		}
 
 		this._container.appendChild(this._detailList);
@@ -84,11 +85,11 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 	 */
 	public updateView(context: ComponentFramework.Context<IInputs>): void
 	{
-		console.log( context )
-		for( let p in context ) {		
-			console.log( p )
-			console.log( (<any>context)[p] )
-		}
+		// console.log( context )
+		// for( let p in context ) {		
+		// 	console.log( p )
+		// 	console.log( (<any>context)[p] )
+		// }
 
 		const dataSet = context.parameters.sampleDataSet;
 		
