@@ -1,22 +1,24 @@
-import { IInputs, IOutputs } from "./generated/ManifestTypes";
+import {IInputs, IOutputs} from "./generated/ManifestTypes";
+import { ExportToExcelControl, IControlProps, initializeControl, exportToExcel } from "./control";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './TimePickerWithTextField';
 
+const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+const EXCEL_EXTENSION = '.xlsx';
 
-export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl<IInputs, IOutputs> {
+export class ExportToExcelButton implements ComponentFramework.StandardControl<IInputs, IOutputs> {
 	private theContainer: HTMLDivElement;
-	
-	private props?: IPCFHourOnlyTextFieldProps
-	private output: IOutputs = {}
-
-	private notifyOutputChanged:() => void
+	private hasDownloaded = false
+	private notifyOutputChanged: () => void
+	private outputs:IOutputs = {}
 
 	/**
 	 * Empty constructor.
 	 */
-	constructor() {
+	constructor()
+	{
+
 	}
 
 	/**
@@ -27,71 +29,73 @@ export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl
 	 * @param state A piece of data that persists in one session for a single user. Can be set at any point in a controls life cycle by calling 'setControlState' in the Mode interface.
 	 * @param container If a control is marked control-type='standard', it will receive an empty div element within which it can render its content.
 	 */
-	public init(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container: HTMLDivElement) {
-		// Add control initialization code
-		
-		this.theContainer = container;
+	public init(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container:HTMLDivElement)
+	{
+		this.theContainer = container
+		initializeControl()
 		this.notifyOutputChanged = notifyOutputChanged;
 
-		initialize()
 	}
+
 
 	/**
 	 * Called when any value in the property bag has changed. This includes field values, data-sets, global values such as container height and width, offline status, control metadata values such as label, visible, etc.
 	 * @param context The entire property bag available to control via Context Object; It contains values as set up by the customizer mapped to names defined in the manifest, as well as utility functions
 	 */
-	public updateView(context: ComponentFramework.Context<IInputs>): void {
-		// Add code to update control view; 
-        
-		/**
-         * DateTime Field Behavior options
-         * 0 - None - Unknown DateTime Behavior,
-         * 1 - UserLocal - Respect user local time. Dates stored as UTC,
-         * 3 - TimeZoneIndependent - Dates and time stored without conversion to UTC
-         */
-		const DateTimeFieldBehavior = context.parameters.TimeValue.attributes?.Behavior
+	public updateView(context: ComponentFramework.Context<IInputs>): void
+	{
+		const props:IControlProps = {}
 
-		console.log( '<OfficeUIHourOnlyField>', 
-			'TimeValue:', context.parameters.TimeValue.raw ,
-			'DefaultDate:', context.parameters.DefaultDate.raw,
-			'TimeValue.Format:', context.parameters.TimeValue.attributes?.Format,
-			'TimeValue.Behavior', DateTimeFieldBehavior,
-			'TimeValue.ImeMode', context.parameters.TimeValue.attributes?.ImeMode,
+		// Add code to update control view
+		if(context.parameters.dataToExport.raw){
+			props.jsonData = context.parameters.dataToExport.raw 
+		}
+		if( context.parameters.FileName.raw){
+			props.filename = context.parameters.FileName.raw + EXCEL_EXTENSION 
+		}
+		if(context.parameters.ButtonText.raw){
+			props.text  = context.parameters.ButtonText.raw
+		};
+
+		ReactDOM.render(
+			React.createElement( ExportToExcelControl, props ),
+			this.theContainer
+		);
+
+		console.log( 'hasDownloaded',this.hasDownloaded, 'context.parameters.Download', context.parameters.Download.raw )
 		
-		)
-		
-		this.props = {
-			TimeValue: context.parameters.TimeValue.raw,
-			DefaultDate: context.parameters.DefaultDate.raw,
-			TimeZoneIndependent:(3==DateTimeFieldBehavior),
-			visible: context.mode.isVisible,
-			disabled: context.mode.isControlDisabled,
-			onTimeChange:( value ) => {
-				this.output.TimeValue = value
+		if( !this.hasDownloaded && context.parameters.Download.raw ){
+			if( props.jsonData && props.filename ) {
+				try {
+					exportToExcel( props.jsonData, props.filename)
+					this.outputs = { EventName: 'Success', EventValue:`file ${props.filename} generated!` }
+				}
+				catch( e ){
+					this.outputs = { EventName:'Error', EventValue:`${e}` }
+
+				}
 				this.notifyOutputChanged()
 			}
 		}
 
-		ReactDOM.render(
-			React.createElement( HourOnlyTextField, this.props ),
-			this.theContainer
-		);
+		this.hasDownloaded = context.parameters.Download.raw
 	}
 
 	/** 
 	 * It is called by the framework prior to a control receiving new data. 
 	 * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as “bound” or “output”
 	 */
-	public getOutputs(): IOutputs {
-		return this.output
+	public getOutputs(): IOutputs
+	{
+		return this.outputs
 	}
 
 	/** 
 	 * Called when the control is to be removed from the DOM tree. Controls should use this call for cleanup.
 	 * i.e. cancelling any pending remote calls, removing listeners, etc.
 	 */
-	public destroy(): void {
+	public destroy(): void
+	{
 		// Add code to cleanup control if necessary
-		ReactDOM.unmountComponentAtNode(this.theContainer);
 	}
 }

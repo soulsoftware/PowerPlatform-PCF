@@ -13,8 +13,8 @@ export interface IPCFHourOnlyTextFieldProps {
 	DefaultDate: Date|null;
 	TimeValue: Date|null;
 	TimeZoneIndependent: boolean;
+	visible:boolean
 	disabled?: boolean;
-
 	onTimeChange: OnTimeChangeHandler
 }
 
@@ -31,7 +31,9 @@ export function initialize() {
  * @returns 
  */
 export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldProps> = props => {
-	const { disabled, DefaultDate, TimeValue, onTimeChange, TimeZoneIndependent } = props;
+	const { visible, disabled, DefaultDate, TimeValue, onTimeChange, TimeZoneIndependent } = props;
+
+	if ( visible===false ) return ( <div></div> )
 
 	const defDate = ( DefaultDate == null ) ? new Date( 1899, 11, 31, 0, 0) : new Date( DefaultDate )
 
@@ -67,17 +69,18 @@ export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldPro
 	    }, [])
 
 	const TimeIcon: IIconProps = { iconName: 'Clock' };
-
-	return (
-		<TextField
-			placeholder="---"
-			onChange={onChangeHandler}
-			iconProps={TimeIcon}
-			value={timeValueField}
-			errorMessage={errorMessage}
-		>
-		</TextField>
-	)
+	
+	return (		
+			<TextField
+				placeholder="---"
+				onChange={onChangeHandler}
+				iconProps={TimeIcon}
+				value={timeValueField}
+				errorMessage={errorMessage}
+				readOnly={disabled}
+			>
+			</TextField>
+		)
 }
 
 

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.1.0.643" SolutionPackageVersion="9.1" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.1.0.843" SolutionPackageVersion="9.1" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <!-- Unique Name of Cds Solution-->
-    <UniqueName>OfficeUIHourOnlyField</UniqueName>
+    <UniqueName>DetailListGridTemplate</UniqueName>
     <LocalizedNames>
       <!-- Localized Solution Name in language code -->
-      <LocalizedName description="OfficeUIHourOnlyField" languagecode="1033" />
+      <LocalizedName description="DetailListGridTemplate" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.2.9</Version>
+    <Version>1.0.8</Version>
     <!-- Solution Package Type: Unmanaged(0)/Managed(1)/Both(2)-->
     <Managed>2</Managed>
     <Publisher>
