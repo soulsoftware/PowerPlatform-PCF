@@ -3,13 +3,18 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {IProps, DetailListGridControl}  from './DetailListGridControl'
 
+
+
 export class DetailListGridTemplate implements ComponentFramework.StandardControl<IInputs, IOutputs> {
 
 	private _context: ComponentFramework.Context<IInputs>;
 	private _container: HTMLDivElement;
 	private _detailList: HTMLDivElement;
 	private _dataSetVersion: number;
-	private _isModelApp: boolean
+	
+	private get  _isModelApp() { 
+		return window.hasOwnProperty('getGlobalContextObject') 
+	}
 
 	private _props: IProps;
 
@@ -34,7 +39,6 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 
 		this._container = container;
 		this._context = context;
-		this._isModelApp = window.hasOwnProperty('getGlobalContextObject');
 		this._dataSetVersion = 0;
 
 		this._props = {
@@ -63,7 +67,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 			// sets the height based upon the rowSpan which is there but not included in the Mode interace when
 			// the control is a subgrid.
 			// Then multiple by 1.5 em which is what MS uses per row.	
-			let rowspan = (this._context.mode as any).rowSpan;
+			let rowspan = this._context.mode.rowSpan;
 			if (rowspan) this._detailList.style.height = `${(rowspan * 1.5).toString()}em`;
 		}
 
@@ -80,8 +84,11 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 	 */
 	public updateView(context: ComponentFramework.Context<IInputs>): void
 	{
-
 		console.log( context )
+		for( let p in context ) {		
+			console.log( p )
+			console.log( (<any>context)[p] )
+		}
 
 		const dataSet = context.parameters.sampleDataSet;
 		
