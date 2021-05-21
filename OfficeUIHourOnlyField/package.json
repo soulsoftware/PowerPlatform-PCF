@@ -7,6 +7,7 @@
     "clean": "pcf-scripts clean",
     "rebuild": "pcf-scripts rebuild",
     "start": "pcf-scripts start",
+    "start:pcf": "pcf-start --watch ----codePath ./out/controls/src",
     "test": "jest"
   },
   "dependencies": {
