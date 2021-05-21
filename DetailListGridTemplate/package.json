@@ -7,7 +7,7 @@
     "clean": "pcf-scripts clean",
     "rebuild": "pcf-scripts rebuild",
     "start": "pcf-scripts start",
-    "start:x": "pcf-start --watch ----codePath ./out/controls/src"
+    "start:pcf": "pcf-start --watch ----codePath ./out/controls/src"
   },
   "dependencies": {
     "@fluentui/react": "^8.14.6",
