@@ -1,18 +1,14 @@
+import { IComboBoxStyles, IComboBox, ComboBox, IComboBoxOption } from '@fluentui/react/lib/ComboBox';
+import { IIconProps } from '@fluentui/react/lib/Icon';
+import { initializeIcons } from '@fluentui/react/lib/Icons';
+import { SelectableOptionMenuItemType } from '@fluentui/react/lib/SelectableOption';
 import * as React from 'react';
 import './time.extension'
-import {
-	initializeIcons,
-	IIconProps,
-	ComboBox,
-	IComboBoxOption,
-	SelectableOptionMenuItemType,
-	IComboBoxStyles,
-	IComboBox
-} from 'office-ui-fabric-react';
+
 
 type OnTimeChangeHandler = (newValue: Date) => void
 
-export interface IPCFHourOnlyTextFieldProps {
+export interface IPCFTextFieldProps {
 	// These are set based on the toggles shown above the examples (not needed in real code)
 	DefaultDate: Date|null;
 	TimeValue: Date;
@@ -101,7 +97,7 @@ function getTimeOptions( step:number, timeValue:Date, defaultDate:Date|null ) {
  * @param props 
  * @returns 
  */
-export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldProps> = props => {
+export const HourOnlyTextField: React.FunctionComponent<IPCFTextFieldProps> = props => {
 	const { disabled, DefaultDate, TimeValue, onTimeChange, isUTC } = props;
 
 	let step = 15;

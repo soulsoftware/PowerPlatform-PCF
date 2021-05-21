@@ -1,9 +1,11 @@
+import { IIconProps } from '@fluentui/react/lib/Icon';
+import { initializeIcons } from '@fluentui/react/lib/Icons';
+import { MaskedTextField } from '@fluentui/react/lib/TextField';
 import * as React from 'react';
-import { initializeIcons, IIconProps, MaskedTextField } from 'office-ui-fabric-react';
 
 type OnTimeChangeHandler = (newValue: Date ) => void 
 
-export interface IPCFHourOnlyTextFieldProps {
+export interface IPCFTextFieldProps {
   // These are set based on the toggles shown above the examples (not needed in real code)
   DefaultDate: Date;
   TimeValue: Date;
@@ -29,7 +31,7 @@ type TimeType  = { h:number, m:number }
  * @param props 
  * @returns 
  */
-export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldProps> = props => {
+export const HourOnlyTextField: React.FunctionComponent<IPCFTextFieldProps> = props => {
   const {  disabled, DefaultDate, TimeValue, onTimeChange, isUTC } = props;
   
   const TimeIcon: IIconProps = { iconName: 'DateTime2' };

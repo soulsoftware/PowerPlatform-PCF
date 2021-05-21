@@ -2,13 +2,13 @@ import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { HourOnlyTextField, IPCFHourOnlyTextFieldProps, initialize } from './TimePickerWithTextField';
+import { HourOnlyTextField, IPCFTextFieldProps, initialize } from './TimePickerWithTextField';
 
 
 export class OfficeUIHourOnlyField implements ComponentFramework.StandardControl<IInputs, IOutputs> {
 	private theContainer: HTMLDivElement;
 	
-	private props?: IPCFHourOnlyTextFieldProps
+	private props?: IPCFTextFieldProps
 	private output: IOutputs = {}
 
 	private notifyOutputChanged:() => void
