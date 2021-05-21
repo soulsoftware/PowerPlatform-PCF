@@ -1,14 +1,12 @@
+import { IIconProps } from '@fluentui/react/lib/Icon';
+import { initializeIcons } from '@fluentui/react/lib/Icons';
+import { TextField } from '@fluentui/react/lib/TextField';
 import * as React from 'react';
 import './time.extension'
-import {
-	initializeIcons,
-	IIconProps,
-	TextField
-} from 'office-ui-fabric-react';
 
 type OnTimeChangeHandler = (newValue?: Date) => void
 
-export interface IPCFHourOnlyTextFieldProps {
+export interface IPCFTextFieldProps {
 	// These are set based on the toggles shown above the examples (not needed in real code)
 	DefaultDate: Date|null;
 	TimeValue: Date|null;
@@ -30,7 +28,7 @@ export function initialize() {
  * @param props 
  * @returns 
  */
-export const HourOnlyTextField: React.FunctionComponent<IPCFHourOnlyTextFieldProps> = props => {
+export const HourOnlyTextField: React.FunctionComponent<IPCFTextFieldProps> = props => {
 	const { visible, disabled, DefaultDate, TimeValue, onTimeChange, TimeZoneIndependent } = props;
 
 	if ( visible===false ) return ( <div></div> )
