@@ -224,11 +224,26 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
         else if(column.dataType === 'DateAndTime.DateAndTime'){
             console.log( 'DateAndTime.DateAndTime' )
             iColumn.onRender = (item, index: number | undefined, column: IColumn | undefined)=> {
-                const v = item[column!.fieldName!]
-                console.log( 'value', v, typeof(v) )
+                const itemValue = item[column!.fieldName!]
+                let value = ''
+                if( itemValue ) {
+                    if( itemValue instanceof Date ) {
+                        value = itemValue.toTimeZoneIndependentString( { hour12:true } )
+                    }
+                    else if( typeof(itemValue) === 'string' ) {
+                        try {
+                            const dt = new Date(itemValue)
+                            value = dt.toTimeZoneIndependentString( { hour12:true } )
+                        }
+                        catch( err ) {
+                            console.error( 'value is a not valid date', itemValue, err)
+                        }
+                    }    
+                }
+                console.log( 'value', value )
+
                 return (   
-                    //<div>{item[column!.fieldName!].toTimeZoneIndependentString({ hour12:true })}</div>                                                     
-                    <div>{item[column!.fieldName!]}</div>                                                     
+                    <div>{value}</div>                                                     
                 )
             }
             // ( TimeValue != null ) ?
