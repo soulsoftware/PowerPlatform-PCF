@@ -223,10 +223,14 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
         }
         else if(column.dataType === 'DateAndTime.DateAndTime'){
             console.log( 'DateAndTime.DateAndTime' )
-            iColumn.onRender = (item, index: number | undefined, column: IColumn | undefined)=> (   
-                <div>{item[column!.fieldName!].toTimeZoneIndependentString({ hour12:true })}</div>                                                     
-            )
-
+            iColumn.onRender = (item, index: number | undefined, column: IColumn | undefined)=> {
+                const v = item[column!.fieldName!]
+                console.log( 'value', v, typeof(v) )
+                return (   
+                    //<div>{item[column!.fieldName!].toTimeZoneIndependentString({ hour12:true })}</div>                                                     
+                    <div>{item[column!.fieldName!]}</div>                                                     
+                )
+            }
             // ( TimeValue != null ) ?
 			// (( TimeZoneIndependent ) ?
 			// 			TimeValue.toTimeZoneIndependentString( { hour12:true } ) :
