@@ -9,11 +9,13 @@ import { TooltipHost, ITooltipHostProps } from '@fluentui/react/lib/Tooltip';
 import { initializeIcons } from '@fluentui/react/lib/icons';
 import * as lcid from 'lcid';
 import {IInputs} from "./generated/ManifestTypes";
+import './time.extension'
 
 export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
     isModelApp: boolean,
-    dataSetVersion: number
+    dataSetVersion: number,
+    entityName?:string
 }
 
 interface IColumnWidth {
@@ -178,7 +180,7 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
 }  
 
  // get the columns from the dataset
-const getColumns = (pcfContext: ComponentFramework.Context<IInputs>) : IColumn[] => {
+const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?:string ) : IColumn[] => {
     let dataSet = pcfContext.parameters.sampleDataSet;
     let iColumns: IColumn[] = [];
 
@@ -218,8 +220,17 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>) : IColumn[]
             );
         }
         else if(column.dataType === 'DateAndTime.DateAndTime'){
-            console.log( column )
-            console.log( `the column '${column.displayName}' is candidate to reformat`)
+            console.log( 'entityName', entityName )
+            iColumn.onRender = (item, index: number | undefined, column: IColumn | undefined)=> (   
+                <div>{item[column!.fieldName!].toTimeZoneIndependentString({ hour12:true })}</div>                                                     
+            );
+
+            // ( TimeValue != null ) ?
+			// (( TimeZoneIndependent ) ?
+			// 			TimeValue.toTimeZoneIndependentString( { hour12:true } ) :
+			// 			TimeValue.toTimeZoneDependentString( { hour12:true } )) : 
+			// 			''
+
         }
 
         //set sorting information

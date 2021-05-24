@@ -3,6 +3,16 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {IDetailListGridControlProps, DetailListGridControl}  from './DetailListGridControl'
 
+function getQueryVariable(variable:string) : string|undefined {
+    const query = window.location.search.substring(1);
+	
+	const result = query.split('&')
+						.map( v =>v .split('='))
+						.find( ( [name, value ] ) =>  decodeURIComponent(name)==name )
+							
+	if( result ) return result[1]
+	
+}
 
 /**
  * PCF component
@@ -17,6 +27,14 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 	private get  _isModelApp() { 
 		return window.hasOwnProperty('getGlobalContextObject') 
 	}
+
+
+	/**
+	 * @see https://www.dancingwithcrm.com/another-way-to-get-entity-name-and-id-in-pcf/
+	 */
+	private get _entityName():string|undefined {
+    	return getQueryVariable('etn')
+    }
 
 	private _props: IDetailListGridControlProps;
 
@@ -46,7 +64,8 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		this._props = {
 			pcfContext: this._context,
 			isModelApp: this._isModelApp,
-			dataSetVersion: this._dataSetVersion
+			dataSetVersion: this._dataSetVersion,
+			entityName: this._entityName
 		}
 
 		// set the container to display to relative so that our Scrollable Panel does not cover up the
