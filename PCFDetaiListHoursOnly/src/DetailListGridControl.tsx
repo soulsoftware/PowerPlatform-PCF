@@ -192,7 +192,7 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
         const name_parts = entityName.split('_')
 
         return ( name_parts.length > 1 ) ? 
-                fieldName.startsWith( name_parts[0] ) : true
+                fieldName.startsWith( name_parts[0] ) : false
     }
 
     for (let column of dataSet.columns){
