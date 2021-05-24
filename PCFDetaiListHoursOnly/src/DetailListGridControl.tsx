@@ -201,7 +201,9 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
             sortAscendingAriaLabel: 'Sorted A to Z',
             sortDescendingAriaLabel:'Sorted Z to A',
         }
-        
+
+        console.log( 'column', 'displayName', column.displayName, 'type', column.dataType, 'isPrimary', column.isPrimary)
+
         //create links for primary field and entity reference.            
         if (column.dataType.startsWith('Lookup.') || column.isPrimary)
         {
@@ -220,10 +222,10 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
             );
         }
         else if(column.dataType === 'DateAndTime.DateAndTime'){
-            console.log( 'entityName', entityName )
+            console.log( 'DateAndTime.DateAndTime' )
             iColumn.onRender = (item, index: number | undefined, column: IColumn | undefined)=> (   
                 <div>{item[column!.fieldName!].toTimeZoneIndependentString({ hour12:true })}</div>                                                     
-            );
+            )
 
             // ( TimeValue != null ) ?
 			// (( TimeZoneIndependent ) ?

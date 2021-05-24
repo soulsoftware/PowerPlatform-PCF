@@ -53,6 +53,8 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 	 */
 	public init(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container:HTMLDivElement)
 	{
+		console.log( 'entity name', this._entityName )
+		
 		// Need to track container resize so that control could get the available width. 
 		// The available height won't be provided even when this is true
 		context.mode.trackContainerResize(true);
