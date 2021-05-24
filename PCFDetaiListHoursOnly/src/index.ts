@@ -3,12 +3,12 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {IDetailListGridControlProps, DetailListGridControl}  from './DetailListGridControl'
 
-function getQueryVariable(variable:string) : string|undefined {
+function getQueryVariable(param:string) : string|undefined {
     const query = window.location.search.substring(1);
 	
 	const result = query.split('&')
 						.map( v =>v .split('='))
-						.find( ( [name, value ] ) =>  decodeURIComponent(name)==name )
+						.find( ( [name, value ] ) =>  decodeURIComponent(name)==param )
 							
 	if( result ) return result[1]
 	

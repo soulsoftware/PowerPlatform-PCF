@@ -186,6 +186,15 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
 
     let columnWidthDistribution = getColumnWidthDistribution(pcfContext);
 
+    const isCustomField = ( fieldName:string ) => {
+        if( !entityName ) return true
+
+        const name_parts = entityName.split('_')
+
+        return ( name_parts.length > 1 ) ? 
+                fieldName.startsWith( name_parts[0] ) : true
+    }
+
     for (let column of dataSet.columns){
         const iColumn: IColumn = {
             className:      'detailList-cell',
@@ -202,7 +211,7 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
             sortDescendingAriaLabel:'Sorted Z to A',
         }
 
-        console.log( 'column', 'displayName', column.displayName, 'type', column.dataType, 'isPrimary', column.isPrimary)
+        // console.log( 'column', 'displayName', column.displayName, 'type', column.dataType, 'isPrimary', column.isPrimary)
 
         //create links for primary field and entity reference.            
         if (column.dataType.startsWith('Lookup.') || column.isPrimary)
@@ -221,8 +230,8 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
                 <Link href={`skype:${item[column!.fieldName!]}?call`} >{item[column!.fieldName!]}</Link>                    
             );
         }
-        else if(column.dataType === 'DateAndTime.DateAndTime'){
-            console.log( 'DateAndTime.DateAndTime' )
+        else if(column.dataType === 'DateAndTime.DateAndTime' && isCustomField(column.name) ){
+            // console.log( 'DateAndTime.DateAndTime' )
             iColumn.onRender = (item, index: number | undefined, column: IColumn | undefined)=> {
                 const itemValue = item[column!.fieldName!]
                 let value = ''
@@ -240,17 +249,12 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
                         }
                     }    
                 }
-                console.log( 'value', value )
+                // console.log( 'value', value )
 
                 return (   
                     <div>{value}</div>                                                     
                 )
             }
-            // ( TimeValue != null ) ?
-			// (( TimeZoneIndependent ) ?
-			// 			TimeValue.toTimeZoneIndependentString( { hour12:true } ) :
-			// 			TimeValue.toTimeZoneDependentString( { hour12:true } )) : 
-			// 			''
 
         }
 
