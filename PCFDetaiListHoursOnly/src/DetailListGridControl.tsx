@@ -34,7 +34,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     // we have passed in an empty array as the default.
     // const [columns, setColumns] = React.useState(_getColumns);
     // const [items, setItems] = React.useState(_getItems);
-    const [columns, setColumns] = React.useState(getColumns(props.pcfContext));
+    const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
     const [items, setItems] = React.useState(getItems(columns, props.pcfContext));
     const [isDataLoaded, setIsDataLoaded] = React.useState(props.isModelApp);
     // react hook to store the number of selected items in the grid which will be displayed in the grid footer.

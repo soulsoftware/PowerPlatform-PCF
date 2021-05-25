@@ -28,19 +28,10 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		return window.hasOwnProperty('getGlobalContextObject') 
 	}
 
-
-	/**
-	 * @see https://www.dancingwithcrm.com/another-way-to-get-entity-name-and-id-in-pcf/
-	 */
-	private get _entityName():string|undefined {
-    	return getQueryVariable('etn')
-    }
-
 	private _props: IDetailListGridControlProps;
 
-	constructor()
+	constructor() 
 	{
-
 	}
 
 	/**
@@ -53,7 +44,11 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 	 */
 	public init(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container:HTMLDivElement)
 	{
-		console.log( 'entity name', this._entityName )
+		/**
+		 * @see https://www.dancingwithcrm.com/another-way-to-get-entity-name-and-id-in-pcf/
+		 */
+		const entityName = getQueryVariable('etn')
+		console.log( 'entity name', entityName )
 		
 		// Need to track container resize so that control could get the available width. 
 		// The available height won't be provided even when this is true
@@ -64,10 +59,10 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		this._dataSetVersion = 0;
 
 		this._props = {
-			pcfContext: this._context,
-			isModelApp: this._isModelApp,
+			pcfContext:		this._context,
+			isModelApp:		this._isModelApp,
 			dataSetVersion: this._dataSetVersion,
-			entityName: this._entityName
+			entityName: 	entityName
 		}
 
 		// set the container to display to relative so that our Scrollable Panel does not cover up the
