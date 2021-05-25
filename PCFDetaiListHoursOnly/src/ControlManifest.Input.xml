@@ -3,7 +3,7 @@
   <control
     namespace="PCFNamespace" 
     constructor="DetailListGridTemplate"
-    version="1.0.7"
+    version="1.0.8"
     display-name-key="DetaiListHoursOnly"
     description-key="A custom grid view that utilizes the Office Fabric UI DetailsList control."
     control-type="standard">

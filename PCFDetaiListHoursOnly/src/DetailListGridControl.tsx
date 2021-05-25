@@ -267,11 +267,14 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
             iColumn.onRender = (item, index: number | undefined, column: IColumn | undefined)=> {
 
                 const itemValue = item[column!.fieldName!]
+                
+                console.log( column!.fieldName!, itemValue)
 
                 const dt = toDate( itemValue )
 
                 let value = ( dt && isDefaultDate(dt) ) ? 
-                    dt.toTimeZoneIndependentString( { hour12:true } ) : ''
+                    //dt.toTimeZoneIndependentString( { hour12:true } ) : itemValue
+                    dt.toTimeZoneDependentString( { hour12:true } ) : itemValue
 
                 return ( <div>{value}</div> )
             }
