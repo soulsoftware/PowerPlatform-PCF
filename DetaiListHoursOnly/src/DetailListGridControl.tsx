@@ -9,11 +9,13 @@ import { TooltipHost, ITooltipHostProps } from '@fluentui/react/lib/Tooltip';
 import { initializeIcons } from '@fluentui/react/lib/icons';
 import * as lcid from 'lcid';
 import {IInputs} from "./generated/ManifestTypes";
+import './time.extension'
 
 export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
     isModelApp: boolean,
-    dataSetVersion: number
+    dataSetVersion: number,
+    entityName?:string
 }
 
 interface IColumnWidth {
@@ -32,7 +34,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     // we have passed in an empty array as the default.
     // const [columns, setColumns] = React.useState(_getColumns);
     // const [items, setItems] = React.useState(_getItems);
-    const [columns, setColumns] = React.useState(getColumns(props.pcfContext));
+    const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
     const [items, setItems] = React.useState(getItems(columns, props.pcfContext));
     const [isDataLoaded, setIsDataLoaded] = React.useState(props.isModelApp);
     // react hook to store the number of selected items in the grid which will be displayed in the grid footer.
@@ -178,11 +180,46 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
 }  
 
  // get the columns from the dataset
-const getColumns = (pcfContext: ComponentFramework.Context<IInputs>) : IColumn[] => {
+const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?:string ) : IColumn[] => {
     let dataSet = pcfContext.parameters.sampleDataSet;
     let iColumns: IColumn[] = [];
 
     let columnWidthDistribution = getColumnWidthDistribution(pcfContext);
+
+    const defaultDate = new Date( 1899, 11, 31, 0, 0)
+
+    const isDefaultDate = ( dt:Date ) => 
+        ( defaultDate.getFullYear()===dt.getFullYear() && 
+            defaultDate.getMonth()===dt.getMonth() && 
+            defaultDate.getDate()===dt.getDate())
+    
+    const toDate = ( itemValue:any|undefined ):Date|undefined => {
+        
+        if( itemValue ) {
+            if( itemValue instanceof Date ) 
+                return itemValue
+            else if( typeof(itemValue) === 'string' ) {
+                try {
+                    return new Date(itemValue)
+                }
+                catch( err ) {
+                    console.error( 'value is a not valid date', itemValue, err)
+                }
+            }    
+        }
+
+    }
+
+    const isCustomField = ( fieldName:string ) => {
+        if( entityName ) {
+            const name_parts = entityName.split('_')
+
+            return ( name_parts.length > 1 ) ? 
+                    fieldName.startsWith( name_parts[0] ) : false
+    
+        }
+    }
+
 
     for (let column of dataSet.columns){
         const iColumn: IColumn = {
@@ -199,7 +236,15 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>) : IColumn[]
             sortAscendingAriaLabel: 'Sorted A to Z',
             sortDescendingAriaLabel:'Sorted Z to A',
         }
-        
+
+        console.table( [ 
+            ['name', column.name],
+            ['displayName', column.displayName], 
+            ['type', column.dataType], 
+            ['isPrimary', column.isPrimary],
+            ['isCustom', isCustomField(column.name)],
+        ])
+
         //create links for primary field and entity reference.            
         if (column.dataType.startsWith('Lookup.') || column.isPrimary)
         {
@@ -216,6 +261,24 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>) : IColumn[]
             iColumn.onRender = (item, index: number | undefined, column: IColumn | undefined)=> (                                    
                 <Link href={`skype:${item[column!.fieldName!]}?call`} >{item[column!.fieldName!]}</Link>                    
             );
+        }
+        else if(column.dataType === 'DateAndTime.DateAndTime' ){
+            
+            iColumn.onRender = (item, index: number | undefined, column: IColumn | undefined)=> {
+
+                const itemValue = item[column!.fieldName!]
+                
+                console.log( column!.fieldName!, itemValue)
+
+                const dt = toDate( itemValue )
+
+                let value = ( dt && isDefaultDate(dt) ) ? 
+                    //dt.toTimeZoneIndependentString( { hour12:true } ) : itemValue
+                    dt.toTimeZoneDependentString( { hour12:true } ) : itemValue
+
+                return ( <div>{value}</div> )
+            }
+
         }
 
         //set sorting information

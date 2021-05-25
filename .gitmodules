@@ -1,0 +1,3 @@
+[submodule "DetailListGrid-Template"]
+	path = DetailListGrid-Template
+	url = https://github.com/soulsoftware/PCF-DetailListGrid-Template.git

@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <manifest>
   <control
     namespace="PCFNamespace" 
     constructor="DetailListGridTemplate"
     version="1.0.8"
-    display-name-key="DetailsList Grid"
+    display-name-key="DetaiListHoursOnly"
     description-key="A custom grid view that utilizes the Office Fabric UI DetailsList control."
     control-type="standard">
     <!-- dataset node represents a set of entity records on CDS; allow more than one datasets -->
@@ -18,17 +18,18 @@
       <code path="index.ts" order="1" />
       <css path="css/Control.css" order="1" />
     </resources>
-    <!-- UNCOMMENT TO ENABLE THE SPECIFIED API
+    <!-- UNCOMMENT TO ENABLE THE SPECIFIED API -->
     <feature-usage>
+    <!--
       <uses-feature name="Device.captureAudio" required="true" />
       <uses-feature name="Device.captureImage" required="true" />
       <uses-feature name="Device.captureVideo" required="true" />
       <uses-feature name="Device.getBarcodeValue" required="true" />
       <uses-feature name="Device.getCurrentPosition" required="true" />
       <uses-feature name="Device.pickFile" required="true" />
-      <uses-feature name="Utility" required="true" />
       <uses-feature name="WebAPI" required="true" />
-    </feature-usage>
     -->
+      <uses-feature name="Utility" required="true" />
+    </feature-usage>
   </control>
 </manifest>

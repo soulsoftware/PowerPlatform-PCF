@@ -2,10 +2,10 @@
 <ImportExportXml version="9.1.0.843" SolutionPackageVersion="9.1" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <!-- Unique Name of Cds Solution-->
-    <UniqueName>DetailListGridTemplate</UniqueName>
+    <UniqueName>DetaiListHoursOnly</UniqueName>
     <LocalizedNames>
       <!-- Localized Solution Name in language code -->
-      <LocalizedName description="DetailListGridTemplate" languagecode="1033" />
+      <LocalizedName description="The DetaiListHoursOnly Component" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
     <Version>1.0.8</Version>
@@ -13,19 +13,19 @@
     <Managed>2</Managed>
     <Publisher>
       <!-- Unique Publisher Name of Cds Solution -->
-      <UniqueName>soulsoftware</UniqueName>
+      <UniqueName>Development</UniqueName>
       <LocalizedNames>
         <!-- Localized Cds Publisher Name in language code-->
-        <LocalizedName description="soulsoftware" languagecode="1033" />
+        <LocalizedName description="The Development Publisher" languagecode="1033" />
       </LocalizedNames>
       <Descriptions>
         <!-- Description of Cds Publisher in language code -->
-        <Description description="soulsoftware" languagecode="1033" />
+        <Description description="The Development Publisher" languagecode="1033" />
       </Descriptions>
       <EMailAddress xsi:nil="true"></EMailAddress>
       <SupportingWebsiteUrl xsi:nil="true"></SupportingWebsiteUrl>
       <!-- Customization Prefix for the Cds Publisher-->
-      <CustomizationPrefix>sou</CustomizationPrefix>
+      <CustomizationPrefix>Dev</CustomizationPrefix>
       <!-- Derived Option Value Prefix for the Customization Prefix of Cds Publisher -->
       <CustomizationOptionValuePrefix>59061</CustomizationOptionValuePrefix>
       <Addresses>
