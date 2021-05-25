@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest>
   <control
-    namespace="PCFNamespace" 
+    namespace="Soul.PCFControls" 
     constructor="DetailListGridTemplate"
     version="1.0.8"
     display-name-key="DetaiListHoursOnly"
