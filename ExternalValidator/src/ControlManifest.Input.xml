@@ -3,7 +3,7 @@
 
   <control  namespace="Soul.PCFControls"
             constructor="ExternalValidatorControl"
-            version="1.0.0"
+            version="1.0.1"
             display-name-key="External Validation Control"
             description-key="External Validation Control"
             control-type="standard">
@@ -15,7 +15,7 @@
     display-name-key="Property_Display_Key" description-key="Property_Desc_Key" of-type-group="numbers" usage="bound" required="true" /> -->
     <resources>
       <code path="index.ts" order="41"/>
-      <!-- UNCOMMENT TO ADD MORE RESOURCES <resx path="strings/ValidatedInputControl.1033.resx" version="1.0.0" /> -->
+      <!-- UNCOMMENT TO ADD MORE RESOURCES <resx path="strings/ValidatedInputControl.1033.resx" version="1.0.1" /> -->
     </resources>
   </control>
 </manifest>

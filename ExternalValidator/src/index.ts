@@ -20,11 +20,12 @@ export class ExternalValidatorControl implements ComponentFramework.StandardCont
   }
 
   public hideControl(elem: HTMLElement | null) {
+
     if (elem == null) return;
-    if (elem.classList.contains("br")) {
+    if (elem.classList.contains("br")) 
       elem.style.display = 'none';
-    }
-    else this.hideControl(elem.parentElement);
+    else 
+      this.hideControl(elem.parentElement);
   }
 
   public setErrorState(value: string) {
@@ -48,7 +49,7 @@ export class ExternalValidatorControl implements ComponentFramework.StandardCont
     debugger;
 
     this._context = context;
-    this._attributeName = (<any>context).reporting._controlId.split('.')[0];
+    this._attributeName = context.reporting!._controlId.split('.')[0];
     this._notifyOutputChanged = notifyOutputChanged;
     this._value = context.parameters.value.raw;
 
@@ -58,7 +59,7 @@ export class ExternalValidatorControl implements ComponentFramework.StandardCont
     if (context.parameters.regEx.raw != null)
       this._regEx = new RegExp(context.parameters.regEx.raw);
 
-    var currentValue = context.parameters.value.formatted ? context.parameters.value.formatted : "0";
+    const currentValue = context.parameters.value.formatted || '';
     this.hideControl(container);
     this.setErrorState(currentValue);
     // appending the HTML elements to the control's HTML container element.
