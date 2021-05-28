@@ -3,6 +3,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {IDetailListGridControlProps, DetailListGridControl}  from './DetailListGridControl'
 
+const DEFAULT_PAGE_SIZE = 10
+
 function getQueryVariable(param:string) : string|undefined {
     const query = window.location.search.substring(1);
 	
@@ -93,7 +95,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		this._container.appendChild(this._detailList);
 
 		//set the paging size to 5000
-		context.parameters.sampleDataSet.paging.setPageSize(5000);
+		context.parameters.sampleDataSet.paging.setPageSize(DEFAULT_PAGE_SIZE);
 	}
 
 

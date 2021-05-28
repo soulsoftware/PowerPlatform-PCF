@@ -150,7 +150,7 @@ const navigate = (item: any, linkReference: string | undefined, pcfContext: Comp
 const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IInputs>) => {
     const dataSet = pcfContext.parameters.sampleDataSet
 
-    const resultSet = dataSet.sortedRecordIds.slice(0,50).map( key => {
+    const resultSet = dataSet.sortedRecordIds.map( key => {
         const record = dataSet.records[key];
         const newRecord: any = {
             key: record.getRecordId()
@@ -225,9 +225,9 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
             key:            column.name,
             name:           column.displayName,
             fieldName:      column.alias,
-            currentWidth:   column.visualSizeFactor,
-            minWidth:       100,                
-            maxWidth:       columnWidthDistribution[index],
+            // currentWidth:   column.visualSizeFactor,
+            minWidth:       column.visualSizeFactor,                
+            // maxWidth:       columnWidthDistribution[index],
             isResizable:    true,
             data:           {isPrimary : column.isPrimary},
             sortAscendingAriaLabel: 'Sorted A to Z',
@@ -241,7 +241,7 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
                 'isPrimary': column.isPrimary,
                 'isCustom': isCustomField(column.name),
                 'visualSizeFactor':column.visualSizeFactor, 
-                'maxWidth':iColumn.maxWidth
+                'maxWidth':columnWidthDistribution[index]
         }])
 
         //create links for primary field and entity reference.            
