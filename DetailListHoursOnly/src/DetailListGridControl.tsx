@@ -18,10 +18,7 @@ export interface IDetailListGridControlProps {
     entityName?:string
 }
 
-interface IColumnWidth {
-    name: string,
-    width: number
-}
+type IColumnWidth = number
 
 //Initialize the icons otherwise they will not display in a Canvas app.
 //They will display in Model app because Microsoft initializes them in their controls.
@@ -182,7 +179,7 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
  // get the columns from the dataset
 const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?:string ) : IColumn[] => {
     let dataSet = pcfContext.parameters.sampleDataSet;
-    let iColumns: IColumn[] = [];
+    
 
     let columnWidthDistribution = getColumnWidthDistribution(pcfContext);
 
@@ -219,9 +216,9 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
     
         }
     }
+  
+    return dataSet.columns.map( (column,index) => { 
 
-
-    for (let column of dataSet.columns){
         const iColumn: IColumn = {
             className:      'detailList-cell',
             headerClassName:'detailList-gridLabels',
@@ -229,21 +226,23 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
             name:           column.displayName,
             fieldName:      column.alias,
             currentWidth:   column.visualSizeFactor,
-            minWidth:       5,                
-            maxWidth:       columnWidthDistribution.find(x => x.name === column.alias)?.width || column.visualSizeFactor,
+            minWidth:       25,                
+            maxWidth:       columnWidthDistribution[index],
             isResizable:    true,
             data:           {isPrimary : column.isPrimary},
             sortAscendingAriaLabel: 'Sorted A to Z',
             sortDescendingAriaLabel:'Sorted Z to A',
         }
 
-        console.table( [ 
-            ['name', column.name],
-            ['displayName', column.displayName], 
-            ['type', column.dataType], 
-            ['isPrimary', column.isPrimary],
-            ['isCustom', isCustomField(column.name)],
-        ])
+        console.table( [{
+                'name': column.name,
+                'displayName': column.displayName, 
+                'type': column.dataType, 
+                'isPrimary': column.isPrimary,
+                'isCustom': isCustomField(column.name),
+                'visualSizeFactor':column.visualSizeFactor, 
+                'maxWidth':iColumn.maxWidth
+        }])
 
         //create links for primary field and entity reference.            
         if (column.dataType.startsWith('Lookup.') || column.isPrimary)
@@ -288,26 +287,23 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
             iColumn.isSortedDescending = dataSet?.sorting?.find( s => s.name === column.name)?.sortDirection === 1 || false;
         }
 
-        iColumns.push(iColumn);
-    }
-    return iColumns;
+        return iColumn
+    })
 }   
 
 const getColumnWidthDistribution = (pcfContext: ComponentFramework.Context<IInputs>): IColumnWidth[] => {
         
-    let widthDistribution: IColumnWidth[] = [];
     let columnsOnView = pcfContext.parameters.sampleDataSet.columns;
+
+    let widthDistribution = Array<IColumnWidth>(columnsOnView.length);
 
     // Considering need to remove border & padding length
     let totalWidth:number = pcfContext.mode.allocatedWidth - 250;
     //console.log(`new total width: ${totalWidth}`);
-    let widthSum = 0;
     
-    columnsOnView.forEach( columnItem => {
-        widthSum += columnItem.visualSizeFactor;
-    });
+    let widthSum = columnsOnView.reduce( (result, columnItem) => result + columnItem.visualSizeFactor, 0)
 
-    let remainWidth:number = totalWidth;
+    let remainWidth = totalWidth;
     
     columnsOnView.forEach((item, index) => {
         let widthPerCell = 0;
@@ -319,7 +315,7 @@ const getColumnWidthDistribution = (pcfContext: ComponentFramework.Context<IInpu
         else {
             widthPerCell = remainWidth;
         }
-        widthDistribution.push({name: item.alias, width: widthPerCell});
+        widthDistribution[index] = widthPerCell
     });
 
     return widthDistribution;
@@ -332,13 +328,10 @@ const updateColumnWidths = (columns: IColumn[], pcfContext: ComponentFramework.C
     let currentColumns = columns;    
 
     //make sure to use map here which returns a new array, otherwise the state/grid will not update.
-    return currentColumns.map(col => {           
-
-        const newMaxWidth = columnWidthDistribution.find(x => x.name === col.fieldName);
-        if (newMaxWidth) col.maxWidth = newMaxWidth.width;
-
+    return currentColumns.map( (col,index) => {           
+        col.maxWidth = columnWidthDistribution[index]
         return col;
-      });        
+    });        
 }
 
 //sort the items in the grid.
