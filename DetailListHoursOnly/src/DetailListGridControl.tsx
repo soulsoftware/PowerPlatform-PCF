@@ -226,7 +226,7 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
             name:           column.displayName,
             fieldName:      column.alias,
             currentWidth:   column.visualSizeFactor,
-            minWidth:       25,                
+            minWidth:       100,                
             maxWidth:       columnWidthDistribution[index],
             isResizable:    true,
             data:           {isPrimary : column.isPrimary},
