@@ -150,7 +150,7 @@ const navigate = (item: any, linkReference: string | undefined, pcfContext: Comp
 const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IInputs>) => {
     const dataSet = pcfContext.parameters.sampleDataSet
 
-    const resultSet = dataSet.sortedRecordIds.map( key => {
+    const resultSet = dataSet.sortedRecordIds.slice(0,50).map( key => {
         const record = dataSet.records[key];
         const newRecord: any = {
             key: record.getRecordId()
