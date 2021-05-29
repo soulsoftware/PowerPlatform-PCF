@@ -109,6 +109,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 	 */
 	public updateView(context: ComponentFramework.Context<IInputs>): void
 	{
+		console.log( 'updateView' )
 
 		const dataSet = context.parameters.sampleDataSet;
 		
@@ -121,7 +122,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 			// 	return;
 			// }
 		}
-		else //Are we in a canvas app?
+		else // Are we in a canvas app?
 		{
 			//since we are in a canvas app let's make sure we set the height of the control
 			this._detailList.style.height = `${(this._context.mode.allocatedHeight).toString()}px`
