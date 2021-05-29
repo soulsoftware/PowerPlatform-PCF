@@ -5,6 +5,21 @@
 
 import React = require("react");
 
+export const useInfiniteScroll = (dataset: ComponentFramework.PropertyTypes.DataSet) => {    
+    const [currentPage, setCurrentPage] = React.useState<number>(0);
+
+    React.useEffect(() => {
+        if( currentPage ==0 && dataset.paging.hasNextPage){ //first page
+            setCurrentPage(1);
+            dataset.paging.loadNextPage()      
+        }               
+    }, [dataset]);
+
+    return {
+        currentPage
+    }
+}
+
 export const useExactPaging = (dataset: ComponentFramework.PropertyTypes.DataSet) => {    
       
     const [firstItemNumber, setFirstItemNumber] = React.useState<number>(0);

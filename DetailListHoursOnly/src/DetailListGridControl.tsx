@@ -11,6 +11,7 @@ import * as lcid from 'lcid';
 import {IInputs} from "./generated/ManifestTypes";
 import './time.extension'
 import { IDetailsRowProps } from '@fluentui/react/lib/DetailsList';
+import { useInfiniteScroll } from './hooks/paging';
 
 export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
@@ -27,11 +28,10 @@ initializeIcons();
 
 export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (props) => {                           
         
-    // using react hooks to create functional which will allow us to set these values in our code
-    // eg. when we calculate the columns we can then udpate the state of them using setColums([our new columns]);
-    // we have passed in an empty array as the default.
-    // const [columns, setColumns] = React.useState(_getColumns);
-    // const [items, setItems] = React.useState(_getItems);
+    const { currentPage } = useInfiniteScroll(props.pcfContext.parameters.sampleDataSet)
+
+    console.log( 'currenttPage', currentPage )
+
     const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
     const [items, setItems] = React.useState(getItems(columns, props.pcfContext));
     const [isDataLoaded, setIsDataLoaded] = React.useState(props.isModelApp);

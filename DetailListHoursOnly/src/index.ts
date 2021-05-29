@@ -114,8 +114,14 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		
 		if (dataSet.loading) return;
 
-		//Are we in a canvas app?
-		if (!this._isModelApp)
+		if (this._isModelApp ) // Are we in a model driven app?
+		{ 
+			// if( dataSet.paging.hasNextPage) {
+			// 	dataSet.paging.loadNextPage();
+			// 	return;
+			// }
+		}
+		else //Are we in a canvas app?
 		{
 			//since we are in a canvas app let's make sure we set the height of the control
 			this._detailList.style.height = `${(this._context.mode.allocatedHeight).toString()}px`
@@ -129,13 +135,6 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 			//console.log(`TS: updateView, dataSet.paging.totalResultCount ${dataSet.paging.totalResultCount}`)
 			dataSet.paging.setPageSize(dataSet.paging.totalResultCount);
 			dataSet.paging.reset();
-		}
-
-		//if data set has additional pages retrieve them before running anything else
-		if (this._isModelApp && dataSet.paging.hasNextPage) {
-			// dataSet.paging.loadNextPage();
-			console.log( '==> load next page <==')
-			return;
 		}
 
 		//useEffect on the dataSet itself was not picking up on all the updates so pass in a dataset version
