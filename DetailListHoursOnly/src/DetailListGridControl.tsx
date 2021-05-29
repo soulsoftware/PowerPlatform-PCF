@@ -28,7 +28,7 @@ initializeIcons();
 
 export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (props) => {                           
         
-    const { currentPage } = useInfiniteScroll(props.pcfContext.parameters.sampleDataSet)
+    const { currentPage, moveNextPage } = useInfiniteScroll(props.pcfContext.parameters.sampleDataSet)
 
     console.log( 'currenttPage', currentPage )
 
@@ -122,7 +122,10 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     const _onRenderMissingItem = (index?: number | undefined, rowProps?: IDetailsRowProps | undefined) => {
 
-        console.log( 'onRenderMissingItem',index )
+        console.log( 'onRenderMissingItem', index )
+
+        moveNextPage()
+        
         return null
     }
    
