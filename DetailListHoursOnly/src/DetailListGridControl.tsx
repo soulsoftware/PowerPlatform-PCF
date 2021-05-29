@@ -125,7 +125,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         console.log( 'onRenderMissingItem', index )
 
         moveNextPage()
-        
+
         return null
     }
    
@@ -248,15 +248,15 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
             sortDescendingAriaLabel:'Sorted Z to A',
         }
 
-        console.table( [{
-                'name': column.name,
-                'displayName': column.displayName, 
-                'type': column.dataType, 
-                'isPrimary': column.isPrimary,
-                'isCustom': isCustomField(column.name),
-                'visualSizeFactor':column.visualSizeFactor, 
-                'maxWidth':columnWidthDistribution[index]
-        }])
+        // console.table( [{
+        //         'name': column.name,
+        //         'displayName': column.displayName, 
+        //         'type': column.dataType, 
+        //         'isPrimary': column.isPrimary,
+        //         'isCustom': isCustomField(column.name),
+        //         'visualSizeFactor':column.visualSizeFactor, 
+        //         'maxWidth':columnWidthDistribution[index]
+        // }])
 
         //create links for primary field and entity reference.            
         if (column.dataType.startsWith('Lookup.') || column.isPrimary)
