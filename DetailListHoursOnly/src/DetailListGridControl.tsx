@@ -180,7 +180,10 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
 
         return newRecord;
     });          
-            
+    
+    if( dataSet.paging.hasNextPage ) {
+        resultSet.push( null )
+    }
     return resultSet;
 }  
 
