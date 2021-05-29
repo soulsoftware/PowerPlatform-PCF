@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {IDetailListGridControlProps, DetailListGridControl}  from './DetailListGridControl'
 
-const DEFAULT_PAGE_SIZE = 10
+const DEFAULT_PAGE_SIZE = 50
 
 function getQueryVariable(param:string) : string|undefined {
     const query = window.location.search.substring(1);
@@ -109,9 +109,12 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 	 */
 	public updateView(context: ComponentFramework.Context<IInputs>): void
 	{
-		console.log( 'updateView' )
 
 		const dataSet = context.parameters.sampleDataSet;
+
+		console.log( 'updateView', { 
+			'dataSet.loading': dataSet.loading 
+		})
 		
 		if (dataSet.loading) return;
 

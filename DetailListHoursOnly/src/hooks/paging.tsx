@@ -7,7 +7,7 @@ import React = require("react");
 
 export const useInfiniteScroll = (dataset: ComponentFramework.PropertyTypes.DataSet) => {    
     const [currentPage, setCurrentPage] = React.useState<number>(0);
-
+    
     function moveNextPage() {        
         if( dataset.paging.hasNextPage ) {
             const newPage = currentPage + 1
