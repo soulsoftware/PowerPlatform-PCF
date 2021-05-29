@@ -50,7 +50,11 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		 * @see https://www.dancingwithcrm.com/another-way-to-get-entity-name-and-id-in-pcf/
 		 */
 		const entityName = getQueryVariable('etn')
-		console.log( 'entity name', entityName )
+		
+		console.table( {
+			'entity name':entityName,
+			isModelApp:this._isModelApp
+		})
 		
 		// Need to track container resize so that control could get the available width. 
 		// The available height won't be provided even when this is true
@@ -105,11 +109,6 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 	 */
 	public updateView(context: ComponentFramework.Context<IInputs>): void
 	{
-		// console.log( context )
-		// for( let p in context ) {		
-		// 	console.log( p )
-		// 	console.log( (<any>context)[p] )
-		// }
 
 		const dataSet = context.parameters.sampleDataSet;
 		
@@ -134,7 +133,8 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 
 		//if data set has additional pages retrieve them before running anything else
 		if (this._isModelApp && dataSet.paging.hasNextPage) {
-			dataSet.paging.loadNextPage();
+			// dataSet.paging.loadNextPage();
+			console.log( '==> load next page <==')
 			return;
 		}
 

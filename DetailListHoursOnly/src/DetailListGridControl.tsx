@@ -10,6 +10,7 @@ import { initializeIcons } from '@fluentui/react/lib/icons';
 import * as lcid from 'lcid';
 import {IInputs} from "./generated/ManifestTypes";
 import './time.extension'
+import { IDetailsRowProps } from '@fluentui/react/lib/DetailsList';
 
 export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
@@ -118,6 +119,12 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
             </Sticky>
         )
     }      
+
+    const _onRenderMissingItem = (index?: number | undefined, rowProps?: IDetailsRowProps | undefined) => {
+
+        console.log( 'onRenderMissingItem',index )
+        return null
+    }
    
     return (   
         <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
@@ -133,10 +140,11 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                         ariaLabelForSelectAllCheckbox="Toggle selection for all items"
                         checkButtonAriaLabel="Row checkbox"                        
                         selectionMode={SelectionMode.multiple}
-                        onRenderDetailsHeader={_onRenderDetailsHeader}
-                        onRenderDetailsFooter={_onRenderDetailsFooter}
                         layoutMode = {DetailsListLayoutMode.justified}
                         constrainMode={ConstrainMode.unconstrained}
+                        onRenderDetailsHeader={_onRenderDetailsHeader}
+                        onRenderDetailsFooter={_onRenderDetailsFooter}
+                        onRenderMissingItem={_onRenderMissingItem}
                     />                   
         </ScrollablePane>
     );
