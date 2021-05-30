@@ -14,6 +14,8 @@ import { IDetailsRowProps } from '@fluentui/react/lib/DetailsList';
 import { useInfiniteScroll } from './hooks/paging';
 import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
 
+const USE_SHIMMEREDLIST = false
+
 export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
     isModelApp: boolean,
@@ -130,22 +132,22 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     const _onRenderCustomPlaceholder = (rowProps: IDetailsRowProps, index?: number, defaultRender?: (props: IDetailsRowProps) => React.ReactNode)  => {
 
-        console.log( 'onRenderCustomPlaceholder', index, rowProps.item )
+        console.log( 'onRenderCustomPlaceholder', rowProps.item, index )
 
-        if( pcfctx.parameters.sampleDataSet.paging.hasNextPage ) {
-            moveNextPage()
-        }
+        moveNextPage()
+
         return defaultRender!( rowProps )
 
     }
    
     return (   
         <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
-                  
+
+            if( USE_SHIMMEREDLIST ) {
                 <ShimmeredDetailsList
                         enableShimmer={pcfctx.parameters.sampleDataSet.loading}
                         items={items}
-                        columns= {columns}
+                        columns={columns}
                         setKey="set"                                                                                         
                         selection={_selection} // updates the dataset so that we can utilize the ribbon buttons in Dynamics                                        
                         onColumnHeaderClick={_onColumnClick} // used to implement sorting for the columns.                    
@@ -158,9 +160,29 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                         constrainMode={ConstrainMode.unconstrained}
                         onRenderDetailsHeader={_onRenderDetailsHeader}
                         onRenderDetailsFooter={_onRenderDetailsFooter}
-                        onRenderMissingItem={_onRenderMissingItem}
                         onRenderCustomPlaceholder={_onRenderCustomPlaceholder}
-                    />                   
+                    />      
+            }
+            else {
+                <DetailsList                
+                    items={items}
+                    columns={columns}
+                    setKey="set"                                                                                         
+                    selection={_selection} // updates the dataset so that we can utilize the ribbon buttons in Dynamics                                        
+                    onColumnHeaderClick={_onColumnClick} // used to implement sorting for the columns.                    
+                    selectionPreservedOnEmptyClick={true}
+                    ariaLabelForSelectionColumn="Toggle selection"
+                    ariaLabelForSelectAllCheckbox="Toggle selection for all items"
+                    checkButtonAriaLabel="Row checkbox"                        
+                    selectionMode={SelectionMode.multiple}
+                    layoutMode = {DetailsListLayoutMode.justified}
+                    constrainMode={ConstrainMode.unconstrained}
+                    onRenderDetailsHeader={_onRenderDetailsHeader}
+                    onRenderDetailsFooter={_onRenderDetailsFooter}
+                    onRenderMissingItem={_onRenderMissingItem}
+            />      
+
+            }             
         </ScrollablePane>
     );
 };
