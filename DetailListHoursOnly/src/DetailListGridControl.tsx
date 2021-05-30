@@ -130,8 +130,11 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     const _onRenderCustomPlaceholder = (rowProps: IDetailsRowProps, index?: number, defaultRender?: (props: IDetailsRowProps) => React.ReactNode)  => {
 
-        console.log( 'onRenderCustomPlaceholder', index )
+        console.log( 'onRenderCustomPlaceholder', index, rowProps.item )
 
+        if( pcfctx.parameters.sampleDataSet.paging.hasNextPage ) {
+            moveNextPage()
+        }
         return defaultRender!( rowProps )
 
     }
