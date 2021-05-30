@@ -140,31 +140,12 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     }
    
-    return (   
-        <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
 
-            if( USE_SHIMMEREDLIST ) {
+    const DetailsListControl = () => {
+        if( USE_SHIMMEREDLIST ) {
+            return (
                 <ShimmeredDetailsList
-                        enableShimmer={pcfctx.parameters.sampleDataSet.loading}
-                        items={items}
-                        columns={columns}
-                        setKey="set"                                                                                         
-                        selection={_selection} // updates the dataset so that we can utilize the ribbon buttons in Dynamics                                        
-                        onColumnHeaderClick={_onColumnClick} // used to implement sorting for the columns.                    
-                        selectionPreservedOnEmptyClick={true}
-                        ariaLabelForSelectionColumn="Toggle selection"
-                        ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-                        checkButtonAriaLabel="Row checkbox"                        
-                        selectionMode={SelectionMode.multiple}
-                        layoutMode = {DetailsListLayoutMode.justified}
-                        constrainMode={ConstrainMode.unconstrained}
-                        onRenderDetailsHeader={_onRenderDetailsHeader}
-                        onRenderDetailsFooter={_onRenderDetailsFooter}
-                        onRenderCustomPlaceholder={_onRenderCustomPlaceholder}
-                    />      
-            }
-            else {
-                <DetailsList                
+                    enableShimmer={pcfctx.parameters.sampleDataSet.loading}
                     items={items}
                     columns={columns}
                     setKey="set"                                                                                         
@@ -179,10 +160,35 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                     constrainMode={ConstrainMode.unconstrained}
                     onRenderDetailsHeader={_onRenderDetailsHeader}
                     onRenderDetailsFooter={_onRenderDetailsFooter}
-                    onRenderMissingItem={_onRenderMissingItem}
+                    onRenderCustomPlaceholder={_onRenderCustomPlaceholder}
+                />      
+
+            )
+        }
+        else {
+            return <DetailsList                
+                items={items}
+                columns={columns}
+                setKey="set"                                                                                         
+                selection={_selection} // updates the dataset so that we can utilize the ribbon buttons in Dynamics                                        
+                onColumnHeaderClick={_onColumnClick} // used to implement sorting for the columns.                    
+                selectionPreservedOnEmptyClick={true}
+                ariaLabelForSelectionColumn="Toggle selection"
+                ariaLabelForSelectAllCheckbox="Toggle selection for all items"
+                checkButtonAriaLabel="Row checkbox"                        
+                selectionMode={SelectionMode.multiple}
+                layoutMode = {DetailsListLayoutMode.justified}
+                constrainMode={ConstrainMode.unconstrained}
+                onRenderDetailsHeader={_onRenderDetailsHeader}
+                onRenderDetailsFooter={_onRenderDetailsFooter}
+                onRenderMissingItem={_onRenderMissingItem}
             />      
 
-            }             
+        }
+    }
+    return (   
+        <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
+            <DetailsListControl/>           
         </ScrollablePane>
     );
 };
