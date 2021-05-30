@@ -130,7 +130,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     const _onRenderCustomPlaceholder = (rowProps: IDetailsRowProps, index?: number, defaultRender?: (props: IDetailsRowProps) => React.ReactNode)  => {
 
-        console.log( '_onRenderCustomPlaceholder', index )
+        console.log( 'onRenderCustomPlaceholder', index )
 
         return defaultRender!( rowProps )
 
