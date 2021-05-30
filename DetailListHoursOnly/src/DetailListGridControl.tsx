@@ -183,6 +183,7 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
     });          
     
     if( dataSet.paging.hasNextPage ) {
+        console.log( 'add null row for trigger "onMissingItem"')
         resultSet.push( null )
     }
     return resultSet;
