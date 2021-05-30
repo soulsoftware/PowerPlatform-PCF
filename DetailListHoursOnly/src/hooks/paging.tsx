@@ -18,9 +18,13 @@ export const useInfiniteScroll = (dataset: ComponentFramework.PropertyTypes.Data
     }
 
     React.useEffect(() => {
-        if( currentPage ==0 ){ //first page
+        if( dataset.loading ){ 
+            dataset.paging.reset()
+            setCurrentPage(0)
+        }
+        else if( currentPage===0 ) {
             moveNextPage()
-        }               
+        }            
     }, [dataset]);
     
     

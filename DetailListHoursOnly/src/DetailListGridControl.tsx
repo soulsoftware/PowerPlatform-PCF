@@ -12,6 +12,7 @@ import {IInputs} from "./generated/ManifestTypes";
 import './time.extension'
 import { IDetailsRowProps } from '@fluentui/react/lib/DetailsList';
 import { useInfiniteScroll } from './hooks/paging';
+import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
 
 export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
@@ -34,18 +35,9 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
     const [items, setItems] = React.useState(getItems(columns, props.pcfContext));
-    const [isDataLoaded, setIsDataLoaded] = React.useState(props.isModelApp);
     // react hook to store the number of selected items in the grid which will be displayed in the grid footer.
     const [selectedItemCount, setSelectedItemCount] = React.useState(0);    
     
-    // Set the isDataLoaded state based upon the paging totalRecordCount
-    React.useEffect(() => {
-        const dataSet = props.pcfContext.parameters.sampleDataSet
-        if (dataSet.loading || props.isModelApp) return
-        setIsDataLoaded(dataSet.paging.totalResultCount !== -1)         
-    },
-    [items]);
-
     // When the component is updated this will determine if the sampleDataSet has changed.  
     // If it has we will go get the udpated items.
     React.useEffect(() => {
@@ -132,7 +124,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     return (   
         <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
                   
-                <DetailsList
+                <ShimmeredDetailsList
                         items={items}
                         columns= {columns}
                         setKey="set"                                                                                         
