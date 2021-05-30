@@ -127,6 +127,14 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
         return null
     }
+
+    const _onRenderCustomPlaceholder = (rowProps: IDetailsRowProps, index?: number, defaultRender?: (props: IDetailsRowProps) => React.ReactNode)  => {
+
+        console.log( '_onRenderCustomPlaceholder', index )
+
+        return defaultRender!( rowProps )
+
+    }
    
     return (   
         <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
@@ -148,6 +156,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                         onRenderDetailsHeader={_onRenderDetailsHeader}
                         onRenderDetailsFooter={_onRenderDetailsFooter}
                         onRenderMissingItem={_onRenderMissingItem}
+                        onRenderCustomPlaceholder={_onRenderCustomPlaceholder}
                     />                   
         </ScrollablePane>
     );
