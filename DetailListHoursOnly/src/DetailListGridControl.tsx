@@ -109,7 +109,8 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const _onRenderDetailsFooter = (props: IDetailsFooterProps | undefined, defaultRender?: IRenderFunction<IDetailsFooterProps>): JSX.Element => {
 
         // const totalResultCount = items.length
-        const totalResultCount = pcfctx.parameters.sampleDataSet.paging.totalResultCount
+        // const totalResultCount = pcfctx.parameters.sampleDataSet.paging.totalResultCount
+        const totalResultCount = pcfctx.parameters.sampleDataSet.sortedRecordIds.length
 
         return (
             <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
@@ -131,6 +132,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
                   
                 <ShimmeredDetailsList
+                        enableShimmer={pcfctx.parameters.sampleDataSet.loading}
                         items={items}
                         columns= {columns}
                         setKey="set"                                                                                         
