@@ -28,10 +28,13 @@ type IColumnWidth = number
 initializeIcons();
 
 export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (props) => {                           
-        
-    const { currentPage, moveNextPage } = useInfiniteScroll(props.pcfContext.parameters.sampleDataSet)
+    
+    const pcfctx = props.pcfContext
 
-    console.log( 'currenttPage', currentPage )
+    const { currentPage, moveNextPage } = 
+        useInfiniteScroll(props.pcfContext.parameters.sampleDataSet, props.dataSetVersion)
+
+    console.log( 'currentPage', currentPage )
 
     const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
     const [items, setItems] = React.useState(getItems(columns, props.pcfContext));
@@ -105,9 +108,12 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     const _onRenderDetailsFooter = (props: IDetailsFooterProps | undefined, defaultRender?: IRenderFunction<IDetailsFooterProps>): JSX.Element => {
 
+        // const totalResultCount = items.length
+        const totalResultCount = pcfctx.parameters.sampleDataSet.paging.totalResultCount
+
         return (
             <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
-                <Label className="footer-item">Records: {items.length.toString()} ({selectedItemCount} selected)</Label>               
+                <Label className="footer-item">Records: {totalResultCount} ({selectedItemCount} selected)</Label>               
             </Sticky>
         )
     }      
