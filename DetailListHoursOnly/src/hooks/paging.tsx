@@ -12,7 +12,7 @@ export const useInfiniteScroll = (
     pageSize:number, 
     deps?: React.DependencyList ) => {    
 
-    const [currentPage, setCurrentPage] = React.useState<number>(0);
+    const [currentPage, setCurrentPage] = React.useState<number>(1);
     
     function moveNextPage() {        
         if( dataset.paging.hasNextPage ) {
@@ -25,21 +25,20 @@ export const useInfiniteScroll = (
     }
 
     React.useEffect(() => {
-        if( currentPage === 0 && dataset.loading ){ 
-            setCurrentPage(1)
-        }
-        else if( currentPage > 1 && detailListRef?.current ) {
-            const ref = detailListRef?.current
-            const index = (currentPage-1) * pageSize + 1
+        if( !dataset.loading ) {
 
-            setImmediate( () => {
-                console.log( 'scrollToIndex in effect', index  )
-                ref.scrollToIndex( index )
-                ref.focusIndex( index )  
-            })  
-        }
-
-            
+            if( currentPage > 1 && detailListRef?.current ) {
+                const ref = detailListRef?.current
+                const index = (currentPage-1) * pageSize + 1
+    
+                setImmediate( () => {
+                    console.log( 'scrollToIndex in effect', index  )
+                    ref.scrollToIndex( index )
+                    ref.focusIndex( index )  
+                })  
+            }
+    
+        }          
     }, [currentPage]);
     
     
