@@ -15,7 +15,7 @@ import { useInfiniteScroll } from './hooks/paging';
 import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
 import { IDetailsList } from '@fluentui/react/lib/DetailsList';
 
-const USE_SHIMMEREDLIST = true
+const USE_SHIMMEREDLIST = false
 
 export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
@@ -137,7 +137,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     const _onRenderCustomPlaceholder = (rowProps: IDetailsRowProps, index?: number, defaultRender?: (props: IDetailsRowProps) => React.ReactNode)  => {
 
-        console.log( 'onRenderCustomPlaceholder', rowProps.item, index )
+        console.log( 'onRenderCustomPlaceholder', index )
 
         moveNextPage()
 

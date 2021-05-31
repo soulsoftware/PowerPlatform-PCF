@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.1.0.3243" SolutionPackageVersion="9.1" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.1.0.3343" SolutionPackageVersion="9.1" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <!-- Unique Name of Cds Solution-->
     <UniqueName>DetaiListHoursOnly</UniqueName>
@@ -8,7 +8,7 @@
       <LocalizedName description="The DetaiListHoursOnly Component" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.0.32</Version>
+    <Version>1.0.33</Version>
     <!-- Solution Package Type: Unmanaged(0)/Managed(1)/Both(2)-->
     <Managed>2</Managed>
     <Publisher>
