@@ -43,7 +43,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const [selectedItemCount, setSelectedItemCount] = React.useState(0);    
     
     const { currentPage, moveNextPage } = 
-        useInfiniteScroll(dataset, detailListRef, props.pageSize, [items])
+        useInfiniteScroll(dataset, detailListRef, props.pageSize, [props.dataSetVersion,items])
 
     // When the component is updated this will determine if the sampleDataSet has changed.  
     // If it has we will go get the udpated items.
