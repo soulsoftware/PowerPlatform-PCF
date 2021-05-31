@@ -169,7 +169,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                     onRenderDetailsHeader={_onRenderDetailsHeader}
                     onRenderDetailsFooter={_onRenderDetailsFooter}
                     onRenderCustomPlaceholder={_onRenderCustomPlaceholder}
-                    componentRef={ (ref) => }
+                    componentRef={ (ref) => detailListRef.current = ref! }
                 />      
 
             )
@@ -191,6 +191,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                 onRenderDetailsHeader={_onRenderDetailsHeader}
                 onRenderDetailsFooter={_onRenderDetailsFooter}
                 onRenderMissingItem={_onRenderMissingItem}
+                componentRef={ (ref) => detailListRef.current = ref! }
             />      
 
         }
