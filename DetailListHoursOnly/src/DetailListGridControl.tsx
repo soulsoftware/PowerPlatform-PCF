@@ -15,7 +15,7 @@ import { useInfiniteScroll } from './hooks/paging';
 import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
 import { IDetailsList } from '@fluentui/react/lib/DetailsList';
 
-const USE_SHIMMEREDLIST = false
+const USE_SHIMMEREDLIST = true
 
 export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
@@ -207,7 +207,7 @@ const navigate = (item: any, linkReference: string | undefined, pcfContext: Comp
 const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IInputs>) => {
     const dataSet = pcfContext.parameters.sampleDataSet
 
-    const resultSet = dataSet.sortedRecordIds.map( key => {
+    const resultSet = dataSet.sortedRecordIds.map( (key,index) => {
         const record = dataSet.records[key];
         const newRecord: any = {
             key: record.getRecordId()
@@ -215,7 +215,7 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
 
         for (let column of columns)
         {                
-            newRecord[column.key] = record.getFormattedValue(column.key);
+            newRecord[column.key] = record.getFormattedValue(column.key)
             if (isEntityReference(record.getValue(column.key)))
             {
                 const ref = record.getValue(column.key) as ComponentFramework.EntityReference;
@@ -223,6 +223,7 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
             }
             else if(column.data.isPrimary)
             {
+                newRecord[column.key] = `${index}) - ${record.getFormattedValue(column.key)}`
                 newRecord[`${column.key}_ref`] = record.getNamedReference();
             }
         }            
@@ -230,10 +231,13 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
         return newRecord;
     });          
     
-    if( dataSet.paging.hasNextPage ) {
-        console.log( 'add null row for trigger "onMissingItem"')
-        resultSet.push( null )
+    if( !USE_SHIMMEREDLIST ) {
+        if( dataSet.paging.hasNextPage ) {
+            console.log( 'add null row for trigger "onMissingItem"')
+            resultSet.push( null )
+        }
     }
+
     return resultSet;
 }  
 
