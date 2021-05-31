@@ -129,11 +129,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
         console.log( 'onRenderMissingItem', index )
 
-        if( moveNextPage() && detailListRef) {
-            const index = props.pageSize + 1
-            console.log( 'scrollToIndex', index  )
-            detailListRef.current?.scrollToIndex( index )
-        }
+        moveNextPage()
 
         return null
     }
@@ -148,7 +144,12 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     }
    
-
+    if( !dataset.loading && detailListRef ) {
+        const index = props.pageSize + 1
+        console.log( 'scrollToIndex', index  )
+        detailListRef.current?.scrollToIndex( index )
+    }
+    
     const DetailsListControl = () => {
         if( USE_SHIMMEREDLIST ) {
             return (
