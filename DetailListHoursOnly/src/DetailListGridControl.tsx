@@ -43,7 +43,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const [selectedItemCount, setSelectedItemCount] = React.useState(0);    
     
     const { currentPage, moveNextPage } = 
-        useInfiniteScroll(dataset, detailListRef, props.pageSize, [props.dataSetVersion,items])
+        useInfiniteScroll(dataset, detailListRef, props.pageSize, [props.dataSetVersion])
 
     console.log( 'currentPage', currentPage, 'dataset.loading', dataset.loading)
 

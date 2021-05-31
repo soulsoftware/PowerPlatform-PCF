@@ -25,8 +25,8 @@ export const useInfiniteScroll = (
     }
 
     React.useEffect(() => {
-        if( dataset.loading ){ 
-            setCurrentPage(0)
+        if( currentPage === 0 && dataset.loading ){ 
+            setCurrentPage(1)
         }
         else if( currentPage > 1 && detailListRef?.current ) {
             const ref = detailListRef?.current
