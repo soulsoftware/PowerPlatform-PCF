@@ -15,7 +15,7 @@ import { useInfiniteScroll } from './hooks/paging';
 import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
 import { IDetailsList } from '@fluentui/react/lib/DetailsList';
 
-const USE_SHIMMEREDLIST = true
+const USE_SHIMMEREDLIST = false
 
 export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
@@ -37,7 +37,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const detailListRef = React.useRef<IDetailsList>()
     
     const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
-    const [items, setItems]     = React.useState(getItems(columns, props.pcfContext));
+    const [items, setItems]     = React.useState<Array<any>>( [] /*getItems(columns, props.pcfContext)*/ );
 
     // react hook to store the number of selected items in the grid which will be displayed in the grid footer.
     const [selectedItemCount, setSelectedItemCount] = React.useState(0);    
