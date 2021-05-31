@@ -40,7 +40,7 @@ export const useInfiniteScroll = (
         }
 
             
-    }, deps);
+    }, [currentPage]);
     
     
     return {
