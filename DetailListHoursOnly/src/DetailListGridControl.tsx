@@ -36,11 +36,6 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const dataset = props.pcfContext.parameters.sampleDataSet
     const detailListRef = React.useRef<IDetailsList>()
     
-    const { currentPage, moveNextPage } = 
-        useInfiniteScroll(dataset, detailListRef, props.pageSize, [props.dataSetVersion])
-
-    console.log( 'currentPage', currentPage )
-
     const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
     const [items, setItems]     = React.useState(getItems(columns, props.pcfContext));
 
@@ -49,15 +44,19 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     
     // When the component is updated this will determine if the sampleDataSet has changed.  
     // If it has we will go get the udpated items.
-    React.useEffect(() => setItems(getItems(columns, props.pcfContext)), [
-        props.dataSetVersion
-    ])
+    React.useEffect(() => setItems(getItems(columns, props.pcfContext)), [props.dataSetVersion])
     
     // When the component is updated this will determine if the width of the control has changed.
     // If so the column widths will be adjusted.
-    React.useEffect(() => setColumns(updateColumnWidths(columns, props.pcfContext)), [
-        props.pcfContext.mode.allocatedWidth
-    ])      
+    React.useEffect(() => 
+        setColumns(updateColumnWidths(columns, props.pcfContext)), [props.pcfContext.mode.allocatedWidth])      
+
+    const { currentPage, moveNextPage } = 
+        useInfiniteScroll(dataset, detailListRef, props.pageSize, [items])
+
+    console.log( 'currentPage', currentPage )
+
+
 
     // the selector used by the DetailList
     const _selection = new Selection({
