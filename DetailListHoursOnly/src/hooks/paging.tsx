@@ -17,8 +17,8 @@ export const useInfiniteScroll = (
     function moveNextPage() {        
         if( dataset.paging.hasNextPage ) {
             const newPage = currentPage + 1
-            setCurrentPage(newPage)
             dataset.paging.loadNextPage()
+            setCurrentPage(newPage)
             return true 
         }   
         return false
@@ -26,7 +26,7 @@ export const useInfiniteScroll = (
 
     React.useEffect(() => {
         if( dataset.loading ){ 
-            setCurrentPage(1)
+            setCurrentPage(0)
         }
         else if( currentPage > 1 && detailListRef?.current ) {
             const ref = detailListRef?.current
