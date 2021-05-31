@@ -13,6 +13,7 @@ import './time.extension'
 import { IDetailsRowProps } from '@fluentui/react/lib/DetailsList';
 import { useInfiniteScroll } from './hooks/paging';
 import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
+import { IDetailsList } from '@fluentui/react/lib/DetailsList';
 
 const USE_SHIMMEREDLIST = false
 
@@ -20,6 +21,7 @@ export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
     isModelApp: boolean,
     dataSetVersion: number,
+    pageSize:number
     entityName?:string
 }
 
@@ -31,10 +33,12 @@ initializeIcons();
 
 export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (props) => {                           
     
-    const pcfctx = props.pcfContext
+    const dataset = props.pcfContext.parameters.sampleDataSet
+
+    const detailListRef = React.useRef<IDetailsList>()
 
     const { currentPage, moveNextPage } = 
-        useInfiniteScroll(props.pcfContext.parameters.sampleDataSet, props.dataSetVersion)
+        useInfiniteScroll(dataset, props.dataSetVersion)
 
     console.log( 'currentPage', currentPage )
 
@@ -73,7 +77,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
             selectedKeys.push(selection.key as string);
         }
         setSelectedItemCount(selectedKeys.length);
-        props.pcfContext.parameters.sampleDataSet.setSelectedRecordIds(selectedKeys);
+        dataset.setSelectedRecordIds(selectedKeys);
     }      
 
     // when a column header is clicked sort the items
@@ -112,7 +116,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
         // const totalResultCount = items.length
         // const totalResultCount = pcfctx.parameters.sampleDataSet.paging.totalResultCount
-        const totalResultCount = pcfctx.parameters.sampleDataSet.sortedRecordIds.length
+        const totalResultCount = dataset.sortedRecordIds.length
 
         return (
             <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
@@ -125,7 +129,11 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
         console.log( 'onRenderMissingItem', index )
 
-        moveNextPage()
+        if( moveNextPage() && detailListRef) {
+            const index = props.pageSize + 1
+            console.log( 'scrollToIndex', index  )
+            detailListRef.current?.scrollToIndex( index )
+        }
 
         return null
     }
@@ -145,7 +153,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         if( USE_SHIMMEREDLIST ) {
             return (
                 <ShimmeredDetailsList
-                    enableShimmer={pcfctx.parameters.sampleDataSet.loading}
+                    enableShimmer={dataset.loading}
                     items={items}
                     columns={columns}
                     setKey="set"                                                                                         
@@ -161,6 +169,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                     onRenderDetailsHeader={_onRenderDetailsHeader}
                     onRenderDetailsFooter={_onRenderDetailsFooter}
                     onRenderCustomPlaceholder={_onRenderCustomPlaceholder}
+                    componentRef={ (ref) => }
                 />      
 
             )

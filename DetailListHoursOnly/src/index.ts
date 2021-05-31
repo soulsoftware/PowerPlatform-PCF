@@ -68,6 +68,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 			pcfContext:		this._context,
 			isModelApp:		this._isModelApp,
 			dataSetVersion: this._dataSetVersion,
+			pageSize:		DEFAULT_PAGE_SIZE,
 			entityName: 	entityName
 		}
 

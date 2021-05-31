@@ -2,6 +2,14 @@
 
 This project provide a template to develop a custom view in [Power Platform](https://powerplatform.microsoft.com/en-us/) [Model Driven Application](https://docs.microsoft.com/en-us/powerapps/maker/model-driven-apps/model-driven-app-overview)
 
+### Github action
+
+Build component from [GITHUB CLI](https://github.com/cli/cli)
+
+```
+gh workflow run build.yml --ref <branch> -f PCFProject=DetailListHoursOnly
+```
+
 ### Inspired by 
 
 ![DetailsList Grid Control](https://github.com/rwilson504/Blogger/blob/master/Office-Fabric-UI-DetailsList-PCF/office-fabric-ui-detailslist.gif?raw=true)
