@@ -32,7 +32,7 @@ type IColumnWidth = number
 initializeIcons();
 
 export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (props) => {                           
-    
+
     const dataset = props.pcfContext.parameters.sampleDataSet
     const detailListRef = React.useRef<IDetailsList>()
     
@@ -42,21 +42,19 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     // react hook to store the number of selected items in the grid which will be displayed in the grid footer.
     const [selectedItemCount, setSelectedItemCount] = React.useState(0);    
     
+    const { currentPage, moveNextPage } = 
+        useInfiniteScroll(dataset, detailListRef, props.pageSize, [items])
+
     // When the component is updated this will determine if the sampleDataSet has changed.  
     // If it has we will go get the udpated items.
-    React.useEffect(() => setItems(getItems(columns, props.pcfContext)), [props.dataSetVersion])
+    React.useEffect(() => setItems(getItems(columns, props.pcfContext)), [currentPage])
     
     // When the component is updated this will determine if the width of the control has changed.
     // If so the column widths will be adjusted.
     React.useEffect(() => 
         setColumns(updateColumnWidths(columns, props.pcfContext)), [props.pcfContext.mode.allocatedWidth])      
 
-    const { currentPage, moveNextPage } = 
-        useInfiniteScroll(dataset, detailListRef, props.pageSize, [items])
-
     console.log( 'currentPage', currentPage )
-
-
 
     // the selector used by the DetailList
     const _selection = new Selection({
@@ -133,7 +131,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
         moveNextPage()
 
-        return defaultRender!( rowProps )
+        return null // defaultRender!( rowProps )
 
     }
        
