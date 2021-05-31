@@ -18,7 +18,6 @@ export const useInfiniteScroll = (
         if( dataset.paging.hasNextPage ) {
             const newPage = currentPage + 1
             setCurrentPage(newPage)
-            // dataset.paging.loadExactPage(newPage)               
             dataset.paging.loadNextPage()
             return true 
         }   
@@ -29,21 +28,17 @@ export const useInfiniteScroll = (
         if( dataset.loading ){ 
             setCurrentPage(1)
         }
-        else {
-            if( currentPage===0 ) { 
-                // moveNextPage()
-            }
-            else if( detailListRef?.current && currentPage > 1 ) {
-                const ref = detailListRef?.current
-                const index = (currentPage-1) * pageSize + 1
-    
-                setImmediate( () => {
-                    console.log( 'scrollToIndex in effect', index  )
-                    ref.scrollToIndex( index )
-                    ref.focusIndex( index )  
-                })  
-            }
+        else if( currentPage > 1 && detailListRef?.current ) {
+            const ref = detailListRef?.current
+            const index = (currentPage-1) * pageSize + 1
+
+            setImmediate( () => {
+                console.log( 'scrollToIndex in effect', index  )
+                ref.scrollToIndex( index )
+                ref.focusIndex( index )  
+            })  
         }
+
             
     }, deps);
     
