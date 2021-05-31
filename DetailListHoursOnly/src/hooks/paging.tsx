@@ -3,11 +3,15 @@
 // https://github.com/brasov2de/ColorfulOptionsetGrid/blob/master/ColorfulOptionsetGrid/App/Generic/Hooks/usePaging.tsx
 //
 
+import { IDetailsList } from "@fluentui/react/lib/DetailsList";
 import React = require("react");
 
-export const useInfiniteScroll = (  dataset: ComponentFramework.PropertyTypes.DataSet, 
-                                    datasetVersion:number ) => 
-{    
+export const useInfiniteScroll = (  
+    dataset: ComponentFramework.PropertyTypes.DataSet, 
+    detailListRef:React.MutableRefObject<IDetailsList|undefined>,
+    pageSize:number, 
+    deps?: React.DependencyList ) => {    
+
     const [currentPage, setCurrentPage] = React.useState<number>(0);
     
     function moveNextPage() {        
@@ -26,10 +30,25 @@ export const useInfiniteScroll = (  dataset: ComponentFramework.PropertyTypes.Da
             // dataset.paging.reset()
             setCurrentPage(0)
         }
-        else if( currentPage===0 ) {
-            moveNextPage()
-        }            
-    }, [datasetVersion]);
+        else {
+            if( currentPage===0 ) { 
+                moveNextPage()
+            }
+            else if( detailListRef?.current && currentPage > 1 ) {
+                const ref = detailListRef?.current
+                const index = (currentPage-1) * pageSize + 1
+    
+                //setTimeout( () => {
+                setImmediate( () => {
+                    console.log( 'scrollToIndex in effect', index  )
+                    ref.scrollToIndex( index )
+                    ref.focusIndex( index )  
+                })  
+                // }, 1000)
+            }
+        }
+            
+    }, deps);
     
     
     return {

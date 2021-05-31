@@ -34,13 +34,7 @@ initializeIcons();
 export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (props) => {                           
     
     const dataset = props.pcfContext.parameters.sampleDataSet
-
     const detailListRef = React.useRef<IDetailsList>()
-
-    const { currentPage, moveNextPage } = 
-        useInfiniteScroll(dataset, props.dataSetVersion)
-
-    console.log( 'currentPage', currentPage )
 
     const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
     const [items, setItems] = React.useState(getItems(columns, props.pcfContext));
@@ -52,16 +46,6 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     React.useEffect(() => {
         //console.log('TSX: props.dataSetVersion was updated');        
         setItems(getItems(columns, props.pcfContext));
-
-        if( !dataset.loading && detailListRef && detailListRef.current ) {
-            const index = props.pageSize + 1
-            console.log( 'scrollToIndex in effect', index  )
-
-            setTimeout( () => {
-                detailListRef?.current?.scrollToIndex( index )
-                detailListRef?.current?.focusIndex( index )    
-            }, 1000)
-        }
     
     }, [props.dataSetVersion]);  
     
@@ -72,6 +56,12 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         setColumns(updateColumnWidths(columns, props.pcfContext));
         }, [props.pcfContext.mode.allocatedWidth]);        
     
+
+    const { currentPage, moveNextPage } = 
+        useInfiniteScroll(dataset, detailListRef, props.pageSize, [items])
+
+    console.log( 'currentPage', currentPage )
+
     // the selector used by the DetailList
     const _selection = new Selection({
         onSelectionChanged: () => _setSelectedItemsOnDataSet()
