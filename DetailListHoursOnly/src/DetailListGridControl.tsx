@@ -144,10 +144,11 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     }
    
-    if( !dataset.loading && detailListRef ) {
+    if( !dataset.loading && detailListRef && detailListRef.current ) {
         const index = props.pageSize + 1
         console.log( 'scrollToIndex', index  )
-        detailListRef.current?.scrollToIndex( index )
+        detailListRef.current.scrollToIndex( index )
+        detailListRef.current.focusIndex( index )
     }
     
     const DetailsListControl = () => {
