@@ -39,7 +39,7 @@ export const useInfiniteScroll = (
             }
     
         }          
-    }, [currentPage]);
+    }, [dataset.loading]);
     
     
     return {
