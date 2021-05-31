@@ -27,7 +27,6 @@ export const useInfiniteScroll = (
 
     React.useEffect(() => {
         if( dataset.loading ){ 
-            // dataset.paging.reset()
             setCurrentPage(0)
         }
         else {
@@ -38,13 +37,11 @@ export const useInfiniteScroll = (
                 const ref = detailListRef?.current
                 const index = (currentPage-1) * pageSize + 1
     
-                //setTimeout( () => {
                 setImmediate( () => {
                     console.log( 'scrollToIndex in effect', index  )
                     ref.scrollToIndex( index )
                     ref.focusIndex( index )  
                 })  
-                // }, 1000)
             }
         }
             

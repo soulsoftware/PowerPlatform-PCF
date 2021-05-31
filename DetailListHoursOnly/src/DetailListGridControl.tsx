@@ -35,32 +35,29 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     
     const dataset = props.pcfContext.parameters.sampleDataSet
     const detailListRef = React.useRef<IDetailsList>()
+    
+    const { currentPage, moveNextPage } = 
+        useInfiniteScroll(dataset, detailListRef, props.pageSize, [props.dataSetVersion])
+
+    console.log( 'currentPage', currentPage )
 
     const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
-    const [items, setItems] = React.useState(getItems(columns, props.pcfContext));
+    const [items, setItems]     = React.useState(getItems(columns, props.pcfContext));
+
     // react hook to store the number of selected items in the grid which will be displayed in the grid footer.
     const [selectedItemCount, setSelectedItemCount] = React.useState(0);    
     
     // When the component is updated this will determine if the sampleDataSet has changed.  
     // If it has we will go get the udpated items.
-    React.useEffect(() => {
-        //console.log('TSX: props.dataSetVersion was updated');        
-        setItems(getItems(columns, props.pcfContext));
-    
-    }, [props.dataSetVersion]);  
+    React.useEffect(() => setItems(getItems(columns, props.pcfContext)), [
+        props.dataSetVersion
+    ])
     
     // When the component is updated this will determine if the width of the control has changed.
     // If so the column widths will be adjusted.
-    React.useEffect(() => {
-        //console.log('width was updated');
-        setColumns(updateColumnWidths(columns, props.pcfContext));
-        }, [props.pcfContext.mode.allocatedWidth]);        
-    
-
-    const { currentPage, moveNextPage } = 
-        useInfiniteScroll(dataset, detailListRef, props.pageSize, [items])
-
-    console.log( 'currentPage', currentPage )
+    React.useEffect(() => setColumns(updateColumnWidths(columns, props.pcfContext)), [
+        props.pcfContext.mode.allocatedWidth
+    ])      
 
     // the selector used by the DetailList
     const _selection = new Selection({
@@ -71,12 +68,8 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     // this will allow us to utilize the ribbon buttons since they need
     // that data set in order to do things such as delete/deactivate/activate/ect..
     const _setSelectedItemsOnDataSet = () => {
-        let selectedKeys = [];
         let selections = _selection.getSelection();
-        for (let selection of selections)
-        {
-            selectedKeys.push(selection.key as string);
-        }
+        let selectedKeys = selections.map( s => s.key as string)
         setSelectedItemCount(selectedKeys.length);
         dataset.setSelectedRecordIds(selectedKeys);
     }      
