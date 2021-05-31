@@ -10,11 +10,18 @@ import { initializeIcons } from '@fluentui/react/lib/icons';
 import * as lcid from 'lcid';
 import {IInputs} from "./generated/ManifestTypes";
 import './time.extension'
+import { IDetailsRowProps } from '@fluentui/react/lib/DetailsList';
+import { useInfiniteScroll } from './hooks/paging';
+import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
+import { IDetailsList } from '@fluentui/react/lib/DetailsList';
+
+const USE_SHIMMEREDLIST = false
 
 export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
     isModelApp: boolean,
     dataSetVersion: number,
+    pageSize:number
     entityName?:string
 }
 
@@ -25,40 +32,32 @@ type IColumnWidth = number
 initializeIcons();
 
 export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (props) => {                           
-        
-    // using react hooks to create functional which will allow us to set these values in our code
-    // eg. when we calculate the columns we can then udpate the state of them using setColums([our new columns]);
-    // we have passed in an empty array as the default.
-    // const [columns, setColumns] = React.useState(_getColumns);
-    // const [items, setItems] = React.useState(_getItems);
+    
+    const dataset = props.pcfContext.parameters.sampleDataSet
+    const detailListRef = React.useRef<IDetailsList>()
+    
     const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
-    const [items, setItems] = React.useState(getItems(columns, props.pcfContext));
-    const [isDataLoaded, setIsDataLoaded] = React.useState(props.isModelApp);
+    const [items, setItems]     = React.useState(getItems(columns, props.pcfContext));
+
     // react hook to store the number of selected items in the grid which will be displayed in the grid footer.
     const [selectedItemCount, setSelectedItemCount] = React.useState(0);    
     
-    // Set the isDataLoaded state based upon the paging totalRecordCount
-    React.useEffect(() => {
-        const dataSet = props.pcfContext.parameters.sampleDataSet
-        if (dataSet.loading || props.isModelApp) return
-        setIsDataLoaded(dataSet.paging.totalResultCount !== -1)         
-    },
-    [items]);
-
     // When the component is updated this will determine if the sampleDataSet has changed.  
     // If it has we will go get the udpated items.
-    React.useEffect(() => {
-        //console.log('TSX: props.dataSetVersion was updated');        
-        setItems(getItems(columns, props.pcfContext));
-        }, [props.dataSetVersion]);  
+    React.useEffect(() => setItems(getItems(columns, props.pcfContext)), [props.dataSetVersion])
     
     // When the component is updated this will determine if the width of the control has changed.
     // If so the column widths will be adjusted.
-    React.useEffect(() => {
-        //console.log('width was updated');
-        setColumns(updateColumnWidths(columns, props.pcfContext));
-        }, [props.pcfContext.mode.allocatedWidth]);        
-    
+    React.useEffect(() => 
+        setColumns(updateColumnWidths(columns, props.pcfContext)), [props.pcfContext.mode.allocatedWidth])      
+
+    const { currentPage, moveNextPage } = 
+        useInfiniteScroll(dataset, detailListRef, props.pageSize, [items])
+
+    console.log( 'currentPage', currentPage )
+
+
+
     // the selector used by the DetailList
     const _selection = new Selection({
         onSelectionChanged: () => _setSelectedItemsOnDataSet()
@@ -68,14 +67,10 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     // this will allow us to utilize the ribbon buttons since they need
     // that data set in order to do things such as delete/deactivate/activate/ect..
     const _setSelectedItemsOnDataSet = () => {
-        let selectedKeys = [];
         let selections = _selection.getSelection();
-        for (let selection of selections)
-        {
-            selectedKeys.push(selection.key as string);
-        }
+        let selectedKeys = selections.map( s => s.key as string)
         setSelectedItemCount(selectedKeys.length);
-        props.pcfContext.parameters.sampleDataSet.setSelectedRecordIds(selectedKeys);
+        dataset.setSelectedRecordIds(selectedKeys);
     }      
 
     // when a column header is clicked sort the items
@@ -112,32 +107,86 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     const _onRenderDetailsFooter = (props: IDetailsFooterProps | undefined, defaultRender?: IRenderFunction<IDetailsFooterProps>): JSX.Element => {
 
+        // const totalResultCount = items.length
+        // const totalResultCount = pcfctx.parameters.sampleDataSet.paging.totalResultCount
+        const totalResultCount = dataset.sortedRecordIds.length
+
         return (
             <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
-                <Label className="footer-item">Records: {items.length.toString()} ({selectedItemCount} selected)</Label>               
+                <Label className="footer-item">Records: {totalResultCount} ({selectedItemCount} selected)</Label>               
             </Sticky>
         )
     }      
-   
+
+    const _onRenderMissingItem = (index?: number | undefined, rowProps?: IDetailsRowProps | undefined) => {
+
+        console.log( 'onRenderMissingItem', index )
+
+        moveNextPage()
+
+        return null
+    }
+
+    const _onRenderCustomPlaceholder = (rowProps: IDetailsRowProps, index?: number, defaultRender?: (props: IDetailsRowProps) => React.ReactNode)  => {
+
+        console.log( 'onRenderCustomPlaceholder', index )
+
+        moveNextPage()
+
+        return defaultRender!( rowProps )
+
+    }
+       
+    const DetailsListControl = () => {
+        if( USE_SHIMMEREDLIST ) {
+            return (
+                <ShimmeredDetailsList
+                    enableShimmer={dataset.loading}
+                    items={items}
+                    columns={columns}
+                    setKey="set"                                                                                         
+                    selection={_selection} // updates the dataset so that we can utilize the ribbon buttons in Dynamics                                        
+                    onColumnHeaderClick={_onColumnClick} // used to implement sorting for the columns.                    
+                    selectionPreservedOnEmptyClick={true}
+                    ariaLabelForSelectionColumn="Toggle selection"
+                    ariaLabelForSelectAllCheckbox="Toggle selection for all items"
+                    checkButtonAriaLabel="Row checkbox"                        
+                    selectionMode={SelectionMode.multiple}
+                    layoutMode = {DetailsListLayoutMode.justified}
+                    constrainMode={ConstrainMode.unconstrained}
+                    onRenderDetailsHeader={_onRenderDetailsHeader}
+                    onRenderDetailsFooter={_onRenderDetailsFooter}
+                    onRenderCustomPlaceholder={_onRenderCustomPlaceholder}
+                    componentRef={ (ref) => detailListRef.current = ref! }
+                />      
+
+            )
+        }
+        else {
+            return <DetailsList                
+                items={items}
+                columns={columns}
+                setKey="set"                                                                                         
+                selection={_selection} // updates the dataset so that we can utilize the ribbon buttons in Dynamics                                        
+                onColumnHeaderClick={_onColumnClick} // used to implement sorting for the columns.                    
+                selectionPreservedOnEmptyClick={true}
+                ariaLabelForSelectionColumn="Toggle selection"
+                ariaLabelForSelectAllCheckbox="Toggle selection for all items"
+                checkButtonAriaLabel="Row checkbox"                        
+                selectionMode={SelectionMode.multiple}
+                layoutMode = {DetailsListLayoutMode.justified}
+                constrainMode={ConstrainMode.unconstrained}
+                onRenderDetailsHeader={_onRenderDetailsHeader}
+                onRenderDetailsFooter={_onRenderDetailsFooter}
+                onRenderMissingItem={_onRenderMissingItem}
+                componentRef={ (ref) => detailListRef.current = ref! }
+            />      
+
+        }
+    }
     return (   
         <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
-                  
-                <DetailsList
-                        items={items}
-                        columns= {columns}
-                        setKey="set"                                                                                         
-                        selection={_selection} // updates the dataset so that we can utilize the ribbon buttons in Dynamics                                        
-                        onColumnHeaderClick={_onColumnClick} // used to implement sorting for the columns.                    
-                        selectionPreservedOnEmptyClick={true}
-                        ariaLabelForSelectionColumn="Toggle selection"
-                        ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-                        checkButtonAriaLabel="Row checkbox"                        
-                        selectionMode={SelectionMode.multiple}
-                        onRenderDetailsHeader={_onRenderDetailsHeader}
-                        onRenderDetailsFooter={_onRenderDetailsFooter}
-                        layoutMode = {DetailsListLayoutMode.justified}
-                        constrainMode={ConstrainMode.unconstrained}
-                    />                   
+            <DetailsListControl/>           
         </ScrollablePane>
     );
 };
@@ -150,7 +199,7 @@ const navigate = (item: any, linkReference: string | undefined, pcfContext: Comp
 const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IInputs>) => {
     const dataSet = pcfContext.parameters.sampleDataSet
 
-    const resultSet = dataSet.sortedRecordIds.map( key => {
+    const resultSet = dataSet.sortedRecordIds.map( (key,index) => {
         const record = dataSet.records[key];
         const newRecord: any = {
             key: record.getRecordId()
@@ -158,7 +207,7 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
 
         for (let column of columns)
         {                
-            newRecord[column.key] = record.getFormattedValue(column.key);
+            newRecord[column.key] = record.getFormattedValue(column.key)
             if (isEntityReference(record.getValue(column.key)))
             {
                 const ref = record.getValue(column.key) as ComponentFramework.EntityReference;
@@ -166,13 +215,21 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
             }
             else if(column.data.isPrimary)
             {
+                newRecord[column.key] = `${index}) - ${record.getFormattedValue(column.key)}`
                 newRecord[`${column.key}_ref`] = record.getNamedReference();
             }
         }            
 
         return newRecord;
     });          
-            
+    
+    if( !USE_SHIMMEREDLIST ) {
+        if( dataSet.paging.hasNextPage ) {
+            console.log( 'add null row for trigger "onMissingItem"')
+            resultSet.push( null )
+        }
+    }
+
     return resultSet;
 }  
 
@@ -234,15 +291,15 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
             sortDescendingAriaLabel:'Sorted Z to A',
         }
 
-        console.table( [{
-                'name': column.name,
-                'displayName': column.displayName, 
-                'type': column.dataType, 
-                'isPrimary': column.isPrimary,
-                'isCustom': isCustomField(column.name),
-                'visualSizeFactor':column.visualSizeFactor, 
-                'maxWidth':columnWidthDistribution[index]
-        }])
+        // console.table( [{
+        //         'name': column.name,
+        //         'displayName': column.displayName, 
+        //         'type': column.dataType, 
+        //         'isPrimary': column.isPrimary,
+        //         'isCustom': isCustomField(column.name),
+        //         'visualSizeFactor':column.visualSizeFactor, 
+        //         'maxWidth':columnWidthDistribution[index]
+        // }])
 
         //create links for primary field and entity reference.            
         if (column.dataType.startsWith('Lookup.') || column.isPrimary)

@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {IDetailListGridControlProps, DetailListGridControl}  from './DetailListGridControl'
 
-const DEFAULT_PAGE_SIZE = 10
+const DEFAULT_PAGE_SIZE = 50
 
 function getQueryVariable(param:string) : string|undefined {
     const query = window.location.search.substring(1);
@@ -50,7 +50,11 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		 * @see https://www.dancingwithcrm.com/another-way-to-get-entity-name-and-id-in-pcf/
 		 */
 		const entityName = getQueryVariable('etn')
-		console.log( 'entity name', entityName )
+		
+		console.table( {
+			'entity name':entityName,
+			isModelApp:this._isModelApp
+		})
 		
 		// Need to track container resize so that control could get the available width. 
 		// The available height won't be provided even when this is true
@@ -64,6 +68,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 			pcfContext:		this._context,
 			isModelApp:		this._isModelApp,
 			dataSetVersion: this._dataSetVersion,
+			pageSize:		DEFAULT_PAGE_SIZE,
 			entityName: 	entityName
 		}
 
@@ -105,40 +110,39 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 	 */
 	public updateView(context: ComponentFramework.Context<IInputs>): void
 	{
-		// console.log( context )
-		// for( let p in context ) {		
-		// 	console.log( p )
-		// 	console.log( (<any>context)[p] )
-		// }
 
 		const dataSet = context.parameters.sampleDataSet;
-		
-		if (dataSet.loading) return;
 
-		//Are we in a canvas app?
-		if (!this._isModelApp)
+		console.log( 'updateView', { 
+			'dataSet.loading': dataSet.loading 
+		})
+
+		if (this._isModelApp ) // Are we in a model driven app?
+		{ 
+			// if( dataSet.paging.hasNextPage) {
+			// 	dataSet.paging.loadNextPage();
+			// 	return;
+			// }
+		}
+		else // Are we in a canvas app?
 		{
-			//since we are in a canvas app let's make sure we set the height of the control
-			this._detailList.style.height = `${(this._context.mode.allocatedHeight).toString()}px`
+
+			// since we are in a canvas app let's make sure we set the height of the control
+			// this._detailList.style.height = `${(this._context.mode.allocatedHeight).toString()}px`
 			
-			//Setting the page size in a Canvas app works on the first load of the component.  If you navigate
+			// Setting the page size in a Canvas app works on the first load of the component.  If you navigate
 			// away from the page on which the component is located though the paging get reset to 25 when you
 			// navigate back.  In order to fix this we need to reset the paging to the count of the records that
 			// will come back and do a reset on the paging.  I beleive this is all due to a MS bug.	
-			//@ts-ignore
-			//console.log(`TS: updateView, dataSet.paging.pageSize ${dataSet.paging.pageSize}`);	
-			//console.log(`TS: updateView, dataSet.paging.totalResultCount ${dataSet.paging.totalResultCount}`)
-			dataSet.paging.setPageSize(dataSet.paging.totalResultCount);
-			dataSet.paging.reset();
+			
+			// @ts-ignore
+			// console.log(`TS: updateView, dataSet.paging.pageSize ${dataSet.paging.pageSize}`);	
+			// console.log(`TS: updateView, dataSet.paging.totalResultCount ${dataSet.paging.totalResultCount}`)
+			// dataSet.paging.setPageSize(dataSet.paging.totalResultCount);
+			// dataSet.paging.reset();
 		}
 
-		//if data set has additional pages retrieve them before running anything else
-		if (this._isModelApp && dataSet.paging.hasNextPage) {
-			dataSet.paging.loadNextPage();
-			return;
-		}
-
-		//useEffect on the dataSet itself was not picking up on all the updates so pass in a dataset version
+		// useEffect on the dataSet itself was not picking up on all the updates so pass in a dataset version
 		// and update it in the props so the react control knows it was updated.
 		this._props.dataSetVersion = this._dataSetVersion++;
 		
