@@ -52,7 +52,15 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     React.useEffect(() => {
         //console.log('TSX: props.dataSetVersion was updated');        
         setItems(getItems(columns, props.pcfContext));
-        }, [props.dataSetVersion]);  
+
+        if( !dataset.loading && detailListRef && detailListRef.current ) {
+            const index = props.pageSize + 1
+            console.log( 'scrollToIndex in effect', index  )
+            detailListRef.current.scrollToIndex( index )
+            detailListRef.current.focusIndex( index )
+        }
+    
+    }, [props.dataSetVersion]);  
     
     // When the component is updated this will determine if the width of the control has changed.
     // If so the column widths will be adjusted.
@@ -143,14 +151,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         return defaultRender!( rowProps )
 
     }
-   
-    if( !dataset.loading && detailListRef && detailListRef.current ) {
-        const index = props.pageSize + 1
-        console.log( 'scrollToIndex', index  )
-        detailListRef.current.scrollToIndex( index )
-        detailListRef.current.focusIndex( index )
-    }
-    
+       
     const DetailsListControl = () => {
         if( USE_SHIMMEREDLIST ) {
             return (
