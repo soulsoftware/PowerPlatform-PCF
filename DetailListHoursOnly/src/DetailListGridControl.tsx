@@ -15,7 +15,7 @@ import { useInfiniteScroll } from './hooks/paging';
 import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
 import { IDetailsList } from '@fluentui/react/lib/DetailsList';
 
-const USE_SHIMMEREDLIST = false
+const USE_SHIMMEREDLIST = true
 
 export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
@@ -129,7 +129,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     const _onRenderCustomPlaceholder = (rowProps: IDetailsRowProps, index?: number, defaultRender?: (props: IDetailsRowProps) => React.ReactNode)  => {
 
-        console.log( 'onRenderCustomPlaceholder', index )
+        console.log( 'onRenderCustomPlaceholder', index, rowProps)
 
         moveNextPage()
 
@@ -223,12 +223,12 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
         return newRecord;
     });          
     
-    if( !USE_SHIMMEREDLIST ) {
+    //if( !USE_SHIMMEREDLIST ) {
         if( dataSet.paging.hasNextPage ) {
             console.log( 'add null row for trigger "onMissingItem"')
             resultSet.push( null )
         }
-    }
+    //}
 
     return resultSet;
 }  
