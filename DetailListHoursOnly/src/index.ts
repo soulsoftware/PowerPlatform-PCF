@@ -117,6 +117,8 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 			'dataSet.loading': dataSet.loading 
 		})
 
+		if( dataSet.loading === true ) return;
+
 		if (this._isModelApp ) // Are we in a model driven app?
 		{ 
 			// if( dataSet.paging.hasNextPage) {

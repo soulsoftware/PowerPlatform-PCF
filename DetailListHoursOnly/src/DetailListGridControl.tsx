@@ -59,7 +59,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     
 
     React.useEffect(() => {
-        if( dataset.loading === false && currentPage > 1 && detailListRef?.current ) {
+        if( currentPage > 1 && detailListRef?.current ) {
             const ref = detailListRef?.current
             const index = (currentPage-1) * props.pageSize + 1
 
