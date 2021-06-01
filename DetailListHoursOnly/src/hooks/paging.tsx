@@ -7,9 +7,7 @@ import { IDetailsList } from "@fluentui/react/lib/DetailsList";
 import React = require("react");
 
 export const useInfiniteScroll = (  
-    dataset: ComponentFramework.PropertyTypes.DataSet, 
-    detailListRef:React.MutableRefObject<IDetailsList|undefined>,
-    pageSize:number, 
+    dataset: ComponentFramework.PropertyTypes.DataSet,
     deps?: React.DependencyList ) => {    
 
     const [currentPage, setCurrentPage] = React.useState<number>(1);
@@ -23,25 +21,10 @@ export const useInfiniteScroll = (
         }   
         return false
     }
-
-    const scrollToPage = React.useCallback( () => {
-        if( currentPage > 1 && detailListRef?.current ) {
-            const ref = detailListRef?.current
-            const index = (currentPage-1) * pageSize + 1
-
-            setImmediate( () => {
-                console.log( 'scrollToIndex in effect', index  )
-                ref.scrollToIndex( index )
-                ref.focusIndex( index )  
-            })  
-        }
-    }, [currentPage])          
-    
     
     return {
         currentPage,
-        moveNextPage,
-        scrollToPage
+        moveNextPage
     }
 }
 
