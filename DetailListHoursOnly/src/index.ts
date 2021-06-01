@@ -21,6 +21,7 @@ function getQueryVariable(param:string) : string|undefined {
  */
 class InfiniteScrollingImpl implements InfiniteScrolling {
 	private _currentPage = 1
+	private _lastIndex = 0
 
 	constructor( private pcfContext: ComponentFramework.Context<IInputs>, private _pageSize:number ) {
 		pcfContext.parameters.sampleDataSet.paging.setPageSize(_pageSize);
@@ -40,16 +41,19 @@ class InfiniteScrollingImpl implements InfiniteScrolling {
 		return (this._currentPage-1) * this._pageSize + 1 
 	}
 
-	moveToNextPage( ) { 
-
+	moveToNextPage( fromIndex:number) { 
+			
 		const paging = this.pcfContext.parameters.sampleDataSet.paging
 
-		if( paging.hasNextPage ) {
+		if( paging.hasNextPage && fromIndex > this._lastIndex ) {
+
+			this._lastIndex = fromIndex
 			this._currentPage++
 			paging.loadNextPage()
 			return true 
-		}   
-		return true
+			
+		}
+		return false
 	
 	}
 

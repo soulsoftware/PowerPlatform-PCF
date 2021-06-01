@@ -20,7 +20,7 @@ const USE_SHIMMEREDLIST = false
 export interface InfiniteScrolling {
     readonly currentPage:number;
     readonly currentScrollIndex:number
-    moveToNextPage: () => boolean 
+    moveToNextPage: (formIndex:number) => boolean 
 
 }
 export interface IDetailListGridControlProps {
@@ -42,8 +42,8 @@ initializeIcons();
 export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (props) => {                           
 
     const dataset = props.pcfContext.parameters.sampleDataSet
-    const detailListRef = React.useRef<IDetailsList>()
     
+    const detailListRef = React.useRef<IDetailsList>()
     const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
     const [items, setItems]     = React.useState<Array<any>>( [] /*getItems(columns, props.pcfContext)*/ );
 
@@ -169,7 +169,8 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
         console.log( 'onRenderMissingItem', index )
 
-        props.pagination.moveToNextPage()
+        if( index  )
+            props.pagination.moveToNextPage( index )
 
         return null
     }
@@ -178,7 +179,8 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
         console.log( 'onRenderCustomPlaceholder', index, rowProps)
 
-        props.pagination.moveToNextPage()
+        if( index  ) 
+            props.pagination.moveToNextPage(index)
 
         return null // defaultRender!( rowProps )
 
