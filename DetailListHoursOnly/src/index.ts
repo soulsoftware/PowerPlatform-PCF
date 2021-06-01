@@ -16,6 +16,9 @@ function getQueryVariable(param:string) : string|undefined {
 	
 }
 
+/**
+ * 
+ */
 class InfiniteScrollingImpl implements InfiniteScrolling {
 	private _currentPage = 1
 
@@ -26,9 +29,10 @@ class InfiniteScrollingImpl implements InfiniteScrolling {
 	get currentPage() { 
 		const paging = this.pcfContext.parameters.sampleDataSet.paging
 
-		if( !paging.hasPreviousPage ) {
-			this._currentPage = 1
-		}
+		console.log( 'paging.hasPreviousPage', paging.hasPreviousPage )
+		// if( !paging.hasPreviousPage ) {
+		// 	this._currentPage = 1
+		// }
 		return this._currentPage 
 	}
 
