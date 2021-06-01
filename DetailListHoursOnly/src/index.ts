@@ -27,12 +27,12 @@ class InfiniteScrollingImpl implements InfiniteScrolling {
 	}
 
 	get currentPage() { 
-		const paging = this.pcfContext.parameters.sampleDataSet.paging
+		const dataset = this.pcfContext.parameters.sampleDataSet
 
-		console.log( 'paging.hasPreviousPage', paging.hasPreviousPage )
-		// if( !paging.hasPreviousPage ) {
-		// 	this._currentPage = 1
-		// }
+		console.log( 'paging.hasPreviousPage', dataset.sortedRecordIds.length )
+		if( dataset.sortedRecordIds.length <= this._pageSize ) {
+			this._currentPage = 1
+		}
 		return this._currentPage 
 	}
 

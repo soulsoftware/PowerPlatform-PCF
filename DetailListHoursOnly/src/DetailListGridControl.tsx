@@ -64,11 +64,11 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
             const ref = detailListRef.current
             const index = props.pagination.currentScrollIndex
 
-            //setTimeout( () => {
-                console.log( 'scrollToIndex in effect', index, ref  )
+            setImmediate( () => {
+                console.log( 'scrollToIndex in effect', index  )
                 ref.scrollToIndex( index )
                 ref.focusIndex( index )  
-            //}, 1000)  
+            })  
         }       
         
     }, [props.dataSetVersion])
