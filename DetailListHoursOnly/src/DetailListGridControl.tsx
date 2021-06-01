@@ -55,7 +55,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     React.useEffect(() => {
         console.log( 'setItems' )
         setItems(getItems(columns, props.pcfContext))
-    }, [currentPage])
+    }, [props.dataSetVersion])
     
 
     React.useEffect(() => {
