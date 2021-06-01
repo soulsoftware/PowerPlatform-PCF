@@ -11,18 +11,25 @@ import * as lcid from 'lcid';
 import {IInputs} from "./generated/ManifestTypes";
 import './time.extension'
 import { IDetailsRowProps } from '@fluentui/react/lib/DetailsList';
-import { useInfiniteScroll } from './hooks/paging';
 import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
 import { IDetailsList } from '@fluentui/react/lib/DetailsList';
 
 const USE_SHIMMEREDLIST = false
 
+export interface InfiniteScrolling {
+    readonly currentPage:number;
+    readonly currentScrollIndex:number
+    moveToNextPage: () => boolean 
+
+}
 export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
     isModelApp: boolean,
     dataSetVersion: number,
-    pageSize:number
+    pagination:InfiniteScrolling
+    
     entityName?:string
+
 }
 
 type IColumnWidth = number
@@ -41,10 +48,8 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     // react hook to store the number of selected items in the grid which will be displayed in the grid footer.
     const [selectedItemCount, setSelectedItemCount] = React.useState(0);    
-    
-    const { currentPage, moveNextPage } = useInfiniteScroll(dataset)
 
-    console.table({
+    console.log({
         'currentPage':currentPage, 
         'dataset.loading':dataset.loading, 
         'dataset.paging.totalResultCount': dataset.paging.totalResultCount
@@ -59,15 +64,15 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     
 
     React.useEffect(() => {
-        if( currentPage > 1 && detailListRef?.current ) {
-            const ref = detailListRef?.current
-            const index = (currentPage-1) * props.pageSize + 1
+        if( props.pagination.currentPage > 1 && detailListRef?.current ) {
+            const ref = detailListRef.current
+            const index = props.pagination.currentScrollIndex
 
             setTimeout( () => {
                 console.log( 'scrollToIndex in effect', index  )
                 ref.scrollToIndex( index )
                 ref.focusIndex( index )  
-            }, 500)  
+            }, 1000)  
         }       
         
     }, [props.dataSetVersion])
@@ -141,7 +146,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
         console.log( 'onRenderMissingItem', index )
 
-        moveNextPage()
+        props.pagination.moveToNextPage()
 
         return null
     }
@@ -150,7 +155,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
         console.log( 'onRenderCustomPlaceholder', index, rowProps)
 
-        moveNextPage()
+        props.pagination.moveToNextPage()
 
         return null // defaultRender!( rowProps )
 
@@ -431,4 +436,8 @@ const getUserLanguage = (pcfContext: ComponentFramework.Context<IInputs>): strin
 // determine if object is an entity reference.
 const isEntityReference = (obj: any): obj is ComponentFramework.EntityReference => {
     return typeof obj?.etn === 'string';
+}
+
+function currentPage() {
+    throw new Error('Function not implemented.');
 }

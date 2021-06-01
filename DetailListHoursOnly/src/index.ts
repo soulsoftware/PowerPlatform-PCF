@@ -1,7 +1,7 @@
 import {IInputs, IOutputs} from "./generated/ManifestTypes";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {IDetailListGridControlProps, DetailListGridControl}  from './DetailListGridControl'
+import {IDetailListGridControlProps, DetailListGridControl, InfiniteScrolling}  from './DetailListGridControl'
 
 const DEFAULT_PAGE_SIZE = 50
 
@@ -16,6 +16,38 @@ function getQueryVariable(param:string) : string|undefined {
 	
 }
 
+class InfiniteScrollingImpl implements InfiniteScrolling {
+	private _currentPage = 1
+
+	constructor( private pcfContext: ComponentFramework.Context<IInputs> ) {}
+
+	get currentPage() { 
+		const paging = this.pcfContext.parameters.sampleDataSet.paging
+
+		if( !paging.hasPreviousPage ) {
+			this._currentPage = 1
+		}
+		return this._currentPage 
+	}
+
+	get currentScrollIndex() { 
+		return (this._currentPage-1) * DEFAULT_PAGE_SIZE + 1 
+	}
+
+	moveToNextPage( ) { 
+
+		const paging = this.pcfContext.parameters.sampleDataSet.paging
+
+		if( paging.hasNextPage ) {
+			this._currentPage++
+			paging.loadNextPage()
+			return true 
+		}   
+		return true
+	
+	}
+
+}
 /**
  * PCF component
  */
@@ -31,6 +63,8 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 	}
 
 	private _props: IDetailListGridControlProps;
+
+	private _paging :InfiniteScrolling
 
 	constructor() 
 	{
@@ -51,7 +85,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		 */
 		const entityName = getQueryVariable('etn')
 		
-		console.table( {
+		console.log( {
 			'entity name':entityName,
 			isModelApp:this._isModelApp
 		})
@@ -63,12 +97,13 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		this._container = container;
 		this._context = context;
 		this._dataSetVersion = 0;
-
+		this._paging = new InfiniteScrollingImpl(context)
+		
 		this._props = {
 			pcfContext:		this._context,
 			isModelApp:		this._isModelApp,
 			dataSetVersion: this._dataSetVersion,
-			pageSize:		DEFAULT_PAGE_SIZE,
+			pagination: 	this._paging,
 			entityName: 	entityName
 		}
 
