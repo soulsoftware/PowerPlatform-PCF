@@ -55,10 +55,6 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         'dataset.paging.totalResultCount': dataset.paging.totalResultCount
     })
 
-    // When the component is updated this will determine if the sampleDataSet has changed.  
-    // If it has we will go get the udpated items.
-    React.useEffect(() => setItems(getItems(columns, props.pcfContext)), [props.dataSetVersion])
-    
     React.useEffect(() => {
         if( props.pagination.currentPage > 1 && detailListRef?.current ) {
             const ref = detailListRef.current
@@ -71,7 +67,15 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
             })  
         }       
         
+    }, [items])
+
+    // When the component is updated this will determine if the sampleDataSet has changed.  
+    // If it has we will go get the udpated items.
+    React.useEffect(() => {
+        setItems(getItems(columns, props.pcfContext))
+        console.log( 'setItems ')
     }, [props.dataSetVersion])
+    
     
     // When the component is updated this will determine if the width of the control has changed.
     // If so the column widths will be adjusted.
