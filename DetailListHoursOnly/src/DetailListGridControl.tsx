@@ -50,7 +50,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     // When the component is updated this will determine if the sampleDataSet has changed.  
     // If it has we will go get the udpated items.
     React.useEffect(() => {
-        console.log( 'setItems', dataset.loading )
+        console.log( 'setItems' )
         setItems(getItems(columns, props.pcfContext))
         scrollToPage()
     }, [currentPage])
@@ -226,7 +226,7 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
     });          
     
     //if( !USE_SHIMMEREDLIST ) {
-    if( dataSet.loading && dataSet.paging.hasNextPage ) {
+    if( dataSet.paging.hasNextPage ) {
         console.log( 'add null row for trigger "onMissingItem"')
         resultSet.push( null )
     }
