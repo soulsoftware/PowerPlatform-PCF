@@ -69,6 +69,17 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         
         console.log( 'setItems' )
 
+        if( props.pagination.currentPage > 1 && detailListRef?.current ) {
+            const ref = detailListRef.current
+            const index = props.pagination.currentScrollIndex
+
+            setImmediate( () => {
+                console.log( 'scrollToIndex in effect', index  )
+                ref.scrollToIndex( index )
+                // ref.focusIndex( index )  
+            })  
+        }       
+
     }, [props.dataSetVersion])
     
     // React.useEffect(() => {
@@ -183,7 +194,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                     ariaLabelForSelectionColumn="Toggle selection"
                     ariaLabelForSelectAllCheckbox="Toggle selection for all items"
                     checkButtonAriaLabel="Row checkbox"                        
-                    selectionMode={SelectionMode.multiple}
+                    selectionMode={SelectionMode.single}
                     layoutMode = {DetailsListLayoutMode.justified}
                     constrainMode={ConstrainMode.unconstrained}
                     onRenderDetailsHeader={_onRenderDetailsHeader}
@@ -205,7 +216,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                 ariaLabelForSelectionColumn="Toggle selection"
                 ariaLabelForSelectAllCheckbox="Toggle selection for all items"
                 checkButtonAriaLabel="Row checkbox"                        
-                selectionMode={SelectionMode.multiple}
+                selectionMode={SelectionMode.single}
                 layoutMode = {DetailsListLayoutMode.justified}
                 constrainMode={ConstrainMode.unconstrained}
                 onRenderDetailsHeader={_onRenderDetailsHeader}
