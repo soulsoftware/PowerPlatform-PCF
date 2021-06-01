@@ -13,6 +13,7 @@ import './time.extension'
 import { IDetailsRowProps } from '@fluentui/react/lib/DetailsList';
 import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
 import { IDetailsList } from '@fluentui/react/lib/DetailsList';
+import { DetailsListBase } from '@fluentui/react/lib/DetailsList';
 
 const USE_SHIMMEREDLIST = false
 
@@ -69,17 +70,6 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         
         console.log( 'setItems' )
 
-        if( props.pagination.currentPage > 1 && detailListRef?.current ) {
-            const ref = detailListRef.current
-            const index = props.pagination.currentScrollIndex
-
-            setImmediate( () => {
-                console.log( 'scrollToIndex in effect', index  )
-                ref.scrollToIndex( index )
-                // ref.focusIndex( index )  
-            })  
-        }       
-
     }, [props.dataSetVersion])
     
     // React.useEffect(() => {
@@ -92,8 +82,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     //             ref.scrollToIndex( index )
     //             ref.focusIndex( index )  
     //         })  
-    //     }       
-        
+    //     }             
     // }, [items])
  
     // When the component is updated this will determine if the width of the control has changed.
@@ -161,6 +150,21 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         )
     }      
 
+    const _onDidUpdate = (detailsList?: DetailsListBase | undefined) => {
+        console.log( 'onDidUpdate' )
+
+        if( props.pagination.currentPage > 1 && detailListRef?.current ) {
+            const ref = detailListRef.current
+            const index = props.pagination.currentScrollIndex
+
+            setImmediate( () => {
+                console.log( 'scrollToIndex in effect', index  )
+                ref.scrollToIndex( index )
+                // ref.focusIndex( index )  
+            })  
+        }       
+    }
+    
     const _onRenderMissingItem = (index?: number | undefined, rowProps?: IDetailsRowProps | undefined) => {
 
         console.log( 'onRenderMissingItem', index )
@@ -223,6 +227,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                 onRenderDetailsFooter={_onRenderDetailsFooter}
                 onRenderMissingItem={_onRenderMissingItem}
                 componentRef={ (ref) => detailListRef.current = ref! }
+                onDidUpdate={_onDidUpdate}
             />      
 
         }
