@@ -66,7 +66,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
             setImmediate( () => {
                 console.log( 'scrollToIndex in effect', index  )
                 ref.scrollToIndex( index )
-                // ref.focusIndex( index )  
+                ref.focusIndex( index )  
             })  
         }       
         
