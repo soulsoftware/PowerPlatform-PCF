@@ -24,27 +24,24 @@ export const useInfiniteScroll = (
         return false
     }
 
-    React.useEffect(() => {
-        if( !dataset.loading ) {
+    const scrollToPage = React.useCallback( () => {
+        if( currentPage > 1 && detailListRef?.current ) {
+            const ref = detailListRef?.current
+            const index = (currentPage-1) * pageSize + 1
 
-            if( currentPage > 1 && detailListRef?.current ) {
-                const ref = detailListRef?.current
-                const index = (currentPage-1) * pageSize + 1
-    
-                setImmediate( () => {
-                    console.log( 'scrollToIndex in effect', index  )
-                    ref.scrollToIndex( index )
-                    ref.focusIndex( index )  
-                })  
-            }
-    
-        }          
-    }, [dataset.loading]);
+            setImmediate( () => {
+                console.log( 'scrollToIndex in effect', index  )
+                ref.scrollToIndex( index )
+                ref.focusIndex( index )  
+            })  
+        }
+    }, [currentPage])          
     
     
     return {
         currentPage,
-        moveNextPage
+        moveNextPage,
+        scrollToPage
     }
 }
 
