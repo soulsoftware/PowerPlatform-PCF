@@ -19,7 +19,9 @@ function getQueryVariable(param:string) : string|undefined {
 class InfiniteScrollingImpl implements InfiniteScrolling {
 	private _currentPage = 1
 
-	constructor( private pcfContext: ComponentFramework.Context<IInputs> ) {}
+	constructor( private pcfContext: ComponentFramework.Context<IInputs>, private _pageSize:number ) {
+		pcfContext.parameters.sampleDataSet.paging.setPageSize(_pageSize);
+	}
 
 	get currentPage() { 
 		const paging = this.pcfContext.parameters.sampleDataSet.paging
@@ -31,7 +33,7 @@ class InfiniteScrollingImpl implements InfiniteScrolling {
 	}
 
 	get currentScrollIndex() { 
-		return (this._currentPage-1) * DEFAULT_PAGE_SIZE + 1 
+		return (this._currentPage-1) * this._pageSize + 1 
 	}
 
 	moveToNextPage( ) { 
@@ -97,8 +99,8 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		this._container = container;
 		this._context = context;
 		this._dataSetVersion = 0;
-		this._paging = new InfiniteScrollingImpl(context)
-		
+		this._paging = new InfiniteScrollingImpl(context, DEFAULT_PAGE_SIZE)
+
 		this._props = {
 			pcfContext:		this._context,
 			isModelApp:		this._isModelApp,
@@ -134,8 +136,6 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 
 		this._container.appendChild(this._detailList);
 
-		//set the paging size to 5000
-		context.parameters.sampleDataSet.paging.setPageSize(DEFAULT_PAGE_SIZE);
 	}
 
 

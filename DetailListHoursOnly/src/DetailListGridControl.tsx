@@ -50,19 +50,15 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const [selectedItemCount, setSelectedItemCount] = React.useState(0);    
 
     console.log({
-        'currentPage':currentPage, 
+        'currentPage':props.pagination.currentPage, 
         'dataset.loading':dataset.loading, 
         'dataset.paging.totalResultCount': dataset.paging.totalResultCount
     })
 
     // When the component is updated this will determine if the sampleDataSet has changed.  
     // If it has we will go get the udpated items.
-    React.useEffect(() => {
-        console.log( 'setItems' )
-        setItems(getItems(columns, props.pcfContext))
-    }, [props.dataSetVersion])
+    React.useEffect(() => setItems(getItems(columns, props.pcfContext)), [props.dataSetVersion])
     
-
     React.useEffect(() => {
         if( props.pagination.currentPage > 1 && detailListRef?.current ) {
             const ref = detailListRef.current
@@ -438,6 +434,3 @@ const isEntityReference = (obj: any): obj is ComponentFramework.EntityReference 
     return typeof obj?.etn === 'string';
 }
 
-function currentPage() {
-    throw new Error('Function not implemented.');
-}
