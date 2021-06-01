@@ -47,27 +47,13 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const [items, setItems]     = React.useState<Array<any>>( [] /*getItems(columns, props.pcfContext)*/ );
 
     // react hook to store the number of selected items in the grid which will be displayed in the grid footer.
-    const [selectedItemCount, setSelectedItemCount] = React.useState(0);    
+    // const [selectedItemCount, setSelectedItemCount] = React.useState(0);    
 
     console.log({
         'currentPage':props.pagination.currentPage, 
         'dataset.loading':dataset.loading, 
-        'dataset.paging.totalResultCount': dataset.paging.totalResultCount
+        'props.dataSetVersion': props.dataSetVersion
     })
-
-    React.useEffect(() => {
-        if( props.pagination.currentPage > 1 && detailListRef?.current ) {
-            const ref = detailListRef.current
-            const index = props.pagination.currentScrollIndex
-
-            setImmediate( () => {
-                console.log( 'scrollToIndex in effect', index  )
-                ref.scrollToIndex( index )
-                ref.focusIndex( index )  
-            })  
-        }       
-        
-    }, [items])
 
     // When the component is updated this will determine if the sampleDataSet has changed.  
     // If it has we will go get the udpated items.
@@ -85,7 +71,20 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     }, [props.dataSetVersion])
     
-    
+    // React.useEffect(() => {
+    //     if( props.pagination.currentPage > 1 && detailListRef?.current ) {
+    //         const ref = detailListRef.current
+    //         const index = props.pagination.currentScrollIndex
+
+    //         setImmediate( () => {
+    //             console.log( 'scrollToIndex in effect', index  )
+    //             ref.scrollToIndex( index )
+    //             ref.focusIndex( index )  
+    //         })  
+    //     }       
+        
+    // }, [items])
+ 
     // When the component is updated this will determine if the width of the control has changed.
     // If so the column widths will be adjusted.
     React.useEffect(() => 
@@ -102,7 +101,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const _setSelectedItemsOnDataSet = () => {
         let selections = _selection.getSelection();
         let selectedKeys = selections.map( s => s.key as string)
-        setSelectedItemCount(selectedKeys.length);
+        // setSelectedItemCount(selectedKeys.length);
         dataset.setSelectedRecordIds(selectedKeys);
     }      
 
@@ -143,7 +142,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         // const totalResultCount = items.length
         // const totalResultCount = pcfctx.parameters.sampleDataSet.paging.totalResultCount
         const totalResultCount = dataset.sortedRecordIds.length
-
+        const selectedItemCount = dataset.getSelectedRecordIds().length
         return (
             <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
                 <Label className="footer-item">Records: {totalResultCount} ({selectedItemCount} selected)</Label>               
