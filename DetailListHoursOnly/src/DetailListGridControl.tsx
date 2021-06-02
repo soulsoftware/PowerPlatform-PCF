@@ -19,8 +19,8 @@ const USE_SHIMMEREDLIST = false
 
 export interface InfiniteScrolling {
     readonly currentPage:number;
-    readonly currentScrollIndex:number
-    moveToNextPage: (formIndex:number) => boolean 
+    moveToNextPage(formIndex:number):boolean 
+    currentScrollIndex( cb:(index:number) => void ):void
 
 }
 export interface IDetailListGridControlProps {
@@ -43,9 +43,6 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     const dataset = props.pcfContext.parameters.sampleDataSet
     
-    const controlState = React.useRef( {
-        lastScrolledIndex:0
-    })
     const detailListRef = React.useRef<IDetailsList>()
     const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
     const [items, setItems]     = React.useState<Array<any>>( [] /*getItems(columns, props.pcfContext)*/ );
@@ -80,16 +77,9 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     //
     // React.useEffect(() => {
     //     console.log( 'useEffect scrollToIndex' )
-    //     if( props.pagination.currentPage > 1 && detailListRef?.current ) {
-    //         const ref = detailListRef.current
-    //         const index = props.pagination.currentScrollIndex
-            
-    //         setImmediate( () => {
-    //             console.log( 'scrollToIndex', index  )
-    //             ref.scrollToIndex( index )
-    //             // ref.focusIndex( index )  
-    //         })  
-    //     }     
+    //     if( detailListRef?.current ) {
+    //         props.pagination.currentScrollIndex( (index) => detailListRef.current?.scrollToIndex(index) )
+    //     }             
     // }, [props.pagination.currentPage])
  
     // When the component is updated this will determine if the width of the control has changed.
@@ -160,19 +150,8 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const _onDidUpdate = (detailsList?: DetailsListBase | undefined) => {
         console.log( 'onDidUpdate' )
 
-        if( props.pagination.currentPage > 1 && 
-            detailListRef?.current && 
-            props.pagination.currentScrollIndex > controlState.current.lastScrolledIndex ) 
-        {
-            const ref = detailListRef.current
-            const index = props.pagination.currentScrollIndex
-            controlState.current.lastScrolledIndex = index
-
-            setImmediate( () => {
-                console.log( 'scrollToIndex in effect', index  )
-                ref.scrollToIndex( index )
-                // ref.focusIndex( index )  
-            })  
+        if( detailsList ) {
+            props.pagination.currentScrollIndex( (index) => detailsList.scrollToIndex(index) )
         }       
     }
     
