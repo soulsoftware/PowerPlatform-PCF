@@ -11,18 +11,26 @@ import * as lcid from 'lcid';
 import {IInputs} from "./generated/ManifestTypes";
 import './time.extension'
 import { IDetailsRowProps } from '@fluentui/react/lib/DetailsList';
-import { useInfiniteScroll } from './hooks/paging';
 import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
 import { IDetailsList } from '@fluentui/react/lib/DetailsList';
+import { DetailsListBase } from '@fluentui/react/lib/DetailsList';
 
 const USE_SHIMMEREDLIST = false
 
+export interface InfiniteScrolling {
+    readonly currentPage:number;
+    readonly currentScrollIndex:number
+    moveToNextPage: (formIndex:number) => boolean 
+
+}
 export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
     isModelApp: boolean,
     dataSetVersion: number,
-    pageSize:number
+    pagination:InfiniteScrolling
+    
     entityName?:string
+
 }
 
 type IColumnWidth = number
@@ -32,31 +40,62 @@ type IColumnWidth = number
 initializeIcons();
 
 export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (props) => {                           
-    
+
     const dataset = props.pcfContext.parameters.sampleDataSet
-    const detailListRef = React.useRef<IDetailsList>()
     
+    const controlState = React.useRef( {
+        lastScrolledIndex:0
+    })
+    const detailListRef = React.useRef<IDetailsList>()
     const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
-    const [items, setItems]     = React.useState(getItems(columns, props.pcfContext));
+    const [items, setItems]     = React.useState<Array<any>>( [] /*getItems(columns, props.pcfContext)*/ );
 
     // react hook to store the number of selected items in the grid which will be displayed in the grid footer.
-    const [selectedItemCount, setSelectedItemCount] = React.useState(0);    
-    
+    // const [selectedItemCount, setSelectedItemCount] = React.useState(0);    
+
+    console.log({
+        'currentPage':props.pagination.currentPage, 
+        'dataset.loading':dataset.loading, 
+        'props.dataSetVersion': props.dataSetVersion
+    })
+
     // When the component is updated this will determine if the sampleDataSet has changed.  
     // If it has we will go get the udpated items.
-    React.useEffect(() => setItems(getItems(columns, props.pcfContext)), [props.dataSetVersion])
+    React.useEffect(() => {
+        const result = getItems(columns, props.pcfContext)
+
+        if( dataset.paging.hasNextPage ) {
+            console.log( 'add null row for trigger "onMissingItem"')
+            result.push( null )
+        }
+        
+        setItems(result)
+        
+        console.log( 'setItems' )
+
+    }, [props.dataSetVersion])
     
+    // 
+    // THIS DOESN'T WORK ( see function '_onDidUpdate' below)
+    //
+    // React.useEffect(() => {
+    //     console.log( 'useEffect scrollToIndex' )
+    //     if( props.pagination.currentPage > 1 && detailListRef?.current ) {
+    //         const ref = detailListRef.current
+    //         const index = props.pagination.currentScrollIndex
+            
+    //         setImmediate( () => {
+    //             console.log( 'scrollToIndex', index  )
+    //             ref.scrollToIndex( index )
+    //             // ref.focusIndex( index )  
+    //         })  
+    //     }     
+    // }, [props.pagination.currentPage])
+ 
     // When the component is updated this will determine if the width of the control has changed.
     // If so the column widths will be adjusted.
     React.useEffect(() => 
         setColumns(updateColumnWidths(columns, props.pcfContext)), [props.pcfContext.mode.allocatedWidth])      
-
-    const { currentPage, moveNextPage } = 
-        useInfiniteScroll(dataset, detailListRef, props.pageSize, [items])
-
-    console.log( 'currentPage', currentPage )
-
-
 
     // the selector used by the DetailList
     const _selection = new Selection({
@@ -69,7 +108,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const _setSelectedItemsOnDataSet = () => {
         let selections = _selection.getSelection();
         let selectedKeys = selections.map( s => s.key as string)
-        setSelectedItemCount(selectedKeys.length);
+        // setSelectedItemCount(selectedKeys.length);
         dataset.setSelectedRecordIds(selectedKeys);
     }      
 
@@ -110,7 +149,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         // const totalResultCount = items.length
         // const totalResultCount = pcfctx.parameters.sampleDataSet.paging.totalResultCount
         const totalResultCount = dataset.sortedRecordIds.length
-
+        const selectedItemCount = dataset.getSelectedRecordIds().length
         return (
             <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
                 <Label className="footer-item">Records: {totalResultCount} ({selectedItemCount} selected)</Label>               
@@ -118,22 +157,43 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         )
     }      
 
+    const _onDidUpdate = (detailsList?: DetailsListBase | undefined) => {
+        console.log( 'onDidUpdate' )
+
+        if( props.pagination.currentPage > 1 && 
+            detailListRef?.current && 
+            props.pagination.currentScrollIndex > controlState.current.lastScrolledIndex ) 
+        {
+            const ref = detailListRef.current
+            const index = props.pagination.currentScrollIndex
+            controlState.current.lastScrolledIndex = index
+
+            setImmediate( () => {
+                console.log( 'scrollToIndex in effect', index  )
+                ref.scrollToIndex( index )
+                // ref.focusIndex( index )  
+            })  
+        }       
+    }
+    
     const _onRenderMissingItem = (index?: number | undefined, rowProps?: IDetailsRowProps | undefined) => {
 
         console.log( 'onRenderMissingItem', index )
 
-        moveNextPage()
+        if( index  )
+            props.pagination.moveToNextPage( index )
 
         return null
     }
 
     const _onRenderCustomPlaceholder = (rowProps: IDetailsRowProps, index?: number, defaultRender?: (props: IDetailsRowProps) => React.ReactNode)  => {
 
-        console.log( 'onRenderCustomPlaceholder', index )
+        console.log( 'onRenderCustomPlaceholder', index, rowProps)
 
-        moveNextPage()
+        if( index  ) 
+            props.pagination.moveToNextPage(index)
 
-        return defaultRender!( rowProps )
+        return null // defaultRender!( rowProps )
 
     }
        
@@ -151,7 +211,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                     ariaLabelForSelectionColumn="Toggle selection"
                     ariaLabelForSelectAllCheckbox="Toggle selection for all items"
                     checkButtonAriaLabel="Row checkbox"                        
-                    selectionMode={SelectionMode.multiple}
+                    selectionMode={SelectionMode.single}
                     layoutMode = {DetailsListLayoutMode.justified}
                     constrainMode={ConstrainMode.unconstrained}
                     onRenderDetailsHeader={_onRenderDetailsHeader}
@@ -173,13 +233,14 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                 ariaLabelForSelectionColumn="Toggle selection"
                 ariaLabelForSelectAllCheckbox="Toggle selection for all items"
                 checkButtonAriaLabel="Row checkbox"                        
-                selectionMode={SelectionMode.multiple}
+                selectionMode={SelectionMode.single}
                 layoutMode = {DetailsListLayoutMode.justified}
                 constrainMode={ConstrainMode.unconstrained}
                 onRenderDetailsHeader={_onRenderDetailsHeader}
                 onRenderDetailsFooter={_onRenderDetailsFooter}
                 onRenderMissingItem={_onRenderMissingItem}
                 componentRef={ (ref) => detailListRef.current = ref! }
+                onDidUpdate={_onDidUpdate}
             />      
 
         }
@@ -223,13 +284,6 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
         return newRecord;
     });          
     
-    if( !USE_SHIMMEREDLIST ) {
-        if( dataSet.paging.hasNextPage ) {
-            console.log( 'add null row for trigger "onMissingItem"')
-            resultSet.push( null )
-        }
-    }
-
     return resultSet;
 }  
 
@@ -413,3 +467,4 @@ const getUserLanguage = (pcfContext: ComponentFramework.Context<IInputs>): strin
 const isEntityReference = (obj: any): obj is ComponentFramework.EntityReference => {
     return typeof obj?.etn === 'string';
 }
+
