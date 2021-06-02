@@ -75,6 +75,9 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     }, [props.dataSetVersion])
     
+    // 
+    // THIS DOESN'T WORK ( see function '_onDidUpdate' below)
+    //
     // React.useEffect(() => {
     //     console.log( 'useEffect scrollToIndex' )
     //     if( props.pagination.currentPage > 1 && detailListRef?.current ) {
