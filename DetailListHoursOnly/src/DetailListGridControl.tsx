@@ -44,7 +44,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const dataset = props.pcfContext.parameters.sampleDataSet
     
     const controlState = React.useRef( {
-        lastPageProcessed:0
+        lastScrolledIndex:0
     })
     const detailListRef = React.useRef<IDetailsList>()
     const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
@@ -75,20 +75,19 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     }, [props.dataSetVersion])
     
-    //
-    React.useLayoutEffect(() => {
-        console.log( 'useEffect scrollToIndex' )
-        if( props.pagination.currentPage > 1 && detailListRef?.current ) {
-            const ref = detailListRef.current
-            const index = props.pagination.currentScrollIndex
+    // React.useEffect(() => {
+    //     console.log( 'useEffect scrollToIndex' )
+    //     if( props.pagination.currentPage > 1 && detailListRef?.current ) {
+    //         const ref = detailListRef.current
+    //         const index = props.pagination.currentScrollIndex
             
-            setImmediate( () => {
-                console.log( 'scrollToIndex', index  )
-                ref.scrollToIndex( index )
-                // ref.focusIndex( index )  
-            })  
-        }     
-    }, [props.pagination.currentPage])
+    //         setImmediate( () => {
+    //             console.log( 'scrollToIndex', index  )
+    //             ref.scrollToIndex( index )
+    //             // ref.focusIndex( index )  
+    //         })  
+    //     }     
+    // }, [props.pagination.currentPage])
  
     // When the component is updated this will determine if the width of the control has changed.
     // If so the column widths will be adjusted.
@@ -158,16 +157,20 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const _onDidUpdate = (detailsList?: DetailsListBase | undefined) => {
         console.log( 'onDidUpdate' )
 
-        // if( props.pagination.currentPage > 1 && detailListRef?.current ) {
-        //     const ref = detailListRef.current
-        //     const index = props.pagination.currentScrollIndex
-            
-        //     setImmediate( () => {
-        //         console.log( 'scrollToIndex in effect', index  )
-        //         ref.scrollToIndex( index )
-        //         // ref.focusIndex( index )  
-        //     })  
-        // }       
+        if( props.pagination.currentPage > 1 && 
+            detailListRef?.current && 
+            props.pagination.currentScrollIndex > controlState.current.lastScrolledIndex ) 
+        {
+            const ref = detailListRef.current
+            const index = props.pagination.currentScrollIndex
+            controlState.current.lastScrolledIndex = index
+
+            setImmediate( () => {
+                console.log( 'scrollToIndex in effect', index  )
+                ref.scrollToIndex( index )
+                // ref.focusIndex( index )  
+            })  
+        }       
     }
     
     const _onRenderMissingItem = (index?: number | undefined, rowProps?: IDetailsRowProps | undefined) => {
