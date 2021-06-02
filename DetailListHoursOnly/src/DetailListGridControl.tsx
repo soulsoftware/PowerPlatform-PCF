@@ -43,6 +43,9 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     const dataset = props.pcfContext.parameters.sampleDataSet
     
+    const controlState = React.useRef( {
+        lastPageProcessed:0
+    })
     const detailListRef = React.useRef<IDetailsList>()
     const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
     const [items, setItems]     = React.useState<Array<any>>( [] /*getItems(columns, props.pcfContext)*/ );
@@ -73,19 +76,18 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     }, [props.dataSetVersion])
     
     //
-    React.useEffect(() => {
-        console.group( 'useEffect scrollToIndex' )
+    React.useLayoutEffect(() => {
+        console.log( 'useEffect scrollToIndex' )
         if( props.pagination.currentPage > 1 && detailListRef?.current ) {
             const ref = detailListRef.current
             const index = props.pagination.currentScrollIndex
             
             setImmediate( () => {
-                console.log( 'index', index  )
+                console.log( 'scrollToIndex', index  )
                 ref.scrollToIndex( index )
                 // ref.focusIndex( index )  
             })  
         }     
-        console.groupEnd()  
     }, [props.pagination.currentPage])
  
     // When the component is updated this will determine if the width of the control has changed.
