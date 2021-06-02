@@ -72,18 +72,21 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     }, [props.dataSetVersion])
     
-    // React.useEffect(() => {
-    //     if( props.pagination.currentPage > 1 && detailListRef?.current ) {
-    //         const ref = detailListRef.current
-    //         const index = props.pagination.currentScrollIndex
-
-    //         setImmediate( () => {
-    //             console.log( 'scrollToIndex in effect', index  )
-    //             ref.scrollToIndex( index )
-    //             ref.focusIndex( index )  
-    //         })  
-    //     }             
-    // }, [items])
+    //
+    React.useEffect(() => {
+        console.group( 'useEffect scrollToIndex' )
+        if( props.pagination.currentPage > 1 && detailListRef?.current ) {
+            const ref = detailListRef.current
+            const index = props.pagination.currentScrollIndex
+            
+            setImmediate( () => {
+                console.log( 'index', index  )
+                ref.scrollToIndex( index )
+                // ref.focusIndex( index )  
+            })  
+        }     
+        console.groupEnd()  
+    }, [props.pagination.currentPage])
  
     // When the component is updated this will determine if the width of the control has changed.
     // If so the column widths will be adjusted.
@@ -153,16 +156,16 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const _onDidUpdate = (detailsList?: DetailsListBase | undefined) => {
         console.log( 'onDidUpdate' )
 
-        if( props.pagination.currentPage > 1 && detailListRef?.current ) {
-            const ref = detailListRef.current
-            const index = props.pagination.currentScrollIndex
-
-            setImmediate( () => {
-                console.log( 'scrollToIndex in effect', index  )
-                ref.scrollToIndex( index )
-                // ref.focusIndex( index )  
-            })  
-        }       
+        // if( props.pagination.currentPage > 1 && detailListRef?.current ) {
+        //     const ref = detailListRef.current
+        //     const index = props.pagination.currentScrollIndex
+            
+        //     setImmediate( () => {
+        //         console.log( 'scrollToIndex in effect', index  )
+        //         ref.scrollToIndex( index )
+        //         // ref.focusIndex( index )  
+        //     })  
+        // }       
     }
     
     const _onRenderMissingItem = (index?: number | undefined, rowProps?: IDetailsRowProps | undefined) => {
