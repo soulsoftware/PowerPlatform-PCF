@@ -113,6 +113,8 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
           isSortedDescending = !isSortedDescending
         }
 
+        console.log( '_onColumnClick', column?.fieldName, isSortedDescending )
+        
         // Reset the items and columns to match the state.
         setItems(copyAndSort(items, column?.fieldName!, props.pcfContext, isSortedDescending))
         setColumns(
@@ -263,7 +265,8 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
             }
             else if(column.data.isPrimary)
             {
-                newRecord[column.key] = `${index}) - ${record.getFormattedValue(column.key)}`
+                // newRecord[column.key] = `${index}) - ${record.getFormattedValue(column.key)}`
+                newRecord[column.key] = record.getFormattedValue(column.key)
                 newRecord[`${column.key}_ref`] = record.getNamedReference();
             }
         }  
@@ -324,9 +327,10 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
             key:            column.name,
             name:           column.displayName,
             fieldName:      column.alias,
-            // currentWidth:   column.visualSizeFactor,
-            minWidth:       column.visualSizeFactor,                
+            minWidth:       column.visualSizeFactor, 
+            maxWidth:       column.visualSizeFactor + 400, 
             // maxWidth:       columnWidthDistribution[index],
+            // currentWidth:   column.visualSizeFactor,
             isResizable:    true,
             data:           {isPrimary : column.isPrimary},
             sortAscendingAriaLabel: 'Sorted A to Z',
