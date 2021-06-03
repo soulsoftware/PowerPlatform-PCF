@@ -14,15 +14,17 @@ import { IDetailsRowProps } from '@fluentui/react/lib/DetailsList';
 import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
 import { IDetailsList } from '@fluentui/react/lib/DetailsList';
 import { DetailsListBase } from '@fluentui/react/lib/DetailsList';
+import { DetailsRow } from '@fluentui/react/lib/DetailsList';
 
 const USE_SHIMMEREDLIST = false
 
 export interface InfiniteScrolling {
     readonly currentPage:number;
-    readonly currentScrollIndex:number
-    moveToNextPage: (formIndex:number) => boolean 
+    moveToNextPage(formIndex:number):boolean 
+    currentScrollIndex( cb:(index:number) => void ):void
 
 }
+
 export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
     isModelApp: boolean,
@@ -43,9 +45,6 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     const dataset = props.pcfContext.parameters.sampleDataSet
     
-    const controlState = React.useRef( {
-        lastScrolledIndex:0
-    })
     const detailListRef = React.useRef<IDetailsList>()
     const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
     const [items, setItems]     = React.useState<Array<any>>( [] /*getItems(columns, props.pcfContext)*/ );
@@ -80,16 +79,9 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     //
     // React.useEffect(() => {
     //     console.log( 'useEffect scrollToIndex' )
-    //     if( props.pagination.currentPage > 1 && detailListRef?.current ) {
-    //         const ref = detailListRef.current
-    //         const index = props.pagination.currentScrollIndex
-            
-    //         setImmediate( () => {
-    //             console.log( 'scrollToIndex', index  )
-    //             ref.scrollToIndex( index )
-    //             // ref.focusIndex( index )  
-    //         })  
-    //     }     
+    //     if( detailListRef?.current ) {
+    //         props.pagination.currentScrollIndex( (index) => detailListRef.current?.scrollToIndex(index) )
+    //     }             
     // }, [props.pagination.currentPage])
  
     // When the component is updated this will determine if the width of the control has changed.
@@ -121,15 +113,22 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
           isSortedDescending = !isSortedDescending
         }
 
+        console.log( '_onColumnClick', column?.fieldName, isSortedDescending )
+
         // Reset the items and columns to match the state.
+        const updateSortingInfo = (col: IColumn ) => {
+            col.isSorted = col.key === column?.key
+            col.isSortedDescending = isSortedDescending
+        }
+        columns.forEach( updateSortingInfo )
         setItems(copyAndSort(items, column?.fieldName!, props.pcfContext, isSortedDescending))
-        setColumns(
-            columns.map(col => {
-                col.isSorted = col.key === column?.key
-                col.isSortedDescending = isSortedDescending
-                return col
-            })
-        );
+        // setColumns(
+        //     columns.map(col => {
+        //         col.isSorted = col.key === column?.key
+        //         col.isSortedDescending = isSortedDescending
+        //         return col
+        //     })
+        // );
     }      
     
     const _onRenderDetailsHeader = (props: IDetailsHeaderProps | undefined, defaultRender?: IRenderFunction<IDetailsHeaderProps>): JSX.Element => {
@@ -160,19 +159,8 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const _onDidUpdate = (detailsList?: DetailsListBase | undefined) => {
         console.log( 'onDidUpdate' )
 
-        if( props.pagination.currentPage > 1 && 
-            detailListRef?.current && 
-            props.pagination.currentScrollIndex > controlState.current.lastScrolledIndex ) 
-        {
-            const ref = detailListRef.current
-            const index = props.pagination.currentScrollIndex
-            controlState.current.lastScrolledIndex = index
-
-            setImmediate( () => {
-                console.log( 'scrollToIndex in effect', index  )
-                ref.scrollToIndex( index )
-                // ref.focusIndex( index )  
-            })  
+        if( detailsList ) {
+            props.pagination.currentScrollIndex( (index) => detailsList.scrollToIndex(index) )
         }       
     }
     
@@ -196,7 +184,12 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         return null // defaultRender!( rowProps )
 
     }
-       
+
+    const _onItemInvoked = (item?: any, index?: number, ev?: Event) => {
+        dataset.openDatasetItem(item[ `_primary_ref`])
+    }
+
+
     const DetailsListControl = () => {
         if( USE_SHIMMEREDLIST ) {
             return (
@@ -241,7 +234,8 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                 onRenderMissingItem={_onRenderMissingItem}
                 componentRef={ (ref) => detailListRef.current = ref! }
                 onDidUpdate={_onDidUpdate}
-            />      
+                onItemInvoked={_onItemInvoked}
+                />      
 
         }
     }
@@ -276,10 +270,12 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
             }
             else if(column.data.isPrimary)
             {
-                newRecord[column.key] = `${index}) - ${record.getFormattedValue(column.key)}`
+                // newRecord[column.key] = `${index}) - ${record.getFormattedValue(column.key)}`
+                newRecord[column.key] = record.getFormattedValue(column.key)
                 newRecord[`${column.key}_ref`] = record.getNamedReference();
             }
-        }            
+        }  
+        newRecord['_primary_ref'] = record.getNamedReference()     
 
         return newRecord;
     });          
@@ -336,24 +332,15 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
             key:            column.name,
             name:           column.displayName,
             fieldName:      column.alias,
-            // currentWidth:   column.visualSizeFactor,
-            minWidth:       column.visualSizeFactor,                
+            minWidth:       column.visualSizeFactor, 
+            maxWidth:       column.visualSizeFactor + 400, 
             // maxWidth:       columnWidthDistribution[index],
+            // currentWidth:   column.visualSizeFactor,
             isResizable:    true,
             data:           {isPrimary : column.isPrimary},
             sortAscendingAriaLabel: 'Sorted A to Z',
             sortDescendingAriaLabel:'Sorted Z to A',
         }
-
-        // console.table( [{
-        //         'name': column.name,
-        //         'displayName': column.displayName, 
-        //         'type': column.dataType, 
-        //         'isPrimary': column.isPrimary,
-        //         'isCustom': isCustomField(column.name),
-        //         'visualSizeFactor':column.visualSizeFactor, 
-        //         'maxWidth':columnWidthDistribution[index]
-        // }])
 
         //create links for primary field and entity reference.            
         if (column.dataType.startsWith('Lookup.') || column.isPrimary)
