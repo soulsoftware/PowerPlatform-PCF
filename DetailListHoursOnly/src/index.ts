@@ -29,6 +29,7 @@ class PaginationImpl implements Pagination {
 		if( state && state.currentPage ) {
 			this._currentPage = state.currentPage
 			this._ctx.parameters.sampleDataSet.paging.loadExactPage( this._currentPage)
+			this._ctx.mode.setControlState( {} ) // reset state 
 		}
 	}
 
