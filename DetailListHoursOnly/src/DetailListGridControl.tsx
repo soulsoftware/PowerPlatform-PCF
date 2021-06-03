@@ -110,7 +110,15 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
             col.isSortedDescending = isSortedDescending
         }
         columns.forEach( updateSortingInfo )
-        setItems(copyAndSort(items, column?.fieldName!, props.pcfContext, isSortedDescending))
+
+        const sortedItems = copyAndSort(items, column?.fieldName!, props.pcfContext, isSortedDescending)
+
+        setItems( sortedItems )
+
+        console.log( 'setSortedItems' )
+
+        console.log( sortedItems )
+
         // setColumns(
         //     columns.map(col => {
         //         col.isSorted = col.key === column?.key
