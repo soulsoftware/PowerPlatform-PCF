@@ -12,6 +12,7 @@ import { Stack } from '@fluentui/react/lib/Stack';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { ScrollablePane, ScrollbarVisibility } from '@fluentui/react/lib/ScrollablePane';
 import { IStackItemStyles } from '@fluentui/react/lib/Stack';
+import { PeoplePickerItemSuggestionBase } from '@fluentui/react';
 
 
 export interface Pagination {
@@ -22,6 +23,7 @@ export interface Pagination {
     moveToFirst():void 
     moveNext():void
     movePrevious():void
+    saveState():void
 
 }
 
@@ -45,7 +47,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     const dataset = props.pcfContext.parameters.sampleDataSet
     
-    const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
+    const [columns, setColumns] = React.useState(getColumns(props));
     const [items, setItems]     = React.useState<Array<any>>( [] /*getItems(columns, props.pcfContext)*/ );
 
     // react hook to store the number of selected items in the grid which will be displayed in the grid footer.
@@ -205,8 +207,12 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 }
 
 // navigates to the record when user clicks the link in the grid.
-const navigate = (item: any, linkReference: string | undefined, pcfContext: ComponentFramework.Context<IInputs>) =>        
-    pcfContext.parameters.sampleDataSet.openDatasetItem(item[ `${linkReference}_ref`])
+const navigate = (item: any, linkReference: string | undefined, props: IDetailListGridControlProps) =>  {    
+    props.pagination.saveState()
+    props.pcfContext.parameters.sampleDataSet.openDatasetItem(item[ `${linkReference}_ref`])
+
+
+}
 
 // get the items from the dataset
 const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IInputs>) => {
@@ -244,11 +250,11 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
 }  
 
  // get the columns from the dataset
-const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?:string ) : IColumn[] => {
-    let dataSet = pcfContext.parameters.sampleDataSet;
+const getColumns = (props: IDetailListGridControlProps ) : IColumn[] => {
+    let dataSet = props.pcfContext.parameters.sampleDataSet;
     
 
-    let columnWidthDistribution = getColumnWidthDistribution(pcfContext);
+    // let columnWidthDistribution = getColumnWidthDistribution(props.pcfContext);
 
     const defaultDate = new Date( 1899, 11, 31, 0, 0)
 
@@ -275,8 +281,8 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
     }
 
     const isCustomField = ( fieldName:string ) => {
-        if( entityName ) {
-            const name_parts = entityName.split('_')
+        if( props.entityName ) {
+            const name_parts = props.entityName.split('_')
 
             return ( name_parts.length > 1 ) ? 
                     fieldName.startsWith( name_parts[0] ) : false
@@ -306,7 +312,7 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
         if (column.dataType.startsWith('Lookup.') || column.isPrimary)
         {
             iColumn.onRender = (item: any, index: number | undefined, column: IColumn | undefined)=> (                                    
-                <Link key={item.key} onClick={() => navigate(item, column!.fieldName, pcfContext) }>{item[column!.fieldName!]}</Link>                    
+                <Link key={item.key} onClick={() => navigate(item, column!.fieldName, props) }>{item[column!.fieldName!]}</Link>                    
             );
         }
         else if(column.dataType === 'SingleLine.Email'){

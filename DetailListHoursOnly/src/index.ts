@@ -15,13 +15,29 @@ function getQueryVariable(param:string) : string|undefined {
 }
 
 const DEFAULT_PAGE_SIZE = 50
+
 /**
  * 
  */
 class PaginationImpl implements Pagination {
 	private _currentPage = 1
 
-	constructor(  private _ctx:ComponentFramework.Context<IInputs>  ) {}
+	constructor(  private _ctx:ComponentFramework.Context<IInputs>, state: ComponentFramework.Dictionary  ) {
+
+		console.log( 'state' , state )
+
+		if( state && state.currentPage ) {
+			this._currentPage = state.currentPage
+			this._ctx.parameters.sampleDataSet.paging.loadExactPage( this._currentPage)
+		}
+	}
+
+
+	saveState(): void {
+		this._ctx.mode.setControlState( { 
+			currentPage: this._currentPage
+		})
+	}
 
 	get firstItemNumber() {
 		return (this._currentPage-1) * this.pageSize + 1
@@ -117,7 +133,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		this._container = container;
 		this._context = context;
 		this._dataSetVersion = 0;
-		this._paging = new PaginationImpl(this._context)
+		this._paging = new PaginationImpl(this._context, state)
 
 		this._props = {
 			pcfContext:		this._context,
