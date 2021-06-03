@@ -32,17 +32,14 @@ class InfiniteScrollingImpl implements Pagination {
 		return this._currentPage 
 	}
 
-	moveToFirst(): boolean {
+	moveToFirst() {
 
 		if( this.currentPage > 1 ) {
-
+			console.log( 'moveToFirst' )
 			const paging = this.pcfContext.parameters.sampleDataSet.paging
 			this._currentPage = 1
 			paging.loadExactPage( this._currentPage)
-			return true
 		}
-
-		return false
 	}
 	
 	
@@ -51,27 +48,20 @@ class InfiniteScrollingImpl implements Pagination {
 		const paging = this.pcfContext.parameters.sampleDataSet.paging
 
 		if( paging.hasNextPage  ) {
-
+			console.log( 'moveNext' )
 			paging.loadExactPage( ++this._currentPage)
-			return true
-			
 		}
-		return false
 	
 	}
 
-	movePrevious() { 
-			
+	movePrevious() { 			
 		const paging = this.pcfContext.parameters.sampleDataSet.paging
 
 		if( paging.hasPreviousPage  ) {
+			console.log( 'movePrevious' )
 
 			paging.loadExactPage( --this._currentPage)
-			return true
-			
-		}
-		return false
-	
+		}	
 	}
 
 }
