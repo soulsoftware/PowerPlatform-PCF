@@ -114,16 +114,21 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         }
 
         console.log( '_onColumnClick', column?.fieldName, isSortedDescending )
-        
+
         // Reset the items and columns to match the state.
+        const updateSortingInfo = (col: IColumn ) => {
+            col.isSorted = col.key === column?.key
+            col.isSortedDescending = isSortedDescending
+        }
+        columns.forEach( updateSortingInfo )
         setItems(copyAndSort(items, column?.fieldName!, props.pcfContext, isSortedDescending))
-        setColumns(
-            columns.map(col => {
-                col.isSorted = col.key === column?.key
-                col.isSortedDescending = isSortedDescending
-                return col
-            })
-        );
+        // setColumns(
+        //     columns.map(col => {
+        //         col.isSorted = col.key === column?.key
+        //         col.isSortedDescending = isSortedDescending
+        //         return col
+        //     })
+        // );
     }      
     
     const _onRenderDetailsHeader = (props: IDetailsHeaderProps | undefined, defaultRender?: IRenderFunction<IDetailsHeaderProps>): JSX.Element => {
