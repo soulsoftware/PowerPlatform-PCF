@@ -62,10 +62,10 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     React.useEffect(() => {
         const result = getItems(columns, props.pcfContext)
 
-        if( dataset.paging.hasNextPage ) {
-            console.log( 'add null row for trigger "onMissingItem"')
-            result.push( null )
-        }
+        // if( dataset.paging.hasNextPage ) {
+        //     console.log( 'add null row for trigger "onMissingItem"')
+        //     result.push( null )
+        // }
         
         setItems(result)
         
@@ -116,8 +116,8 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         setItems( sortedItems )
 
         console.log( 'setSortedItems' )
-
         console.log( sortedItems )
+
 
         // setColumns(
         //     columns.map(col => {
@@ -399,7 +399,7 @@ const copyAndSort = <T, >(items: T[], columnKey: string, pcfContext: ComponentFr
         const valueB = String(b[key]) || ''
 
         const result = valueA.localeCompare( valueB, getUserLanguage(pcfContext), { numeric: true } )
-        console.log( `compare('${valueA}', '${valueB}') = ${result} `)
+        // console.log( `compare('${valueA}', '${valueB}') = ${result} `)
     
         return result
     
