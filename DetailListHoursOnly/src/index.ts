@@ -14,6 +14,7 @@ function getQueryVariable(param:string) : string|undefined {
 	
 }
 
+const DEFAULT_PAGE_SIZE = 50
 /**
  * 
  */
@@ -23,21 +24,6 @@ class PaginationImpl implements Pagination {
 
 	constructor(  private _ctx:ComponentFramework.Context<IInputs>  ) {}
 
-	init() {
-
-		if( this._currentPage == 1 ) {
-			const pageSize = this._ctx.parameters.sampleDataSet.sortedRecordIds.length
-
-			if( pageSize > 0 && pageSize != this._pageSize ) {
-				this._pageSize = pageSize
-				console.log( 'set new pageSize', this._pageSize)
-				this._ctx.parameters.sampleDataSet.paging.setPageSize(this._pageSize)
-			}
-
-		}
-		
-		return this
-	}
 	get firstItemNumber() {
 		return (this._currentPage-1) * this._pageSize + 1
 	}
@@ -47,8 +33,10 @@ class PaginationImpl implements Pagination {
 	}
 
 	get pageSize() {
-		return this._pageSize
+		const paging = this._ctx?.parameters.sampleDataSet.paging
+		return ( paging && paging.pageSize ) ? paging.pageSize : DEFAULT_PAGE_SIZE
 	}
+
 	get currentPage() { 
 		return this._currentPage 
 	}

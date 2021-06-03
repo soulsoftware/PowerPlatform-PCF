@@ -49,7 +49,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const [items, setItems]     = React.useState<Array<any>>( [] /*getItems(columns, props.pcfContext)*/ );
 
     // react hook to store the number of selected items in the grid which will be displayed in the grid footer.
-    // const [selectedItemCount, setSelectedItemCount] = React.useState(0);    
+    const [selectedItemCount, setSelectedItemCount] = React.useState(0);    
 
     console.log({
         'currentPage':props.pagination.currentPage, 
@@ -89,7 +89,9 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     const _setSelectedItemsOnDataSet = () => {
         let selections = _selection.getSelection();
         let selectedKeys = selections.map( s => s.key as string)
-        // setSelectedItemCount(selectedKeys.length);
+
+        setSelectedItemCount(selectedKeys.length);
+        
         dataset.setSelectedRecordIds(selectedKeys);
     }      
 
@@ -144,7 +146,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         // const totalResultCount = items.length
         // const totalResultCount = dataset.sortedRecordIds.length
         const totalResultCount = dataset.paging.totalResultCount
-        const selectedItemCount = dataset.getSelectedRecordIds().length
+        //const selectedItemCount = dataset.getSelectedRecordIds().length
 
         const totalRecordsString = (totalResultCount > 0 ) ? `${totalResultCount}` : ` N `
 

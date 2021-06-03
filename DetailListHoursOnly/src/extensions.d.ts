@@ -12,6 +12,7 @@ declare namespace ComponentFramework {
             interface Paging {
 
                 loadExactPage( pageIndex:number ):void
+                readonly pageSize?:number
             }
         }
     }
