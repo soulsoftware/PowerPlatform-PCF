@@ -15,6 +15,9 @@ import { ScrollablePane, ScrollbarVisibility } from '@fluentui/react/lib/Scrolla
 
 export interface Pagination {
     readonly currentPage:number;
+    readonly pageSize:number;
+    readonly firstItemNumber:number;
+    readonly lastItemNumber:number;
     moveToFirst():void 
     moveNext():void
     movePrevious():void
@@ -134,8 +137,6 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         // const totalResultCount = dataset.sortedRecordIds.length
         const totalResultCount = dataset.paging.totalResultCount
         const selectedItemCount = dataset.getSelectedRecordIds().length
-        const firstItemNumber = 0
-        const lastItemNumber = 0
 
         // return (
         //     <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
@@ -147,7 +148,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         <Stack grow horizontal horizontalAlign="space-between" >
             <Stack.Item className="Footer">
                 <Stack grow horizontal horizontalAlign="space-between" >
-                    <Stack.Item grow={1} align="center" >{firstItemNumber} - {lastItemNumber} of {totalResultCount} {selectedItemCount} selected)</Stack.Item>
+                    <Stack.Item grow={1} align="center" >{props.pagination.firstItemNumber} - {props.pagination.lastItemNumber} of {totalResultCount} {selectedItemCount} selected)</Stack.Item>
                     <Stack.Item grow={1} align="center" className="FooterRight">
                         <IconButton className="FooterIcon" iconProps={{ iconName: "DoubleChevronLeft"}} onClick={ () => props.pagination.moveToFirst() } disabled={!dataset.paging.hasPreviousPage}/>
                         <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronLeft"}} onClick={ () => props.pagination.movePrevious() } disabled={!dataset.paging.hasPreviousPage}/>

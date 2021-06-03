@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {IDetailListGridControlProps, DetailListGridControl, Pagination}  from './DetailListGridControl'
 
-const DEFAULT_PAGE_SIZE = 50
+const DEFAULT_PAGE_SIZE = 100
 
 function getQueryVariable(param:string) : string|undefined {
     const query = window.location.search.substring(1);
@@ -19,15 +19,28 @@ function getQueryVariable(param:string) : string|undefined {
 /**
  * 
  */
-class InfiniteScrollingImpl implements Pagination {
+class PaginationImpl implements Pagination {
 	private _currentPage = 1
-	private _lastIndex = 0
-	private _lastScrollIndex = 0
+	private _ctx?:ComponentFramework.Context<IInputs>
 
-	constructor( private pcfContext: ComponentFramework.Context<IInputs>, private _pageSize:number ) {
-		pcfContext.parameters.sampleDataSet.paging.setPageSize(_pageSize);
+	constructor( private _pageSize:number ) {
 	}
 
+	init( pcfContext: ComponentFramework.Context<IInputs> ) {
+		this._ctx = pcfContext
+		return this
+	}
+	get firstItemNumber() {
+		return (this._currentPage-1) * this._pageSize + 1
+	}
+	get lastItemNumber() {
+		const dataset = this._ctx?.parameters.sampleDataSet
+		return (this._currentPage-1) * this._pageSize + ((dataset) ?  dataset?.sortedRecordIds.length : this._pageSize)
+	}
+
+	get pageSize() {
+		return this._pageSize
+	}
 	get currentPage() { 
 		return this._currentPage 
 	}
@@ -36,30 +49,27 @@ class InfiniteScrollingImpl implements Pagination {
 
 		if( this.currentPage > 1 ) {
 			console.log( 'moveToFirst' )
-			const paging = this.pcfContext.parameters.sampleDataSet.paging
-			this._currentPage = 1
-			paging.loadExactPage( this._currentPage)
+			const paging = this._ctx?.parameters.sampleDataSet.paging
+			if( paging ) {
+				this._currentPage = 1
+				paging.loadExactPage( this._currentPage)	
+			}
 		}
 	}
 	
 	
-	moveNext() { 
-			
-		const paging = this.pcfContext.parameters.sampleDataSet.paging
-
-		if( paging.hasNextPage  ) {
+	moveNext() { 		
+		const paging = this._ctx?.parameters.sampleDataSet.paging
+		if( paging && paging.hasNextPage  ) {
 			console.log( 'moveNext' )
 			paging.loadExactPage( ++this._currentPage)
-		}
-	
+		}	
 	}
 
 	movePrevious() { 			
-		const paging = this.pcfContext.parameters.sampleDataSet.paging
-
-		if( paging.hasPreviousPage  ) {
+		const paging = this._ctx?.parameters.sampleDataSet.paging
+		if( paging && paging.hasPreviousPage  ) {
 			console.log( 'movePrevious' )
-
 			paging.loadExactPage( --this._currentPage)
 		}	
 	}
@@ -81,7 +91,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 
 	private _props: IDetailListGridControlProps;
 
-	private _paging :Pagination
+	private _paging = new PaginationImpl(DEFAULT_PAGE_SIZE)
 
 	constructor() 
 	{
@@ -114,13 +124,12 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		this._container = container;
 		this._context = context;
 		this._dataSetVersion = 0;
-		this._paging = new InfiniteScrollingImpl(context, DEFAULT_PAGE_SIZE)
 
 		this._props = {
 			pcfContext:		this._context,
 			isModelApp:		this._isModelApp,
 			dataSetVersion: this._dataSetVersion,
-			pagination: 	this._paging,
+			pagination: 	this._paging.init( context ),
 			entityName: 	entityName
 		}
 
