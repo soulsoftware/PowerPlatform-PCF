@@ -5,6 +5,78 @@
 
 import React = require("react");
 
+export interface InfiniteScrolling {
+    readonly currentPage:number;
+    moveToNextPage(formIndex:number):boolean 
+    currentScrollIndex( cb:(index:number) => void ):void
+
+}
+
+/**
+ * 
+ */
+ class InfiniteScrollingImpl implements InfiniteScrolling {
+	private _currentPage = 1
+	private _lastIndex = 0
+	private _lastScrollIndex = 0
+
+	constructor( private _dataset: ComponentFramework.PropertyTypes.DataSet, private _pageSize:number ) {
+		_dataset.paging.setPageSize(_pageSize);
+	}
+	
+	get currentPage() { 
+
+		// console.log( 'dataset.sortedRecordIds.length', dataset.sortedRecordIds.length )
+		if( this._dataset.sortedRecordIds.length <= this._pageSize ) {
+			this._currentPage = 1
+		}
+		return this._currentPage 
+	}
+
+	private get _scrollIndex() { 
+		return (this._currentPage-1) * this._pageSize + 1 
+	}
+
+	currentScrollIndex( cb:(index:number) => void ) {
+		const index = this._scrollIndex
+
+        if( this.currentPage > 1 && index > this._lastScrollIndex ) {
+            
+            this._lastScrollIndex = index
+
+            setImmediate( cb, index )
+
+			return true
+        }   
+		return false
+	}
+
+	moveToNextPage( fromIndex:number) { 
+			
+		const paging = this._dataset.paging
+
+		if( paging.hasNextPage && fromIndex > this._lastIndex ) {
+
+			this._lastIndex = fromIndex
+			this._currentPage++
+			paging.loadNextPage()
+			return true 
+			
+		}
+		return false
+	
+	}
+
+}
+
+export const useInfiniteScroll = ( dataset:ComponentFramework.PropertyTypes.DataSet, pagesize:number ) => {
+    const [ is ] = React.useState( () => (new InfiniteScrollingImpl(dataset, pagesize) ) )
+    const ref = React.useRef( is )
+
+    return ref
+}
+
+
 export const useExactPaging = (dataset: ComponentFramework.PropertyTypes.DataSet) => {    
       
     const [firstItemNumber, setFirstItemNumber] = React.useState<number>(0);

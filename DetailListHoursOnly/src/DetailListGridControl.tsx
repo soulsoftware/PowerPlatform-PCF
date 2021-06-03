@@ -14,6 +14,7 @@ import { IDetailsRowProps } from '@fluentui/react/lib/DetailsList';
 import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
 import { IDetailsList } from '@fluentui/react/lib/DetailsList';
 import { DetailsListBase } from '@fluentui/react/lib/DetailsList';
+import { DetailsRow } from '@fluentui/react/lib/DetailsList';
 
 const USE_SHIMMEREDLIST = false
 
@@ -23,6 +24,7 @@ export interface InfiniteScrolling {
     currentScrollIndex( cb:(index:number) => void ):void
 
 }
+
 export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
     isModelApp: boolean,
@@ -175,7 +177,12 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         return null // defaultRender!( rowProps )
 
     }
-       
+
+    const _onItemInvoked = (item?: any, index?: number, ev?: Event) => {
+        dataset.openDatasetItem(item[ `_primary_ref`])
+    }
+
+
     const DetailsListControl = () => {
         if( USE_SHIMMEREDLIST ) {
             return (
@@ -220,7 +227,8 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                 onRenderMissingItem={_onRenderMissingItem}
                 componentRef={ (ref) => detailListRef.current = ref! }
                 onDidUpdate={_onDidUpdate}
-            />      
+                onItemInvoked={_onItemInvoked}
+                />      
 
         }
     }
@@ -258,7 +266,8 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
                 newRecord[column.key] = `${index}) - ${record.getFormattedValue(column.key)}`
                 newRecord[`${column.key}_ref`] = record.getNamedReference();
             }
-        }            
+        }  
+        newRecord['_primary_ref'] = record.getNamedReference()     
 
         return newRecord;
     });          
@@ -323,16 +332,6 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
             sortAscendingAriaLabel: 'Sorted A to Z',
             sortDescendingAriaLabel:'Sorted Z to A',
         }
-
-        // console.table( [{
-        //         'name': column.name,
-        //         'displayName': column.displayName, 
-        //         'type': column.dataType, 
-        //         'isPrimary': column.isPrimary,
-        //         'isCustom': isCustomField(column.name),
-        //         'visualSizeFactor':column.visualSizeFactor, 
-        //         'maxWidth':columnWidthDistribution[index]
-        // }])
 
         //create links for primary field and entity reference.            
         if (column.dataType.startsWith('Lookup.') || column.isPrimary)

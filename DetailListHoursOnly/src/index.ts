@@ -60,7 +60,7 @@ class InfiniteScrollingImpl implements InfiniteScrolling {
 			
 		const paging = this.pcfContext.parameters.sampleDataSet.paging
 
-		if( paging.hasNextPage && fromIndex > this._lastIndex ) {
+		if( paging.hasNextPage && fromIndex >= this._lastIndex ) {
 
 			this._lastIndex = fromIndex
 			this._currentPage++
