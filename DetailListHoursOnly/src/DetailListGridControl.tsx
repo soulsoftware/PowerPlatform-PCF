@@ -177,7 +177,6 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         dataset.openDatasetItem(item[ `_primary_ref`])
     }
 
-
     const DetailsListControl = () => {
             return <DetailsList                
                 items={items}
@@ -190,7 +189,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                 ariaLabelForSelectAllCheckbox="Toggle selection for all items"
                 checkButtonAriaLabel="Row checkbox"                        
                 selectionMode={SelectionMode.single}
-                layoutMode = {DetailsListLayoutMode.fixedColumns}
+                layoutMode = {DetailsListLayoutMode.justified}
                 constrainMode={ConstrainMode.unconstrained}
                 onRenderDetailsHeader={_onRenderDetailsHeader}
                 onRenderDetailsFooter={_onRenderDetailsFooter}
