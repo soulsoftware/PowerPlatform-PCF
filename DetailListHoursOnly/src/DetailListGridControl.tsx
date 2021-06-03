@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { Link } from '@fluentui/react/lib/Link';
-import { Label } from '@fluentui/react/lib/Label';
-import { ScrollablePane, ScrollbarVisibility } from '@fluentui/react/lib/ScrollablePane';
 import { Sticky, StickyPositionType } from '@fluentui/react/lib/Sticky';
 import { IRenderFunction, SelectionMode } from '@fluentui/react/lib/Utilities';
 import { DetailsListLayoutMode, Selection, IColumn, ConstrainMode, IDetailsHeaderProps, IDetailsFooterProps, DetailsList } from '@fluentui/react/lib/DetailsList';
@@ -10,18 +8,16 @@ import { initializeIcons } from '@fluentui/react/lib/icons';
 import * as lcid from 'lcid';
 import {IInputs} from "./generated/ManifestTypes";
 import './time.extension'
-import { IDetailsRowProps } from '@fluentui/react/lib/DetailsList';
-import { ShimmeredDetailsList } from '@fluentui/react/lib/ShimmeredDetailsList';
-import { IDetailsList } from '@fluentui/react/lib/DetailsList';
-import { DetailsListBase } from '@fluentui/react/lib/DetailsList';
-import { DetailsRow } from '@fluentui/react/lib/DetailsList';
+import { Stack } from '@fluentui/react/lib/Stack';
+import { IconButton } from '@fluentui/react/lib/Button';
+import { ScrollablePane, ScrollbarVisibility } from '@fluentui/react/lib/ScrollablePane';
 
-const USE_SHIMMEREDLIST = false
 
-export interface InfiniteScrolling {
+export interface Pagination {
     readonly currentPage:number;
-    moveToNextPage(formIndex:number):boolean 
-    currentScrollIndex( cb:(index:number) => void ):void
+    moveToFirst():boolean 
+    moveNext():boolean
+    movePrevious():boolean
 
 }
 
@@ -29,7 +25,7 @@ export interface IDetailListGridControlProps {
     pcfContext: ComponentFramework.Context<IInputs>,
     isModelApp: boolean,
     dataSetVersion: number,
-    pagination:InfiniteScrolling
+    pagination:Pagination
     
     entityName?:string
 
@@ -45,7 +41,6 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     const dataset = props.pcfContext.parameters.sampleDataSet
     
-    const detailListRef = React.useRef<IDetailsList>()
     const [columns, setColumns] = React.useState(getColumns(props.pcfContext, props.entityName));
     const [items, setItems]     = React.useState<Array<any>>( [] /*getItems(columns, props.pcfContext)*/ );
 
@@ -74,16 +69,6 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
     }, [props.dataSetVersion])
     
-    // 
-    // THIS DOESN'T WORK ( see function '_onDidUpdate' below)
-    //
-    // React.useEffect(() => {
-    //     console.log( 'useEffect scrollToIndex' )
-    //     if( detailListRef?.current ) {
-    //         props.pagination.currentScrollIndex( (index) => detailListRef.current?.scrollToIndex(index) )
-    //     }             
-    // }, [props.pagination.currentPage])
- 
     // When the component is updated this will determine if the width of the control has changed.
     // If so the column widths will be adjusted.
     React.useEffect(() => 
@@ -143,79 +128,42 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         )
     }      
 
-    const _onRenderDetailsFooter = (props: IDetailsFooterProps | undefined, defaultRender?: IRenderFunction<IDetailsFooterProps>): JSX.Element => {
+    const _onRenderDetailsFooter = (footerProps: IDetailsFooterProps | undefined, defaultRender?: IRenderFunction<IDetailsFooterProps>): JSX.Element => {
 
         // const totalResultCount = items.length
-        // const totalResultCount = pcfctx.parameters.sampleDataSet.paging.totalResultCount
-        const totalResultCount = dataset.sortedRecordIds.length
+        // const totalResultCount = dataset.sortedRecordIds.length
+        const totalResultCount = dataset.paging.totalResultCount
         const selectedItemCount = dataset.getSelectedRecordIds().length
+        const firstItemNumber = 0
+        const lastItemNumber = 0
+
+        // return (
+        //     <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
+        //         <Label className="footer-item">Records: {totalResultCount} ({selectedItemCount} selected)</Label>               
+        //     </Sticky>
+        // )
         return (
-            <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
-                <Label className="footer-item">Records: {totalResultCount} ({selectedItemCount} selected)</Label>               
-            </Sticky>
-        )
-    }      
-
-    const _onDidUpdate = (detailsList?: DetailsListBase | undefined) => {
-        console.log( 'onDidUpdate' )
-
-        if( detailsList ) {
-            props.pagination.currentScrollIndex( (index) => detailsList.scrollToIndex(index) )
-        }       
+        <Stack grow horizontal horizontalAlign="space-between" >
+            <Stack.Item className="Footer">
+                <Stack grow horizontal horizontalAlign="space-between" >
+                    <Stack.Item grow={1} align="center" >{firstItemNumber} - {lastItemNumber} of {totalResultCount} {selectedItemCount} selected)</Stack.Item>
+                    <Stack.Item grow={1} align="center" className="FooterRight">
+                        <IconButton className="FooterIcon" iconProps={{ iconName: "DoubleChevronLeft"}} onClick={props.pagination.moveToFirst} disabled={!dataset.paging.hasPreviousPage}/>
+                        <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronLeft"}} onClick={props.pagination.movePrevious} disabled={!dataset.paging.hasPreviousPage}/>
+                        <span >Page {props.pagination.currentPage}</span>
+                        <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronRight" }} onClick={props.pagination.moveNext} disabled={!dataset.paging.hasNextPage}/>
+                    </Stack.Item>
+                </Stack>
+            </Stack.Item>
+        </Stack> )
     }
-    
-    const _onRenderMissingItem = (index?: number | undefined, rowProps?: IDetailsRowProps | undefined) => {
-
-        console.log( 'onRenderMissingItem', index )
-
-        if( index  )
-            props.pagination.moveToNextPage( index )
-
-        return null
-    }
-
-    const _onRenderCustomPlaceholder = (rowProps: IDetailsRowProps, index?: number, defaultRender?: (props: IDetailsRowProps) => React.ReactNode)  => {
-
-        console.log( 'onRenderCustomPlaceholder', index, rowProps)
-
-        if( index  ) 
-            props.pagination.moveToNextPage(index)
-
-        return null // defaultRender!( rowProps )
-
-    }
-
+      
     const _onItemInvoked = (item?: any, index?: number, ev?: Event) => {
         dataset.openDatasetItem(item[ `_primary_ref`])
     }
 
 
     const DetailsListControl = () => {
-        if( USE_SHIMMEREDLIST ) {
-            return (
-                <ShimmeredDetailsList
-                    enableShimmer={dataset.loading}
-                    items={items}
-                    columns={columns}
-                    setKey="set"                                                                                         
-                    selection={_selection} // updates the dataset so that we can utilize the ribbon buttons in Dynamics                                        
-                    onColumnHeaderClick={_onColumnClick} // used to implement sorting for the columns.                    
-                    selectionPreservedOnEmptyClick={true}
-                    ariaLabelForSelectionColumn="Toggle selection"
-                    ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-                    checkButtonAriaLabel="Row checkbox"                        
-                    selectionMode={SelectionMode.single}
-                    layoutMode = {DetailsListLayoutMode.justified}
-                    constrainMode={ConstrainMode.unconstrained}
-                    onRenderDetailsHeader={_onRenderDetailsHeader}
-                    onRenderDetailsFooter={_onRenderDetailsFooter}
-                    onRenderCustomPlaceholder={_onRenderCustomPlaceholder}
-                    componentRef={ (ref) => detailListRef.current = ref! }
-                />      
-
-            )
-        }
-        else {
             return <DetailsList                
                 items={items}
                 columns={columns}
@@ -231,20 +179,16 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                 constrainMode={ConstrainMode.unconstrained}
                 onRenderDetailsHeader={_onRenderDetailsHeader}
                 onRenderDetailsFooter={_onRenderDetailsFooter}
-                onRenderMissingItem={_onRenderMissingItem}
-                componentRef={ (ref) => detailListRef.current = ref! }
-                onDidUpdate={_onDidUpdate}
                 onItemInvoked={_onItemInvoked}
                 />      
-
-        }
     }
+    
     return (   
         <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
             <DetailsListControl/>           
         </ScrollablePane>
     );
-};
+}
 
 // navigates to the record when user clicks the link in the grid.
 const navigate = (item: any, linkReference: string | undefined, pcfContext: ComponentFramework.Context<IInputs>) =>        

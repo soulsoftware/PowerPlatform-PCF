@@ -1,7 +1,7 @@
 import {IInputs, IOutputs} from "./generated/ManifestTypes";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {IDetailListGridControlProps, DetailListGridControl, InfiniteScrolling}  from './DetailListGridControl'
+import {IDetailListGridControlProps, DetailListGridControl, Pagination}  from './DetailListGridControl'
 
 const DEFAULT_PAGE_SIZE = 50
 
@@ -19,7 +19,7 @@ function getQueryVariable(param:string) : string|undefined {
 /**
  * 
  */
-class InfiniteScrollingImpl implements InfiniteScrolling {
+class InfiniteScrollingImpl implements Pagination {
 	private _currentPage = 1
 	private _lastIndex = 0
 	private _lastScrollIndex = 0
@@ -27,45 +27,47 @@ class InfiniteScrollingImpl implements InfiniteScrolling {
 	constructor( private pcfContext: ComponentFramework.Context<IInputs>, private _pageSize:number ) {
 		pcfContext.parameters.sampleDataSet.paging.setPageSize(_pageSize);
 	}
-	
-	get currentPage() { 
-		const dataset = this.pcfContext.parameters.sampleDataSet
 
-		// console.log( 'dataset.sortedRecordIds.length', dataset.sortedRecordIds.length )
-		if( dataset.sortedRecordIds.length <= this._pageSize ) {
-			this._currentPage = 1
-		}
+	get currentPage() { 
 		return this._currentPage 
 	}
 
-	private get _scrollIndex() { 
-		return (this._currentPage-1) * this._pageSize + 1 
-	}
+	moveToFirst(): boolean {
 
-	currentScrollIndex( cb:(index:number) => void ) {
-		const index = this._scrollIndex
+		if( this.currentPage > 1 ) {
 
-        if( this.currentPage > 1 && index > this._lastScrollIndex ) {
-            
-            this._lastScrollIndex = index
-
-            setImmediate( cb, index )
-
+			const paging = this.pcfContext.parameters.sampleDataSet.paging
+			this._currentPage = 1
+			paging.loadExactPage( this._currentPage)
 			return true
-        }   
+		}
+
 		return false
 	}
-
-	moveToNextPage( fromIndex:number) { 
+	
+	
+	moveNext() { 
 			
 		const paging = this.pcfContext.parameters.sampleDataSet.paging
 
-		if( paging.hasNextPage && fromIndex >= this._lastIndex ) {
+		if( paging.hasNextPage  ) {
 
-			this._lastIndex = fromIndex
-			this._currentPage++
-			paging.loadNextPage()
-			return true 
+			paging.loadExactPage( ++this._currentPage)
+			return true
+			
+		}
+		return false
+	
+	}
+
+	movePrevious() { 
+			
+		const paging = this.pcfContext.parameters.sampleDataSet.paging
+
+		if( paging.hasPreviousPage  ) {
+
+			paging.loadExactPage( --this._currentPage)
+			return true
 			
 		}
 		return false
@@ -89,7 +91,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 
 	private _props: IDetailListGridControlProps;
 
-	private _paging :InfiniteScrolling
+	private _paging :Pagination
 
 	constructor() 
 	{
