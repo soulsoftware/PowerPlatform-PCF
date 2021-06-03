@@ -148,8 +148,8 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
         <Stack grow horizontal horizontalAlign="space-between" styles={ { root: {  paddingLeft: 5} } } >
             <Stack.Item className="Footer">
-                <Stack grow horizontal horizontalAlign="space-between">
-                    <Stack.Item grow={1} align="center" >{props.pagination.firstItemNumber} - {props.pagination.lastItemNumber} of {totalResultCount} {selectedItemCount} selected)</Stack.Item>
+                <Stack grow horizontal horizontalAlign="space-between" verticalAlign="center">
+                    <Stack.Item grow={1} align="center" >{props.pagination.firstItemNumber} - {props.pagination.lastItemNumber} of {totalResultCount} {selectedItemCount} selected</Stack.Item>
                     <Stack.Item grow={1} align="center" className="FooterRight">
                         <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronLeftEnd6"}} onClick={ () => props.pagination.moveToFirst() } disabled={!dataset.paging.hasPreviousPage}/>
                         <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronLeftSmall"}} onClick={ () => props.pagination.movePrevious() } disabled={!dataset.paging.hasPreviousPage}/>
@@ -386,7 +386,7 @@ const copyAndSort = <T, >(items: T[], columnKey: string, pcfContext: ComponentFr
     let sortedItems = items.slice(0);     
     
     const predicate = (a: T, b: T) => {
-        
+
         const valueA = String(a[key]) || ''
         const valueB = String(b[key]) || ''
 

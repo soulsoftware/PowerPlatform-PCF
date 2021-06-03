@@ -30,6 +30,8 @@ class PaginationImpl implements Pagination {
 		
 		if( this._currentPage == 1 ) {
 			this._pageSize = pcfContext.parameters.sampleDataSet.sortedRecordIds.length
+
+			console.log( 'pageSize', this._pageSize)
 			pcfContext.parameters.sampleDataSet.paging.setPageSize(this._pageSize)
 		}
 		
