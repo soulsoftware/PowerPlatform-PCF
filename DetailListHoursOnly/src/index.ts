@@ -121,8 +121,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		
 		console.log( {
 			'entity name':entityName,
-			isModelApp:this._isModelApp
-		})
+		}, context, state )
 		
 		// Need to track container resize so that control could get the available width. 
 		// The available height won't be provided even when this is true
