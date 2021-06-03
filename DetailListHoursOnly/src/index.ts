@@ -1,9 +1,7 @@
 import {IInputs, IOutputs} from "./generated/ManifestTypes";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {IDetailListGridControlProps, DetailListGridControl, InfiniteScrolling}  from './DetailListGridControl'
-
-const DEFAULT_PAGE_SIZE = 50
+import {IDetailListGridControlProps, DetailListGridControl, Pagination}  from './DetailListGridControl'
 
 function getQueryVariable(param:string) : string|undefined {
     const query = window.location.search.substring(1);
@@ -16,45 +14,75 @@ function getQueryVariable(param:string) : string|undefined {
 	
 }
 
+const DEFAULT_PAGE_SIZE = 50
+
 /**
  * 
  */
-class InfiniteScrollingImpl implements InfiniteScrolling {
+class PaginationImpl implements Pagination {
 	private _currentPage = 1
-	private _lastIndex = 0
 
-	constructor( private pcfContext: ComponentFramework.Context<IInputs>, private _pageSize:number ) {
-		pcfContext.parameters.sampleDataSet.paging.setPageSize(_pageSize);
+	constructor(  private _ctx:ComponentFramework.Context<IInputs>, state: ComponentFramework.Dictionary  ) {
+
+		console.log( 'state' , state )
+
+		if( state && state.currentPage ) {
+			this._currentPage = state.currentPage
+			this._ctx.parameters.sampleDataSet.paging.loadExactPage( this._currentPage)
+		}
+	}
+
+
+	saveState(): void {
+		const result = this._ctx.mode.setControlState( { 
+			currentPage: this._currentPage
+		})
+		console.log( 'save state', result )
+	}
+
+	get firstItemNumber() {
+		return (this._currentPage-1) * this.pageSize + 1
+	}
+	get lastItemNumber() {
+		const dataset = this._ctx?.parameters.sampleDataSet
+		return (this._currentPage-1) * this.pageSize + ((dataset) ?  dataset?.sortedRecordIds.length : this.pageSize)
+	}
+
+	get pageSize() {
+		const paging = this._ctx?.parameters.sampleDataSet.paging
+		return ( paging && paging.pageSize ) ? paging.pageSize : DEFAULT_PAGE_SIZE
 	}
 
 	get currentPage() { 
-		const dataset = this.pcfContext.parameters.sampleDataSet
-
-		console.log( 'dataset.sortedRecordIds.length', dataset.sortedRecordIds.length )
-		if( dataset.sortedRecordIds.length <= this._pageSize ) {
-			this._currentPage = 1
-		}
 		return this._currentPage 
 	}
 
-	get currentScrollIndex() { 
-		return (this._currentPage-1) * this._pageSize + 1 
+	moveToFirst() {
+		console.log( 'moveToFirst' )
+		if( this.currentPage > 1 ) {
+			const paging = this._ctx?.parameters.sampleDataSet.paging
+			if( paging ) {
+				this._currentPage = 1
+				paging.loadExactPage( this._currentPage)	
+			}
+		}
+	}
+	
+	
+	moveNext() { 		
+		console.log( 'moveNext' )
+		const paging = this._ctx?.parameters.sampleDataSet.paging
+		if( paging && paging.hasNextPage  ) {
+			paging.loadExactPage( ++this._currentPage)
+		}	
 	}
 
-	moveToNextPage( fromIndex:number) { 
-			
-		const paging = this.pcfContext.parameters.sampleDataSet.paging
-
-		if( paging.hasNextPage && fromIndex > this._lastIndex ) {
-
-			this._lastIndex = fromIndex
-			this._currentPage++
-			paging.loadNextPage()
-			return true 
-			
-		}
-		return false
-	
+	movePrevious() { 			
+		console.log( 'movePrevious' )
+		const paging = this._ctx?.parameters.sampleDataSet.paging
+		if( paging && paging.hasPreviousPage  ) {
+			paging.loadExactPage( --this._currentPage)
+		}	
 	}
 
 }
@@ -74,7 +102,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 
 	private _props: IDetailListGridControlProps;
 
-	private _paging :InfiniteScrolling
+	private _paging:PaginationImpl
 
 	constructor() 
 	{
@@ -97,8 +125,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		
 		console.log( {
 			'entity name':entityName,
-			isModelApp:this._isModelApp
-		})
+		}, context, state )
 		
 		// Need to track container resize so that control could get the available width. 
 		// The available height won't be provided even when this is true
@@ -107,7 +134,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		this._container = container;
 		this._context = context;
 		this._dataSetVersion = 0;
-		this._paging = new InfiniteScrollingImpl(context, DEFAULT_PAGE_SIZE)
+		this._paging = new PaginationImpl(this._context, state)
 
 		this._props = {
 			pcfContext:		this._context,
