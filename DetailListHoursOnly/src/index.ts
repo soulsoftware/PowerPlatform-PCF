@@ -20,16 +20,15 @@ const DEFAULT_PAGE_SIZE = 50
  */
 class PaginationImpl implements Pagination {
 	private _currentPage = 1
-	private _pageSize:number = 50
 
 	constructor(  private _ctx:ComponentFramework.Context<IInputs>  ) {}
 
 	get firstItemNumber() {
-		return (this._currentPage-1) * this._pageSize + 1
+		return (this._currentPage-1) * this.pageSize + 1
 	}
 	get lastItemNumber() {
 		const dataset = this._ctx?.parameters.sampleDataSet
-		return (this._currentPage-1) * this._pageSize + ((dataset) ?  dataset?.sortedRecordIds.length : this._pageSize)
+		return (this._currentPage-1) * this.pageSize + ((dataset) ?  dataset?.sortedRecordIds.length : this.pageSize)
 	}
 
 	get pageSize() {
