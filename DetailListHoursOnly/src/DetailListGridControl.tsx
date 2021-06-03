@@ -115,8 +115,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
 
         setItems( sortedItems )
 
-        console.log( 'setSortedItems' )
-        console.log( sortedItems )
+        console.log( 'setItems Sorted' )
 
 
         // setColumns(
@@ -147,6 +146,8 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         const totalResultCount = dataset.paging.totalResultCount
         const selectedItemCount = dataset.getSelectedRecordIds().length
 
+        const totalRecordsString = (totalResultCount > 0 ) ? `${totalResultCount}` : ` N `
+
         // return (
         //     <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
         //         <Label className="footer-item">Records: {totalResultCount} ({selectedItemCount} selected)</Label>               
@@ -157,7 +158,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         <Stack grow horizontal horizontalAlign="space-between" styles={ { root: {  paddingLeft: 5} } } >
             <Stack.Item className="Footer">
                 <Stack grow horizontal horizontalAlign="space-between" verticalAlign="center">
-                    <Stack.Item grow={1} align="center" >{props.pagination.firstItemNumber} - {props.pagination.lastItemNumber} of {totalResultCount} {selectedItemCount} selected</Stack.Item>
+                    <Stack.Item grow={1} align="center" >{props.pagination.firstItemNumber} - {props.pagination.lastItemNumber} of {totalRecordsString} with {selectedItemCount} selected</Stack.Item>
                     <Stack.Item grow={1} align="center" className="FooterRight">
                         <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronLeftEnd6"}} onClick={ () => props.pagination.moveToFirst() } disabled={!dataset.paging.hasPreviousPage}/>
                         <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronLeftSmall"}} onClick={ () => props.pagination.movePrevious() } disabled={!dataset.paging.hasPreviousPage}/>
@@ -209,6 +210,8 @@ const navigate = (item: any, linkReference: string | undefined, pcfContext: Comp
 // get the items from the dataset
 const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IInputs>) => {
     const dataSet = pcfContext.parameters.sampleDataSet
+
+    console.log( 'dataSet.sortedRecordIds.length', dataSet.sortedRecordIds.length)
 
     const resultSet = dataSet.sortedRecordIds.map( (key,index) => {
         const record = dataSet.records[key];
@@ -291,7 +294,7 @@ const getColumns = (pcfContext: ComponentFramework.Context<IInputs>, entityName?
             minWidth:       column.visualSizeFactor, 
             maxWidth:       column.visualSizeFactor + 400, 
             // maxWidth:       columnWidthDistribution[index],
-            // currentWidth:   column.visualSizeFactor,
+            currentWidth:   column.visualSizeFactor,
             isResizable:    true,
             data:           {isPrimary : column.isPrimary},
             sortAscendingAriaLabel: 'Sorted A to Z',
@@ -400,16 +403,16 @@ const copyAndSort = <T, >(items: T[], columnKey: string, pcfContext: ComponentFr
 
         const result = valueA.localeCompare( valueB, getUserLanguage(pcfContext), { numeric: true } )
         // console.log( `compare('${valueA}', '${valueB}') = ${result} `)
-    
-        return result
+        
+        return ( isSortedDescending ) ? result * -1 : result
     
     }
 
     sortedItems.sort( predicate);
 
-    if (isSortedDescending) {
-        sortedItems.reverse();
-    }
+    // if (isSortedDescending) {
+    //     sortedItems.reverse();
+    // }
 
     return sortedItems;
 }
