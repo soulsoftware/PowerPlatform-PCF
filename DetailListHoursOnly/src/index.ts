@@ -34,9 +34,10 @@ class PaginationImpl implements Pagination {
 
 
 	saveState(): void {
-		this._ctx.mode.setControlState( { 
+		const result = this._ctx.mode.setControlState( { 
 			currentPage: this._currentPage
 		})
+		console.log( 'save state', result )
 	}
 
 	get firstItemNumber() {
