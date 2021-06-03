@@ -31,7 +31,7 @@ class PaginationImpl implements Pagination {
 		if( this._currentPage == 1 ) {
 			this._pageSize = pcfContext.parameters.sampleDataSet.sortedRecordIds.length
 
-			console.log( 'pageSize', this._pageSize)
+			console.log( 'set pageSize', this._pageSize)
 			pcfContext.parameters.sampleDataSet.paging.setPageSize(this._pageSize)
 		}
 		
@@ -53,9 +53,8 @@ class PaginationImpl implements Pagination {
 	}
 
 	moveToFirst() {
-
+		console.log( 'moveToFirst' )
 		if( this.currentPage > 1 ) {
-			console.log( 'moveToFirst' )
 			const paging = this._ctx?.parameters.sampleDataSet.paging
 			if( paging ) {
 				this._currentPage = 1
@@ -66,17 +65,17 @@ class PaginationImpl implements Pagination {
 	
 	
 	moveNext() { 		
+		console.log( 'moveNext' )
 		const paging = this._ctx?.parameters.sampleDataSet.paging
 		if( paging && paging.hasNextPage  ) {
-			console.log( 'moveNext' )
 			paging.loadExactPage( ++this._currentPage)
 		}	
 	}
 
 	movePrevious() { 			
+		console.log( 'movePrevious' )
 		const paging = this._ctx?.parameters.sampleDataSet.paging
 		if( paging && paging.hasPreviousPage  ) {
-			console.log( 'movePrevious' )
 			paging.loadExactPage( --this._currentPage)
 		}	
 	}
