@@ -3,8 +3,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {IDetailListGridControlProps, DetailListGridControl, Pagination}  from './DetailListGridControl'
 
-const DEFAULT_PAGE_SIZE = 50
-
 function getQueryVariable(param:string) : string|undefined {
     const query = window.location.search.substring(1);
 	
@@ -21,18 +19,21 @@ function getQueryVariable(param:string) : string|undefined {
  */
 class PaginationImpl implements Pagination {
 	private _currentPage = 1
-	private _ctx?:ComponentFramework.Context<IInputs>
+	private _pageSize:number = 50
 
-	constructor( private _pageSize:number ) {
-	}
+	constructor(  private _ctx:ComponentFramework.Context<IInputs>  ) {}
 
-	init( pcfContext: ComponentFramework.Context<IInputs> ) {
-		
+	init() {
+
 		if( this._currentPage == 1 ) {
-			this._pageSize = pcfContext.parameters.sampleDataSet.sortedRecordIds.length
+			const pageSize = this._ctx.parameters.sampleDataSet.sortedRecordIds.length
 
-			console.log( 'set pageSize', this._pageSize)
-			pcfContext.parameters.sampleDataSet.paging.setPageSize(this._pageSize)
+			if( pageSize > 0 && pageSize != this._pageSize ) {
+				this._pageSize = pageSize
+				console.log( 'set new pageSize', this._pageSize)
+				this._ctx.parameters.sampleDataSet.paging.setPageSize(this._pageSize)
+			}
+
 		}
 		
 		return this
@@ -97,7 +98,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 
 	private _props: IDetailListGridControlProps;
 
-	private _paging = new PaginationImpl(DEFAULT_PAGE_SIZE)
+	private _paging:PaginationImpl
 
 	constructor() 
 	{
@@ -130,6 +131,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		this._container = container;
 		this._context = context;
 		this._dataSetVersion = 0;
+		this._paging = new PaginationImpl(this._context)
 
 		this._props = {
 			pcfContext:		this._context,
@@ -184,7 +186,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 
 		if( dataSet.loading === true ) return;
 
-		this._paging.init( context )
+		this._paging.init()
 
 		if (this._isModelApp ) // Are we in a model driven app?
 		{ 
