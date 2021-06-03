@@ -11,6 +11,7 @@ import './time.extension'
 import { Stack } from '@fluentui/react/lib/Stack';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { ScrollablePane, ScrollbarVisibility } from '@fluentui/react/lib/ScrollablePane';
+import { IStackItemStyles } from '@fluentui/react/lib/Stack';
 
 
 export interface Pagination {
@@ -145,15 +146,15 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         // )
         return (
         <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
-        <Stack grow horizontal horizontalAlign="space-between" >
+        <Stack grow horizontal horizontalAlign="space-between" styles={ { root: {  paddingLeft: 5} } } >
             <Stack.Item className="Footer">
-                <Stack grow horizontal horizontalAlign="space-between" >
+                <Stack grow horizontal horizontalAlign="space-between">
                     <Stack.Item grow={1} align="center" >{props.pagination.firstItemNumber} - {props.pagination.lastItemNumber} of {totalResultCount} {selectedItemCount} selected)</Stack.Item>
                     <Stack.Item grow={1} align="center" className="FooterRight">
-                        <IconButton className="FooterIcon" iconProps={{ iconName: "DoubleChevronLeft"}} onClick={ () => props.pagination.moveToFirst() } disabled={!dataset.paging.hasPreviousPage}/>
-                        <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronLeft"}} onClick={ () => props.pagination.movePrevious() } disabled={!dataset.paging.hasPreviousPage}/>
+                        <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronLeftEnd6"}} onClick={ () => props.pagination.moveToFirst() } disabled={!dataset.paging.hasPreviousPage}/>
+                        <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronLeftSmall"}} onClick={ () => props.pagination.movePrevious() } disabled={!dataset.paging.hasPreviousPage}/>
                         <span >Page {props.pagination.currentPage}</span>
-                        <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronRight" }} onClick={ () => props.pagination.moveNext() } disabled={!dataset.paging.hasNextPage}/>
+                        <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronRightSmall" }} onClick={ () => props.pagination.moveNext() } disabled={!dataset.paging.hasNextPage}/>
                     </Stack.Item>
                 </Stack>
             </Stack.Item>

@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {IDetailListGridControlProps, DetailListGridControl, Pagination}  from './DetailListGridControl'
 
-const DEFAULT_PAGE_SIZE = 100
+const DEFAULT_PAGE_SIZE = 50
 
 function getQueryVariable(param:string) : string|undefined {
     const query = window.location.search.substring(1);
@@ -27,7 +27,12 @@ class PaginationImpl implements Pagination {
 	}
 
 	init( pcfContext: ComponentFramework.Context<IInputs> ) {
-		this._ctx = pcfContext
+		
+		if( this._currentPage == 1 ) {
+			this._pageSize = pcfContext.parameters.sampleDataSet.sortedRecordIds.length
+			pcfContext.parameters.sampleDataSet.paging.setPageSize(this._pageSize)
+		}
+		
 		return this
 	}
 	get firstItemNumber() {
@@ -178,6 +183,8 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 
 		if( dataSet.loading === true ) return;
 
+		this._paging.init( context )
+		
 		if (this._isModelApp ) // Are we in a model driven app?
 		{ 
 			// if( dataSet.paging.hasNextPage) {
