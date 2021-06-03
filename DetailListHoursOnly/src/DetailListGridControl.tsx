@@ -383,8 +383,21 @@ const updateColumnWidths = (columns: IColumn[], pcfContext: ComponentFramework.C
 //sort the items in the grid.
 const copyAndSort = <T, >(items: T[], columnKey: string, pcfContext: ComponentFramework.Context<IInputs>, isSortedDescending?: boolean): T[] =>  {
     let key = columnKey as keyof T;
-    let sortedItems = items.slice(0);        
-    sortedItems.sort((a: T, b: T) => (a[key] || '' as any).toString().localeCompare((b[key] || '' as any).toString(), getUserLanguage(pcfContext), { numeric: true }));
+    let sortedItems = items.slice(0);     
+    
+    const predicate = (a: T, b: T) => {
+        
+        const valueA = String(a[key]) || ''
+        const valueB = String(b[key]) || ''
+
+        const result = valueA.localeCompare( valueB, getUserLanguage(pcfContext), { numeric: true } )
+        console.log( `compare('${valueA}', '${valueB}') = ${result} `)
+    
+        return result
+    
+    }
+
+    sortedItems.sort( predicate);
 
     if (isSortedDescending) {
         sortedItems.reverse();

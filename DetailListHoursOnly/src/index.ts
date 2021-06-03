@@ -134,7 +134,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 			pcfContext:		this._context,
 			isModelApp:		this._isModelApp,
 			dataSetVersion: this._dataSetVersion,
-			pagination: 	this._paging.init( context ),
+			pagination: 	this._paging,
 			entityName: 	entityName
 		}
 
@@ -184,7 +184,7 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		if( dataSet.loading === true ) return;
 
 		this._paging.init( context )
-		
+
 		if (this._isModelApp ) // Are we in a model driven app?
 		{ 
 			// if( dataSet.paging.hasNextPage) {
