@@ -176,6 +176,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     }
       
     const _onItemInvoked = (item?: any, index?: number, ev?: Event) => {
+        props.pagination.saveState()
         dataset.openDatasetItem(item[ `_primary_ref`])
     }
 
