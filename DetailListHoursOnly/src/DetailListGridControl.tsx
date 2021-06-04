@@ -63,11 +63,6 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     React.useEffect(() => {
         const result = getItems(columns, props.pcfContext)
 
-        // if( dataset.paging.hasNextPage ) {
-        //     console.log( 'add null row for trigger "onMissingItem"')
-        //     result.push( null )
-        // }
-        
         setItems(result)
         
         console.log( 'setItems' )
@@ -76,8 +71,8 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     
     // When the component is updated this will determine if the width of the control has changed.
     // If so the column widths will be adjusted.
-    React.useEffect(() => 
-        setColumns(updateColumnWidths(columns, props.pcfContext)), [props.pcfContext.mode.allocatedWidth])      
+    // React.useEffect(() => 
+    //     setColumns(updateColumnWidths(columns, props.pcfContext)), [props.pcfContext.mode.allocatedWidth])      
 
     // the selector used by the DetailList
     const _selection = new Selection({
