@@ -291,7 +291,6 @@ const getColumns = (props: IDetailListGridControlProps ) : IColumn[] => {
             name:           column.displayName,
             fieldName:      column.alias,
             minWidth:       column.visualSizeFactor, 
-            maxWidth:       column.visualSizeFactor + 400, 
             // maxWidth:       columnWidthDistribution[index],
             currentWidth:   column.visualSizeFactor,
             isResizable:    true,
