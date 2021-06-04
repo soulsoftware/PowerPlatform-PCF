@@ -11,8 +11,7 @@ import './time.extension'
 import { Stack } from '@fluentui/react/lib/Stack';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { ScrollablePane, ScrollbarVisibility } from '@fluentui/react/lib/ScrollablePane';
-import { IStackItemStyles } from '@fluentui/react/lib/Stack';
-import { PeoplePickerItemSuggestionBase } from '@fluentui/react';
+import { Label } from '@fluentui/react/lib/Label';
 
 
 export interface Pagination {
@@ -64,11 +63,6 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     React.useEffect(() => {
         const result = getItems(columns, props.pcfContext)
 
-        // if( dataset.paging.hasNextPage ) {
-        //     console.log( 'add null row for trigger "onMissingItem"')
-        //     result.push( null )
-        // }
-        
         setItems(result)
         
         console.log( 'setItems' )
@@ -77,8 +71,8 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
     
     // When the component is updated this will determine if the width of the control has changed.
     // If so the column widths will be adjusted.
-    React.useEffect(() => 
-        setColumns(updateColumnWidths(columns, props.pcfContext)), [props.pcfContext.mode.allocatedWidth])      
+    // React.useEffect(() => 
+    //     setColumns(updateColumnWidths(columns, props.pcfContext)), [props.pcfContext.mode.allocatedWidth])      
 
     // the selector used by the DetailList
     const _selection = new Selection({
@@ -120,15 +114,6 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         setItems( sortedItems )
 
         console.log( 'setItems Sorted' )
-
-
-        // setColumns(
-        //     columns.map(col => {
-        //         col.isSorted = col.key === column?.key
-        //         col.isSortedDescending = isSortedDescending
-        //         return col
-        //     })
-        // );
     }      
     
     const _onRenderDetailsHeader = (props: IDetailsHeaderProps | undefined, defaultRender?: IRenderFunction<IDetailsHeaderProps>): JSX.Element => {
@@ -150,7 +135,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         const totalResultCount = dataset.paging.totalResultCount
         //const selectedItemCount = dataset.getSelectedRecordIds().length
 
-        const totalRecordsString = (totalResultCount > 0 ) ? `${totalResultCount}` : ` N `
+        const totalRecordsString = (totalResultCount > 0 ) ? ` of ${totalResultCount}` : `  `
 
         // return (
         //     <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
@@ -160,14 +145,16 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         return (
         <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
         <Stack grow horizontal horizontalAlign="space-between" styles={ { root: {  paddingLeft: 5} } } >
-            <Stack.Item className="Footer">
+            <Stack.Item>
                 <Stack grow horizontal horizontalAlign="space-between" verticalAlign="center">
-                    <Stack.Item grow={1} align="center" >{props.pagination.firstItemNumber} - {props.pagination.lastItemNumber} of {totalRecordsString} with {selectedItemCount} selected</Stack.Item>
-                    <Stack.Item grow={1} align="center" className="FooterRight">
-                        <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronLeftEnd6"}} onClick={ () => props.pagination.moveToFirst() } disabled={!dataset.paging.hasPreviousPage}/>
-                        <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronLeftSmall"}} onClick={ () => props.pagination.movePrevious() } disabled={!dataset.paging.hasPreviousPage}/>
-                        <span >Page {props.pagination.currentPage}</span>
-                        <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronRightSmall" }} onClick={ () => props.pagination.moveNext() } disabled={!dataset.paging.hasNextPage}/>
+                    <Label className="footer-item">{props.pagination.firstItemNumber} - {props.pagination.lastItemNumber} {totalRecordsString} with {selectedItemCount} selected</Label>
+                    <Stack.Item grow={1} align="center" >
+                        <IconButton iconProps={{ iconName: "ChevronLeftEnd6"}} onClick={ () => props.pagination.moveToFirst() } disabled={!dataset.paging.hasPreviousPage}/>
+                        <IconButton iconProps={{ iconName: "ChevronLeftSmall"}} onClick={ () => props.pagination.movePrevious() } disabled={!dataset.paging.hasPreviousPage}/>
+                    </Stack.Item>
+                    <Label className="footer-item">page {props.pagination.currentPage}</Label>
+                    <Stack.Item grow={1} align="center">
+                        <IconButton iconProps={{ iconName: "ChevronRightSmall" }} onClick={ () => props.pagination.moveNext() } disabled={!dataset.paging.hasNextPage}/>
                     </Stack.Item>
                 </Stack>
             </Stack.Item>
@@ -180,8 +167,9 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         dataset.openDatasetItem(item[ `_primary_ref`])
     }
 
-    const DetailsListControl = () => {
-            return <DetailsList                
+    return (   
+        <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
+            <DetailsList                
                 items={items}
                 columns={columns}
                 setKey="set"                                                                                         
@@ -192,17 +180,12 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                 ariaLabelForSelectAllCheckbox="Toggle selection for all items"
                 checkButtonAriaLabel="Row checkbox"                        
                 selectionMode={SelectionMode.single}
-                layoutMode = {DetailsListLayoutMode.justified}
+                layoutMode = {DetailsListLayoutMode.fixedColumns}
                 constrainMode={ConstrainMode.unconstrained}
                 onRenderDetailsHeader={_onRenderDetailsHeader}
                 onRenderDetailsFooter={_onRenderDetailsFooter}
                 onItemInvoked={_onItemInvoked}
-                />      
-    }
-    
-    return (   
-        <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
-            <DetailsListControl/>           
+                />               
         </ScrollablePane>
     );
 }
@@ -254,7 +237,6 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
 const getColumns = (props: IDetailListGridControlProps ) : IColumn[] => {
     let dataSet = props.pcfContext.parameters.sampleDataSet;
     
-
     // let columnWidthDistribution = getColumnWidthDistribution(props.pcfContext);
 
     const defaultDate = new Date( 1899, 11, 31, 0, 0)
@@ -295,15 +277,15 @@ const getColumns = (props: IDetailListGridControlProps ) : IColumn[] => {
 
         const iColumn: IColumn = {
             className:      'detailList-cell',
-            headerClassName:'detailList-gridLabels',
+            // headerClassName:'detailList-gridLabels',
             key:            column.name,
             name:           column.displayName,
             fieldName:      column.alias,
             minWidth:       column.visualSizeFactor, 
-            maxWidth:       column.visualSizeFactor + 400, 
-            // maxWidth:       columnWidthDistribution[index],
-            currentWidth:   column.visualSizeFactor,
+            maxWidth:       column.visualSizeFactor + Math.floor( column.visualSizeFactor * 0.33 ),
+            // currentWidth:   column.visualSizeFactor,
             isResizable:    true,
+            isPadded:       true,
             data:           {isPrimary : column.isPrimary},
             sortAscendingAriaLabel: 'Sorted A to Z',
             sortDescendingAriaLabel:'Sorted Z to A',
@@ -355,49 +337,6 @@ const getColumns = (props: IDetailListGridControlProps ) : IColumn[] => {
         return iColumn
     })
 }   
-
-const getColumnWidthDistribution = (pcfContext: ComponentFramework.Context<IInputs>): IColumnWidth[] => {
-        
-    let columnsOnView = pcfContext.parameters.sampleDataSet.columns;
-
-    let widthDistribution = Array<IColumnWidth>(columnsOnView.length);
-
-    // Considering need to remove border & padding length
-    let totalWidth:number = pcfContext.mode.allocatedWidth - 250;
-    //console.log(`new total width: ${totalWidth}`);
-    
-    let widthSum = columnsOnView.reduce( (result, columnItem) => result + columnItem.visualSizeFactor, 0)
-
-    let remainWidth = totalWidth;
-    
-    columnsOnView.forEach((item, index) => {
-        let widthPerCell = 0;
-        if (index !== columnsOnView.length - 1) {
-            let cellWidth = Math.round((item.visualSizeFactor / widthSum) * totalWidth);
-            remainWidth = remainWidth - cellWidth;
-            widthPerCell = cellWidth;
-        }
-        else {
-            widthPerCell = remainWidth;
-        }
-        widthDistribution[index] = widthPerCell
-    });
-
-    return widthDistribution;
-
-}
-
-// Updates the column widths based upon the current side of the control on the form.
-const updateColumnWidths = (columns: IColumn[], pcfContext: ComponentFramework.Context<IInputs>) : IColumn[] => {
-    let columnWidthDistribution = getColumnWidthDistribution(pcfContext);        
-    let currentColumns = columns;    
-
-    //make sure to use map here which returns a new array, otherwise the state/grid will not update.
-    return currentColumns.map( (col,index) => {           
-        col.maxWidth = columnWidthDistribution[index]
-        return col;
-    });        
-}
 
 //sort the items in the grid.
 const copyAndSort = <T, >(items: T[], columnKey: string, pcfContext: ComponentFramework.Context<IInputs>, isSortedDescending?: boolean): T[] =>  {

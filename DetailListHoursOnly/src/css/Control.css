@@ -1,8 +1,13 @@
+/*
 #detailList {
+
     height: 100%;
     max-height: 100%;
     overflow: auto;
+    
 }
+*/
+
 #detailList .ms-DetailsHeader {
     padding-top: 0px;
 }
@@ -28,6 +33,6 @@
     color: #6E6F77;
     font-size: 12px;
     font-weight: normal;
-    padding-left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
-
