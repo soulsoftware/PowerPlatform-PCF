@@ -172,8 +172,9 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         dataset.openDatasetItem(item[ `_primary_ref`])
     }
 
-    const DetailsListControl = () => {
-            return <DetailsList                
+    return (   
+        <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
+            <DetailsList                
                 items={items}
                 columns={columns}
                 setKey="set"                                                                                         
@@ -184,17 +185,12 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
                 ariaLabelForSelectAllCheckbox="Toggle selection for all items"
                 checkButtonAriaLabel="Row checkbox"                        
                 selectionMode={SelectionMode.single}
-                layoutMode = {DetailsListLayoutMode.justified}
+                layoutMode = {DetailsListLayoutMode.fixedColumns}
                 constrainMode={ConstrainMode.unconstrained}
                 onRenderDetailsHeader={_onRenderDetailsHeader}
                 onRenderDetailsFooter={_onRenderDetailsFooter}
                 onItemInvoked={_onItemInvoked}
-                />      
-    }
-    
-    return (   
-        <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
-            <DetailsListControl/>           
+                />               
         </ScrollablePane>
     );
 }
