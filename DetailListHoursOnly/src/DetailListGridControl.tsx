@@ -338,49 +338,6 @@ const getColumns = (props: IDetailListGridControlProps ) : IColumn[] => {
     })
 }   
 
-const getColumnWidthDistribution = (pcfContext: ComponentFramework.Context<IInputs>): IColumnWidth[] => {
-        
-    let columnsOnView = pcfContext.parameters.sampleDataSet.columns;
-
-    let widthDistribution = Array<IColumnWidth>(columnsOnView.length);
-
-    // Considering need to remove border & padding length
-    let totalWidth:number = pcfContext.mode.allocatedWidth - 250;
-    //console.log(`new total width: ${totalWidth}`);
-    
-    let widthSum = columnsOnView.reduce( (result, columnItem) => result + columnItem.visualSizeFactor, 0)
-
-    let remainWidth = totalWidth;
-    
-    columnsOnView.forEach((item, index) => {
-        let widthPerCell = 0;
-        if (index !== columnsOnView.length - 1) {
-            let cellWidth = Math.round((item.visualSizeFactor / widthSum) * totalWidth);
-            remainWidth = remainWidth - cellWidth;
-            widthPerCell = cellWidth;
-        }
-        else {
-            widthPerCell = remainWidth;
-        }
-        widthDistribution[index] = widthPerCell
-    });
-
-    return widthDistribution;
-
-}
-
-// Updates the column widths based upon the current side of the control on the form.
-const updateColumnWidths = (columns: IColumn[], pcfContext: ComponentFramework.Context<IInputs>) : IColumn[] => {
-    let columnWidthDistribution = getColumnWidthDistribution(pcfContext);        
-    let currentColumns = columns;    
-
-    //make sure to use map here which returns a new array, otherwise the state/grid will not update.
-    return currentColumns.map( (col,index) => {           
-        col.maxWidth = columnWidthDistribution[index]
-        return col;
-    });        
-}
-
 //sort the items in the grid.
 const copyAndSort = <T, >(items: T[], columnKey: string, pcfContext: ComponentFramework.Context<IInputs>, isSortedDescending?: boolean): T[] =>  {
     let key = columnKey as keyof T;
