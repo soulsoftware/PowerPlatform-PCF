@@ -11,8 +11,7 @@ import './time.extension'
 import { Stack } from '@fluentui/react/lib/Stack';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { ScrollablePane, ScrollbarVisibility } from '@fluentui/react/lib/ScrollablePane';
-import { IStackItemStyles } from '@fluentui/react/lib/Stack';
-import { PeoplePickerItemSuggestionBase } from '@fluentui/react';
+import { Label } from '@fluentui/react/lib/Label';
 
 
 export interface Pagination {
@@ -120,15 +119,6 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         setItems( sortedItems )
 
         console.log( 'setItems Sorted' )
-
-
-        // setColumns(
-        //     columns.map(col => {
-        //         col.isSorted = col.key === column?.key
-        //         col.isSortedDescending = isSortedDescending
-        //         return col
-        //     })
-        // );
     }      
     
     const _onRenderDetailsHeader = (props: IDetailsHeaderProps | undefined, defaultRender?: IRenderFunction<IDetailsHeaderProps>): JSX.Element => {
@@ -150,7 +140,7 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         const totalResultCount = dataset.paging.totalResultCount
         //const selectedItemCount = dataset.getSelectedRecordIds().length
 
-        const totalRecordsString = (totalResultCount > 0 ) ? `${totalResultCount}` : ` N `
+        const totalRecordsString = (totalResultCount > 0 ) ? ` of ${totalResultCount}` : `  `
 
         // return (
         //     <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
@@ -160,14 +150,16 @@ export const DetailListGridControl: React.FC<IDetailListGridControlProps> = (pro
         return (
         <Sticky stickyPosition={StickyPositionType.Footer} isScrollSynced={true} stickyBackgroundColor={'white'}>
         <Stack grow horizontal horizontalAlign="space-between" styles={ { root: {  paddingLeft: 5} } } >
-            <Stack.Item className="Footer">
+            <Stack.Item>
                 <Stack grow horizontal horizontalAlign="space-between" verticalAlign="center">
-                    <Stack.Item grow={1} align="center" >{props.pagination.firstItemNumber} - {props.pagination.lastItemNumber} of {totalRecordsString} with {selectedItemCount} selected</Stack.Item>
-                    <Stack.Item grow={1} align="center" className="FooterRight">
-                        <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronLeftEnd6"}} onClick={ () => props.pagination.moveToFirst() } disabled={!dataset.paging.hasPreviousPage}/>
-                        <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronLeftSmall"}} onClick={ () => props.pagination.movePrevious() } disabled={!dataset.paging.hasPreviousPage}/>
-                        <span >Page {props.pagination.currentPage}</span>
-                        <IconButton className="FooterIcon" iconProps={{ iconName: "ChevronRightSmall" }} onClick={ () => props.pagination.moveNext() } disabled={!dataset.paging.hasNextPage}/>
+                    <Label className="footer-item">{props.pagination.firstItemNumber} - {props.pagination.lastItemNumber} {totalRecordsString} with {selectedItemCount} selected</Label>
+                    <Stack.Item grow={1} align="center" >
+                        <IconButton iconProps={{ iconName: "ChevronLeftEnd6"}} onClick={ () => props.pagination.moveToFirst() } disabled={!dataset.paging.hasPreviousPage}/>
+                        <IconButton iconProps={{ iconName: "ChevronLeftSmall"}} onClick={ () => props.pagination.movePrevious() } disabled={!dataset.paging.hasPreviousPage}/>
+                    </Stack.Item>
+                    <Label className="footer-item">page {props.pagination.currentPage}</Label>
+                    <Stack.Item grow={1} align="center">
+                        <IconButton iconProps={{ iconName: "ChevronRightSmall" }} onClick={ () => props.pagination.moveNext() } disabled={!dataset.paging.hasNextPage}/>
                     </Stack.Item>
                 </Stack>
             </Stack.Item>
@@ -254,7 +246,6 @@ const getItems = (columns: IColumn[], pcfContext: ComponentFramework.Context<IIn
 const getColumns = (props: IDetailListGridControlProps ) : IColumn[] => {
     let dataSet = props.pcfContext.parameters.sampleDataSet;
     
-
     // let columnWidthDistribution = getColumnWidthDistribution(props.pcfContext);
 
     const defaultDate = new Date( 1899, 11, 31, 0, 0)

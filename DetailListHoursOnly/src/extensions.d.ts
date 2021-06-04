@@ -5,6 +5,15 @@ declare namespace ComponentFramework {
         rowSpan?:number
     }
 
+    /**
+     * The entire property bag interface available to control via Context Object
+     */
+    interface Context<TInputs> {
+            // @autoExpand: Not documented, but it seems to be the check box: 
+            // “Automatically expand to use available space”
+            parameters: TInputs & { autoExpand:boolean };
+    }
+
     namespace PropertyHelper {
 
         namespace DataSetApi {
