@@ -11,7 +11,7 @@ declare namespace ComponentFramework {
     interface Context<TInputs> {
             // @autoExpand: Not documented, but it seems to be the check box: 
             // “Automatically expand to use available space”
-            parameters: TInputs & { autoExpand:boolean };
+            parameters: TInputs & { autoExpand?:ComponentFramework.PropertyTypes.TwoOptionsProperty };
     }
 
     namespace PropertyHelper {
