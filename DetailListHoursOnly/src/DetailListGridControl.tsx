@@ -286,14 +286,15 @@ const getColumns = (props: IDetailListGridControlProps ) : IColumn[] => {
 
         const iColumn: IColumn = {
             className:      'detailList-cell',
-            headerClassName:'detailList-gridLabels',
+            // headerClassName:'detailList-gridLabels',
             key:            column.name,
             name:           column.displayName,
             fieldName:      column.alias,
             minWidth:       column.visualSizeFactor, 
-            // maxWidth:       columnWidthDistribution[index],
-            currentWidth:   column.visualSizeFactor,
+            maxWidth:       column.visualSizeFactor + Math.floor( column.visualSizeFactor * 0.33 ),
+            // currentWidth:   column.visualSizeFactor,
             isResizable:    true,
+            isPadded:       true,
             data:           {isPrimary : column.isPrimary},
             sortAscendingAriaLabel: 'Sorted A to Z',
             sortDescendingAriaLabel:'Sorted Z to A',
