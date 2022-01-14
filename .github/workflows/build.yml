@@ -3,11 +3,19 @@ name: build
 on:
   workflow_dispatch:
     inputs:
-    # github.event.inputs.PCFProject
-     PCFProject:
-      description: 'PCF project folder'
-      required: true
-      default: 'OfficeUIHourOnlyField'
+      # github.event.inputs.PCFProject
+      PCFProject:
+          type: choice
+          description: 'PCF project folder'
+          default: 'MarkDownViewer'
+          options:
+          - MarkDownViewer
+          - OfficeUIHourOnlyField
+          - DetailListHoursOnly
+          - ExportToExcelButton
+          - OfficeUIHourOnlyField
+          - OfficeUIOpenMailButton
+          - WebApiExplorer
 
 jobs:
   build:
