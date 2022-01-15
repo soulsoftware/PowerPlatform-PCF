@@ -1,7 +1,7 @@
 import {IInputs, IOutputs} from "./generated/ManifestTypes";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {IDetailListGridControlProps, DetailListGridControl}  from './DetailListGridControl'
+import {IDetailListGridControlProps, DetailListGridControl, Pagination}  from './DetailListGridControl'
 
 function getQueryVariable(param:string) : string|undefined {
     const query = window.location.search.substring(1);
@@ -14,6 +14,79 @@ function getQueryVariable(param:string) : string|undefined {
 	
 }
 
+const DEFAULT_PAGE_SIZE = 50
+
+/**
+ * 
+ */
+class PaginationImpl implements Pagination {
+	private _currentPage = 1
+
+	constructor(  private _ctx:ComponentFramework.Context<IInputs>, state: ComponentFramework.Dictionary  ) {
+
+		console.log( 'state' , state )
+
+		if( state && state.currentPage ) {
+			this._currentPage = state.currentPage
+			this._ctx.parameters.sampleDataSet.paging.loadExactPage( this._currentPage)
+			this._ctx.mode.setControlState( {} ) // reset state 
+		}
+	}
+
+
+	saveState(): void {
+		const result = this._ctx.mode.setControlState( { 
+			currentPage: this._currentPage
+		})
+		console.log( 'save state', result )
+	}
+
+	get firstItemNumber() {
+		return (this._currentPage-1) * this.pageSize + 1
+	}
+	get lastItemNumber() {
+		const dataset = this._ctx?.parameters.sampleDataSet
+		return (this._currentPage-1) * this.pageSize + ((dataset) ?  dataset?.sortedRecordIds.length : this.pageSize)
+	}
+
+	get pageSize() {
+		const paging = this._ctx?.parameters.sampleDataSet.paging
+		return ( paging && paging.pageSize ) ? paging.pageSize : DEFAULT_PAGE_SIZE
+	}
+
+	get currentPage() { 
+		return this._currentPage 
+	}
+
+	moveToFirst() {
+		console.log( 'moveToFirst' )
+		if( this.currentPage > 1 ) {
+			const paging = this._ctx?.parameters.sampleDataSet.paging
+			if( paging ) {
+				this._currentPage = 1
+				paging.loadExactPage( this._currentPage)	
+			}
+		}
+	}
+	
+	
+	moveNext() { 		
+		console.log( 'moveNext' )
+		const paging = this._ctx?.parameters.sampleDataSet.paging
+		if( paging && paging.hasNextPage  ) {
+			paging.loadExactPage( ++this._currentPage)
+		}	
+	}
+
+	movePrevious() { 			
+		console.log( 'movePrevious' )
+		const paging = this._ctx?.parameters.sampleDataSet.paging
+		if( paging && paging.hasPreviousPage  ) {
+			paging.loadExactPage( --this._currentPage)
+		}	
+	}
+
+}
 /**
  * PCF component
  */
@@ -29,6 +102,8 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 	}
 
 	private _props: IDetailListGridControlProps;
+
+	private _paging:PaginationImpl
 
 	constructor() 
 	{
@@ -48,7 +123,10 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		 * @see https://www.dancingwithcrm.com/another-way-to-get-entity-name-and-id-in-pcf/
 		 */
 		const entityName = getQueryVariable('etn')
-		console.log( 'entity name', entityName )
+		
+		console.log( {
+			'entity name':entityName,
+		}, context, state )
 		
 		// Need to track container resize so that control could get the available width. 
 		// The available height won't be provided even when this is true
@@ -57,11 +135,13 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 		this._container = container;
 		this._context = context;
 		this._dataSetVersion = 0;
+		this._paging = new PaginationImpl(this._context, state)
 
 		this._props = {
 			pcfContext:		this._context,
 			isModelApp:		this._isModelApp,
 			dataSetVersion: this._dataSetVersion,
+			pagination: 	this._paging,
 			entityName: 	entityName
 		}
 
@@ -92,8 +172,6 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 
 		this._container.appendChild(this._detailList);
 
-		//set the paging size to 5000
-		context.parameters.sampleDataSet.paging.setPageSize(5000);
 	}
 
 
@@ -103,40 +181,41 @@ export class DetailListGridTemplate implements ComponentFramework.StandardContro
 	 */
 	public updateView(context: ComponentFramework.Context<IInputs>): void
 	{
-		// console.log( context )
-		// for( let p in context ) {		
-		// 	console.log( p )
-		// 	console.log( (<any>context)[p] )
-		// }
 
 		const dataSet = context.parameters.sampleDataSet;
-		
-		if (dataSet.loading) return;
 
-		//Are we in a canvas app?
-		if (!this._isModelApp)
+		console.log( 'updateView', { 
+			'dataSet.loading': dataSet.loading 
+		})
+
+		if( dataSet.loading === true ) return;
+
+		if (this._isModelApp ) // Are we in a model driven app?
+		{ 
+			// if( dataSet.paging.hasNextPage) {
+			// 	dataSet.paging.loadNextPage();
+			// 	return;
+			// }
+		}
+		else // Are we in a canvas app?
 		{
-			//since we are in a canvas app let's make sure we set the height of the control
-			this._detailList.style.height = `${(this._context.mode.allocatedHeight).toString()}px`
+
+			// since we are in a canvas app let's make sure we set the height of the control
+			// this._detailList.style.height = `${(this._context.mode.allocatedHeight).toString()}px`
 			
-			//Setting the page size in a Canvas app works on the first load of the component.  If you navigate
+			// Setting the page size in a Canvas app works on the first load of the component.  If you navigate
 			// away from the page on which the component is located though the paging get reset to 25 when you
 			// navigate back.  In order to fix this we need to reset the paging to the count of the records that
 			// will come back and do a reset on the paging.  I beleive this is all due to a MS bug.	
-			//@ts-ignore
-			//console.log(`TS: updateView, dataSet.paging.pageSize ${dataSet.paging.pageSize}`);	
-			//console.log(`TS: updateView, dataSet.paging.totalResultCount ${dataSet.paging.totalResultCount}`)
-			dataSet.paging.setPageSize(dataSet.paging.totalResultCount);
-			dataSet.paging.reset();
+			
+			// @ts-ignore
+			// console.log(`TS: updateView, dataSet.paging.pageSize ${dataSet.paging.pageSize}`);	
+			// console.log(`TS: updateView, dataSet.paging.totalResultCount ${dataSet.paging.totalResultCount}`)
+			// dataSet.paging.setPageSize(dataSet.paging.totalResultCount);
+			// dataSet.paging.reset();
 		}
 
-		//if data set has additional pages retrieve them before running anything else
-		if (this._isModelApp && dataSet.paging.hasNextPage) {
-			dataSet.paging.loadNextPage();
-			return;
-		}
-
-		//useEffect on the dataSet itself was not picking up on all the updates so pass in a dataset version
+		// useEffect on the dataSet itself was not picking up on all the updates so pass in a dataset version
 		// and update it in the props so the react control knows it was updated.
 		this._props.dataSetVersion = this._dataSetVersion++;
 		

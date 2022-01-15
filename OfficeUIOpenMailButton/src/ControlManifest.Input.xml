@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest>
-  <control namespace="PCFNamespace" constructor="OfficeUIOpenMailButton" version="0.0.1" display-name-key="OfficeUIOpenMailButton" description-key="OfficeUIOpenMailButton description" control-type="standard">
+  <control namespace="Soul.PCFControls" constructor="OfficeUIOpenMailButton" version="0.0.1" display-name-key="OfficeUIOpenMailButton" description-key="OfficeUIOpenMailButton description" control-type="standard">
     <property name="MessageID" display-name-key="Mail Message ID" description-key="MessageID" of-type="SingleLine.Text" usage="bound" required="true"/>
     <property name="Target" display-name-key="Target Window" description-key="Target" of-type="SingleLine.Text" usage="input" required="false" default-value="_blank"  />
     
