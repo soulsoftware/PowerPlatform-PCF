@@ -5,7 +5,7 @@
     <UniqueName>MarkDownViewer</UniqueName>
     <LocalizedNames>
       <!-- Localized Solution Name in language code -->
-      <LocalizedName description="solution" languagecode="1033" />
+      <LocalizedName description="MarkDownViewer" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
     <Version>1.0</Version>
