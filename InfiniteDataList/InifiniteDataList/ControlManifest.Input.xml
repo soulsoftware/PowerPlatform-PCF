@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest>
-  <control namespace="Soul.PCF" constructor="InfiniteDetailList" version="0.0.4" display-name-key="InfiniteDetailList" description-key="InfiniteDetailList description" control-type="virtual">
+  <control namespace="Soul.PCF" constructor="InfiniteDetailList" version="0.0.8" display-name-key="InfiniteDetailList" description-key="InfiniteDetailList description" control-type="virtual">
     <!--external-service-usage node declares whether this 3rd party PCF control is using external service or not, if yes, this control will be considered as premium and please also add the external domain it is using.
     If it is not using any external service, please set the enabled="false" and DO NOT add any domain below. The "enabled" will be false by default.
     Example1:
@@ -17,6 +17,9 @@
       <domain></domain>
       -->
     </external-service-usage>
+    <!--
+    <property name="Height" display-name-key="Control_Height" description-key="Control_Height" of-type="Whole.None" usage="input" required="true" default-value="600"  />
+    -->
     <!-- dataset node represents a set of entity records on CDS; allow more than one datasets -->
     <data-set name="sampleDataSet" display-name-key="Dataset_Display_Key">
       <!-- 'property-set' node represents a unique, configurable property that each record in the dataset must provide. -->
@@ -28,8 +31,8 @@
       <code path="index.ts" order="1" />
       <platform-library name="React" version="16.8.6" />
       <platform-library name="Fluent" version="8.29.0" />
-      <!-- UNCOMMENT TO ADD MORE RESOURCES
       <css path="css/InfiniteDetailList.css" order="1" />
+      <!-- UNCOMMENT TO ADD MORE RESOURCES
       <resx path="strings/InfiniteDetailList.1033.resx" version="1.0.0" />
       -->
     </resources>
