@@ -15,3 +15,6 @@ const  _InfiniteDetailListControl = ( props: InfiniteDetailListProps ) => {
 }
 
 export const InfiniteDetailListControl = React.memo( _InfiniteDetailListControl )
+
+
+
