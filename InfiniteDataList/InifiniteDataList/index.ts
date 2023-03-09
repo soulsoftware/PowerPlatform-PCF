@@ -1,8 +1,8 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
-import { HelloWorld, IHelloWorldProps } from "./HelloWorld";
+import { InfiniteDetailListControl, InfiniteDetailListProps } from "./InfiniteDetailList";
 import * as React from "react";
 
-export class InifiniteDataList implements ComponentFramework.ReactControl<IInputs, IOutputs> {
+export class InfiniteDetailList implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private theComponent: ComponentFramework.ReactControl<IInputs, IOutputs>;
     private notifyOutputChanged: () => void;
 
@@ -32,9 +32,12 @@ export class InifiniteDataList implements ComponentFramework.ReactControl<IInput
      * @returns ReactElement root react element for the control
      */
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
-        const props: IHelloWorldProps = { name: 'Hello, World!' };
+        const props: InfiniteDetailListProps = { name: 'Hello InfiniteDataList Control!' };
+
+        console.log(  '===> updateView' )
+        console.dir( context, { depth: 5 })
         return React.createElement(
-            HelloWorld, props
+            InfiniteDetailListControl, props
         );
     }
 
