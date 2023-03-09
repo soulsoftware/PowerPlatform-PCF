@@ -1,7 +1,7 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 
 // import { InfiniteDetailListControl, InfiniteDetailListProps } from "./InfiniteDetailList";
-import { InfiniteDetailListRedditControl, InfiniteDetailListRedditProps } from "./InfiniteDetailList-Reddit";
+import { InfiniteDetailListFetchControl, InfiniteDetailListFetchProps } from "./InfiniteDetailList-Fetch";
 
 import * as React from "react";
 
@@ -27,6 +27,8 @@ export class InfiniteDetailList implements ComponentFramework.ReactControl<IInpu
         state: ComponentFramework.Dictionary
     ): void {
         this.notifyOutputChanged = notifyOutputChanged;
+        context.mode.trackContainerResize(true)
+        
     }
 
     /**
@@ -36,13 +38,13 @@ export class InfiniteDetailList implements ComponentFramework.ReactControl<IInpu
      */
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
      
-        console.log(  '===> updateView' )
+        console.log(  '===> updateView', context.mode.allocatedHeight  )
         console.dir( context, { depth: 5 })
 
-        const props: InfiniteDetailListRedditProps = { name: 'Hello InfiniteDataList Control!' };
+        const props: InfiniteDetailListFetchProps = { name: 'Hello InfiniteDataList Control!', height: context.mode.allocatedHeight };
 
         return React.createElement(
-            InfiniteDetailListRedditControl, props
+            InfiniteDetailListFetchControl, props
         );
 
         // const props: InfiniteDetailListProps = { name: 'Hello InfiniteDataList Control!' };

@@ -1,41 +1,44 @@
   
-  .titleArea {
+/* 
+.titleArea {
     text-align: center;
     height: 50px;
-  }
+} 
 
-  .title {
-    margin: 0 8px;
-  }
-  
-  .thumb {
-    margin: -10px 0;
-  }
-  
-  .refresh {
+.refresh {
     vertical-align: middle;
-  }
-  
-  .reddit {
+}
+
+.reddit {
     font-weight: inherit;
-  }
-  
-  .inlineSpinner {
+}
+
+.inlineSpinner {
     display: inline-block;
     margin: 0 6px;
     vertical-align: middle;
-  }
-  
-  .loadingSpinner {
+}
+
+*/
+
+.title {
+    margin: 0 8px;
+}
+
+.thumb {
+    margin: -10px 0;
+}
+
+.loadingSpinner {
     margin: 20px 0;
-  }
-  
-  .itemMetadata span {
+}
+
+.itemMetadata span {
     display: inline-block;
     padding-top: 5px;  
     padding-right: 10px;
-  }
-  
-  .itemMetadata i {
+}
+
+.itemMetadata i {
     vertical-align: middle;
-  }
+}

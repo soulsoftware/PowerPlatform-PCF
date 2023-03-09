@@ -2,35 +2,22 @@
  * inpired by codepen: [Fabric DetailsList](https://codepen.io/anon/pen/KrpqQN)
  */
 
-import { Image, ImageFit, Link, Selection, css, FontClassNames, IconButton, Spinner, MarqueeSelection, DetailsList, IColumn, ScrollablePane, ScrollbarVisibility, DetailsListLayoutMode, IDetailsListStyles } from '@fluentui/react';
-import * as React from 'react';
-// import ReactDOM = require('react-dom');
+import { 
+  Image, 
+  ImageFit, 
+  Link, 
+  Selection, 
+  Spinner, 
+  MarqueeSelection, 
+  DetailsList, 
+  IColumn, 
+  IDetailsListStyles, 
+  IButtonStyles 
+} from '@fluentui/react';
 
-//
-// [DetailsList Fixed Header without ScrollablePane](https://developer.microsoft.com/en-us/fluentui#/controls/web/scrollablepane)
-//
-const gridStyles: Partial<IDetailsListStyles> = {
-    root: {
-      overflowX: 'scroll',
-      selectors: {
-        '& [role=grid]': {
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'start',
-          height: '600px',
-        },
-      },
-    },
-    headerWrapper: {
-      flex: '0 0 auto',
-    },
-    contentWrapper: {
-      flex: '1 1 auto',
-      overflowY: 'auto',
-      overflowX: 'hidden',
-    },
-  };
-  
+import * as React from 'react';
+
+ 
 const SUBREDDIT = 'bostonterriers';
 const THUMBSIZE = 80;
 
@@ -76,30 +63,33 @@ const columns: IColumn[] = [
   }
 ];
 
-const refreshButtonStyles = {
+const refreshButtonStyles:IButtonStyles = {
   root: {
     verticalAlign: 'middle'
   }
 };
 
-export interface InfiniteDetailListRedditProps {
+export interface InfiniteDetailListFetchProps {
   name?: string;
+  height: number;
 }
 
-interface InfiniteDetailListRedditState {
+interface InfiniteDetailListFetchState {
   rows: any
   isLoading: Boolean
   subreddit: string
-  nextPageToken: any
+  nextPageToken: any,
+  height: number
 
 }
 
 type FetchData = any
 
-export class InfiniteDetailListRedditControl extends React.Component<InfiniteDetailListRedditProps, InfiniteDetailListRedditState> {
+export class InfiniteDetailListFetchControl extends React.Component<InfiniteDetailListFetchProps, InfiniteDetailListFetchState> {
   private _selection;
+  
 
-  constructor(props: InfiniteDetailListRedditProps) {
+  constructor(props: InfiniteDetailListFetchProps) {
     super(props);
 
     this._selection = new Selection();
@@ -107,14 +97,28 @@ export class InfiniteDetailListRedditControl extends React.Component<InfiniteDet
       rows: null,
       isLoading: false,
       subreddit: SUBREDDIT,
-      nextPageToken: null
+      nextPageToken: null,
+      height: props.height
     };
+
     this._onReloadClick = this._onReloadClick.bind(this);
+
+
   }
 
   public componentDidMount() {
     this._onReloadClick();
   }
+
+  public componentDidUpdate(prevProps: Readonly<InfiniteDetailListFetchProps>, prevState: Readonly<InfiniteDetailListFetchState>, snapshot?: any): void {
+      console.log( 'componentDidUpdate',  prevState.height, prevProps.height, this.props.height)
+      
+      if( prevState.height !=  this.props.height ) {
+        this.setState( { ...prevState, height: this.props.height})
+      }
+  }
+  
+
 
   public render() {
     let { rows, subreddit, isLoading } = this.state;
@@ -122,8 +126,10 @@ export class InfiniteDetailListRedditControl extends React.Component<InfiniteDet
     return (
 
       <div>
+{/* 
         <div className={css(FontClassNames.xxLarge, 'titleArea')}>
-          <span className='title'>reddit/r/<Link className='reddit'>{subreddit}</Link></span>
+          <span className='title'>reddit/r/<Link className='reddit'>{subreddit}</Link></span> 
+          
           {!isLoading ? (
             <IconButton
               styles={refreshButtonStyles}
@@ -135,6 +141,7 @@ export class InfiniteDetailListRedditControl extends React.Component<InfiniteDet
             <Spinner className='inlineSpinner' />
           )}
         </div>
+*/}
         {rows && (
           
           <MarqueeSelection selection={this._selection}>
@@ -147,10 +154,11 @@ export class InfiniteDetailListRedditControl extends React.Component<InfiniteDet
               onRenderRow={(props, defaultRender) =>
                 <div onClick={() => console.log('clicking: ' + props?.item.title)}>{(defaultRender) ? defaultRender(props) : null}</div>
               }
-              styles={gridStyles}
+              styles={ this._getStyles() }
+              
             />
             {isLoading && (
-              <Spinner className='loadingSpinner' label='Loading...' />
+              <Spinner className='loadingSpinner' label='Loading...' ariaLive="assertive" labelPosition="left" />
             )}
 
           </MarqueeSelection>
@@ -159,6 +167,40 @@ export class InfiniteDetailListRedditControl extends React.Component<InfiniteDet
      </div>
 
     );
+  }
+
+  /**
+   * 
+   * styles got from  [DetailsList Fixed Header without ScrollablePane](https://developer.microsoft.com/en-us/fluentui#/controls/web/scrollablepane)
+   * 
+   * @returns 
+   */
+  private _getStyles() : Partial<IDetailsListStyles> {
+
+    const spinner_height = 50
+    const h = `${this.state.height - spinner_height}px`
+
+    return {
+        root: {
+            overflowX: 'scroll',
+            selectors: {
+                '& [role=grid]': {
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'start',
+                  height: h,
+                },
+            }
+        },
+        headerWrapper: {
+          flex: '0 0 auto',
+        },
+        contentWrapper: {
+          flex: '1 1 auto',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+        },
+    }
   }
 
   private _onReloadClick() {
@@ -197,7 +239,8 @@ export class InfiniteDetailListRedditControl extends React.Component<InfiniteDet
         this.setState({
           rows,
           nextPageToken: json.data.after,
-          isLoading: false
+          isLoading: false,
+          height: this.props.height
         });
 
         this._selection.setItems(rows);
@@ -232,9 +275,4 @@ export class InfiniteDetailListRedditControl extends React.Component<InfiniteDet
     return items;
   }
 }
-
-// ReactDOM.render( 
-//   <InfiniteDetailListReddit />,
-//   document.getElementById('content')
-// );
 
