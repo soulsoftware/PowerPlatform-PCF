@@ -1,4 +1,6 @@
 /**
+ * InfiniteDetailList-Fetch.tsx
+ * 
  * inpired by codepen: [Fabric DetailsList](https://codepen.io/anon/pen/KrpqQN)
  */
 
@@ -216,8 +218,7 @@ export class InfiniteDetailListFetchControl extends React.Component<InfiniteDeta
     if (!isLoading) {
       this.setState({ isLoading: true });
 
-      // This setTimeout is only here for illustrating a slow API. Reddit API is pretty fast.
-      setTimeout(() => this._onLoadNextPage(), 1000);
+      setTimeout(() => this._onLoadNextPage(), 0);
     }
   }
 
