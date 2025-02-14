@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { DefaultButton, IIconProps } from '@fluentui/react';
+import { Button } from '@fluentui/react-components';
+import { ArrowUploadFilled, CheckmarkRegular } from '@fluentui/react-icons';
+
 import { IControlEvent } from './IControlEvent';
 import { useState, createRef } from 'react';
 
@@ -8,8 +10,6 @@ export interface IImportProps {
   onEvent: (event: IControlEvent) => void;
 }
 
-const upload: IIconProps = { iconName: 'Upload' };
-const uploaded: IIconProps = { iconName: 'Accept' };
 
 export const ImportFile: React.FC<IImportProps> = (props: IImportProps) => {
   const [imported, setImported] = useState<boolean>(false);
@@ -54,11 +54,11 @@ export const ImportFile: React.FC<IImportProps> = (props: IImportProps) => {
 
   return (
     <div>
-      <DefaultButton
+      <Button
         onClick={() => importFileRef.current?.click()}
-        iconProps={imported ? uploaded : upload}>{
+        icon={imported ? <CheckmarkRegular /> : <ArrowUploadFilled/>}>{
           imported ? "File Imported" : (props.buttonLabel ? props.buttonLabel : "Import File")
-        }</DefaultButton>
+        }</Button>
       <input ref={importFileRef} type="file" onChange={onFileChange} key={Math.random().toString(16)} style={{ display: 'none' }} />
     </div>);
 }
