@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Button } from '@fluentui/react-components';
 import { ArrowUploadFilled, CheckmarkRegular } from '@fluentui/react-icons';
+import mammoth from "mammoth"
 
 import { IControlEvent } from './IControlEvent';
 import { useState, createRef } from 'react';
@@ -28,26 +29,59 @@ export const ImportFile: React.FC<IImportProps> = (props: IImportProps) => {
         resolve(reader.result);
       }
 
+      // read file
+      reader.readAsArrayBuffer(file);
+
       //read file
-      reader.readAsDataURL(file);
+      // reader.readAsDataURL(file);
     });
   };
 
-  const getAsByteArray = async (file: File) => {
-    let fileContent: string | null = (await readFile(file) as string | null);
-    return fileContent?.split(',')?.[1];
+  // const getAsByteArray = async (file: File) => {
+  //   let fileContent: string | null = (await readFile(file) as string | null);
+  //   return fileContent?.split(',')?.[1];
+  // }
+
+  const getFileContent = async (file: File) => {
+    const fileContent =  (await readFile(file) as ArrayBuffer );
+    if( fileContent ) {
+
+      const { value } = await mammoth.extractRawText({arrayBuffer: fileContent});
+
+      console.log( value  );
+      return value;
+  
+    }
+
+    throw new Error( "file content is null!" );
+    
   }
 
   const onFileChange = async (event: any) => {
     let fileSelected: File = event.target.files[0];
-    let fileContent = await getAsByteArray(fileSelected);
+    try {
+      const fileContent = await getFileContent(fileSelected);
 
-    props.onEvent({
-      event: "ImportedFile", errorMessage: "", file: {
-        contentBytes: fileContent ?? "",
-        name: fileSelected?.name ?? ""
-      }
-    })
+      props.onEvent({
+        event: "ImportedFile", 
+        errorMessage: "", 
+        file: {
+          content: fileContent,
+          name: fileSelected?.name ?? ""
+        }
+     })
+    }
+    catch( e:any ) {
+      
+      props.onEvent({
+        event: "ImportedFile", 
+        errorMessage: e.message, 
+        file: {
+          content: "",
+          name: fileSelected?.name ?? ""
+        }
+      })
+    }
 
     setImported(true);
   };
