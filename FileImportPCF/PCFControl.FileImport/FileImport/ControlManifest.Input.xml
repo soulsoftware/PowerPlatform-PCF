@@ -3,7 +3,7 @@
   <control 
     namespace="fi" 
     constructor="FileImport" 
-    version="0.0.1" 
+    version="0.1.1" 
     display-name-key="FileImport" 
     description-key="FileImport_OutputFileContent" 
     control-type="virtual" >
