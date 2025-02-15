@@ -3,6 +3,7 @@
     "compilerOptions": {
         "target": "ES6",
         "typeRoots": ["node_modules/@types"],
-        "sourceMap": true
+        "sourceMap": true,
+        "esModuleInterop": true
     }
 }
