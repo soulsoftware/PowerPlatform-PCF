@@ -1,6 +1,6 @@
 // IControlEvent.ts
 type PowerFxFileType = {
-  contentBytes: string,
+  content: string,
   name: string
 }
 
