@@ -47,8 +47,13 @@ export class FileImport implements ComponentFramework.ReactControl<IInputs, IOut
         return this.controlEvent;
     }
 
-    public async getOutputSchema(context: ComponentFramework.Context<IInputs>): Promise<any> {
-        console.log(context);
+
+    /**
+     * It is called by the framework prior to a component initialization. Returns an object schema based on nomenclature defined in manifest, for any output property of type object.
+     * @returns an object schema
+     */
+    public async getOutputSchema(context: ComponentFramework.Context<IInputs>): Promise<Record<string,any>> {
+        console.log("getOutputSchema", FileSchema);
         return Promise.resolve({
             file: FileSchema
         });

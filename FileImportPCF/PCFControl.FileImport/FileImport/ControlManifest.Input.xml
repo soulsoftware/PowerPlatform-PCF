@@ -3,7 +3,7 @@
   <control 
     namespace="fi" 
     constructor="FileImport" 
-    version="0.1.1" 
+    version="0.1.4" 
     display-name-key="FileImport" 
     description-key="FileImport_OutputFileContent" 
     control-type="virtual" >
@@ -20,9 +20,9 @@
     <!-- property node identifies a specific, configurable piece of data that the control expects from CDS -->
     <property name="ImportLabel" display-name-key="ImportButton_Display" description-key="ImportButton_Desc" of-type="SingleLine.Text" usage="input" required="false" />
     <property name="errorMessage" display-name-key="ErrorMessage_Display" description-key="ErrorMessage_Desc" of-type="Multiple" usage="output" required="false" />
+    <property name="file" display-name-key="File_Display" description-key="File_Desc" of-type="Object" usage="output" required="false" hidden="false" default-value=""/>
 
     <!-- A hidden property used by Canvas to get the output object schema -->
-    <property name="file" display-name-key="File_Display" description-key="File_Desc" of-type="Object" usage="output" required="false" hidden="false" default-value=""/>
     <property name="FileSchema" display-name-key="FileSchema" description-key="FileSchema" of-type="SingleLine.Text" usage="input" hidden="true"/>
     
     <property-dependencies>
